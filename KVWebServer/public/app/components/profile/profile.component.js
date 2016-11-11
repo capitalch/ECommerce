@@ -11,17 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var Profile = (function () {
-    // firstName: string;
-    // lastName: string;
-    // phone: string;
-    // birthday: string;
-    // mailingAddress1: string;
-    // mailingAddress2: string;
-    // mailingCity: string;
-    // mailingState: string;
-    // mailingZip: string;
-    // id: number;
-    //email: string;
     function Profile(appService) {
         var _this = this;
         this.appService = appService;
