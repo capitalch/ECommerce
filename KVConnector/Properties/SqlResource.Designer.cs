@@ -97,11 +97,51 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --declare @email varchar(256);
+        ///--select @email = &apos;sagarwal@netwoven.com&apos;;
+        ///select b.id, firstName,lastName, phone, birthDay, mailingAddress1
+        ///	, mailingAddress2, mailingCity, mailingState, mailingZip
+        ///	from userMaster a join userProfiles b
+        ///		on a.Id = b.UserId
+        ///			where email = @email;.
+        /// </summary>
+        internal static string GetProfile {
+            get {
+                return ResourceManager.GetString("GetProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select PwdHash from UserMaster where email = @email;.
         /// </summary>
         internal static string GetPwdHash {
             get {
                 return ResourceManager.GetString("GetPwdHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --declare @email varchar(50);
+        ///--select @email = &apos;sagarwal@netwoven.com&apos;;
+        ///--profile
+        ///select b.Id, FirstName,LastName, Phone, Birthday, MailingAddress1
+        ///	, MailingAddress2, MailingCity, MailingState, MailingZip
+        ///	from UserMaster a join UserProfiles b
+        ///		on a.Id = b.UserId
+        ///			where Email = @email;
+        ///
+        ///--order master
+        ///select b.Id, MDate, OrderNo,Descr, Isdelivered
+        ///	from UserMaster a join OrderMaster b
+        ///		on a.Id = b.UserId
+        ///			where Email = @email;
+        ///
+        ///--order details
+        ///select c.Id, d.Item, d.Price, d.Packing, [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetUserData {
+            get {
+                return ResourceManager.GetString("GetUserData", resourceCulture);
             }
         }
         
@@ -147,6 +187,25 @@ namespace KVConnector.Properties {
         internal static string SetMaxOrderNumber {
             get {
                 return ResourceManager.GetString("SetMaxOrderNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update UserProfiles 
+        ///	set FirstName = @firstName,
+        ///	LastName = @lastName,
+        ///	Phone = @phone,
+        ///	Birthday = @birthDay,
+        ///	MailingAddress1 = @mailingAddress1,
+        ///	MailingAddress2 = @mailingAddress2,
+        ///	MailingCity = @mailingCity,
+        ///	MailingState = @mailingState,
+        ///	MailingZip = @mailingZip
+        ///	where Id = @id;.
+        /// </summary>
+        internal static string UpdateProfile {
+            get {
+                return ResourceManager.GetString("UpdateProfile", resourceCulture);
             }
         }
     }

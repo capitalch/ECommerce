@@ -141,6 +141,9 @@
   <data name="ErrSqlQueryFailed" xml:space="preserve">
     <value>Execution of sql query at server failed</value>
   </data>
+  <data name="ErrUpdateError" xml:space="preserve">
+    <value>Update to database could not be done</value>
+  </data>
   <data name="MessAuthenticationFailed" xml:space="preserve">
     <value>Either user name or password is incorrect</value>
   </data>

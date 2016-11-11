@@ -19,16 +19,16 @@ import { urlHash, messages } from '../config';
 @Injectable()
 export class AppService {
     subject: Subject<any>;
-    channel: any;    
+    channel: any;
     globalHash: {} = {};
-    
+
     constructor(private http: Http) {
         this.subject = new Subject();
         this.channel = {};
     };
-    
+
     getMessage(messageKey) {
-        return(messages[messageKey]);
+        return (messages[messageKey]);
     }
 
     setCredential(email, token) {
@@ -43,10 +43,10 @@ export class AppService {
         }
         return (credential);
     };
-    getToken(): string{
+    getToken(): string {
         let token = null;
         let credential = this.getCredential();
-        if(credential){
+        if (credential) {
             token = credential.token;
         }
         return (token);
@@ -86,14 +86,15 @@ export class AppService {
                     id: id,
                     data: { error: err }
                 }));
-    };
+    };    
+
     //application wide events
     emit(id: string, options?: any) {
         this.subject.next({
             id: id, data: options
         });
     }
-    
+
     filterOn(id: string): Observable<any> {
         return (this.subject.filter(d => (d.id === id)));
     }

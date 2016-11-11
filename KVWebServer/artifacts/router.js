@@ -177,8 +177,8 @@ router.post('/api/change/password', function (req, res, next) {
 });
 router.get('/api/current/offer', function (req, res, next) {
     try {
-        let data = { action: 'sql:query', sqlKey: 'getCurrentOffer', sqlParms: {} };
-        handler.edgePush(res, next, 'current:offer', data);
+        let data = { action: 'sql:query', sqlKey: 'GetCurrentOffer', sqlParms: {} };
+        handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);
         next(err);
@@ -188,23 +188,36 @@ router.get('/api/current/offer', function (req, res, next) {
 router.post('/api/order', function (req, res,next) {
     try {
         let data = { action: 'save:order', order: req.body.order, email: req.user.email };
-        handler.edgePush(res, next, 'common:result', data);
+        handler.edgePush(res, next, 'common:result:no:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);
         next(err);
     }
 });
 
-router.get('/api/order', function (req, res,next) {
-    console.log('send order');
-    res.json({ date: 'This is order' });
+router.get('/api/profile', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetProfile', sqlParms: {email:req.user.email} };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
 });
 
+router.post('/api/profile', function (req, res, next) {
+    try {
+        let data = {
+            action: 'update:Insert:profile',
+            profile: req.body.profile,
+            email: req.user.email,
+            isUpdate : req.body.profile.id ? true : false
+        };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
 
-// apiRouter.post('/sale', function (req, res, next) {
-//     var user = req.user;
-//     var data = { "action": "addSales", authorize: { apiApplicationName: 'sale', httpMethod: req.method, user: user }, innerData: { sale: req.body } };
-//     util.processRequest(data, res, next, null);
-// });
-//}
 module.exports = router;

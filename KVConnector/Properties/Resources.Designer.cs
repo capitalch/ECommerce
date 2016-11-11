@@ -133,6 +133,15 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update to database could not be done.
+        /// </summary>
+        internal static string ErrUpdateError {
+            get {
+                return ResourceManager.GetString("ErrUpdateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Either user name or password is incorrect.
         /// </summary>
         internal static string MessAuthenticationFailed {

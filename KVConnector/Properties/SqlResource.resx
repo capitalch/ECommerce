@@ -132,8 +132,54 @@
   <data name="GetPwdHash" xml:space="preserve">
     <value>select PwdHash from UserMaster where email = @email;</value>
   </data>
+  <data name="GetUserData" xml:space="preserve">
+    <value>--declare @email varchar(50);
+--select @email = 'sagarwal@netwoven.com';
+--profile
+select b.Id, FirstName,LastName, Phone, Birthday, MailingAddress1
+	, MailingAddress2, MailingCity, MailingState, MailingZip
+	from UserMaster a join UserProfiles b
+		on a.Id = b.UserId
+			where Email = @email;
+
+--order master
+select b.Id, MDate, OrderNo,Descr, Isdelivered
+	from UserMaster a join OrderMaster b
+		on a.Id = b.UserId
+			where Email = @email;
+
+--order details
+select c.Id, d.Item, d.Price, d.Packing, c.OrderQty,c.WishList
+	from UserMaster a join OrderMaster b
+		on a.Id = b.UserId			
+			join OrderDetails c
+				on b.Id = c.OrderId
+			join OfferMaster d
+				on d.Id = c.OfferId
+			where Email = @email;
+--shipping addresses
+select b.Id, b.Address1 
+	from UserMaster a join ShippingAddresses b
+		on a.Id = b.UserId
+			where Email = @email;
+
+--Credit cards
+select b.Id, b.CardName
+	from UserMaster a join CreditCards b
+		on a.Id = b.UserId
+			where Email = @email;</value>
+  </data>
   <data name="GetUserIdFromEmail" xml:space="preserve">
     <value>select MAX(Id) from UserMaster where Email = @email;</value>
+  </data>
+  <data name="GetProfile" xml:space="preserve">
+    <value>--declare @email varchar(256);
+--select @email = 'sagarwal@netwoven.com';
+select b.id, firstName,lastName, phone, birthDay, mailingAddress1
+	, mailingAddress2, mailingCity, mailingState, mailingZip
+	from userMaster a join userProfiles b
+		on a.Id = b.UserId
+			where email = @email;</value>
   </data>
   <data name="IsEmailAndHashExist" xml:space="preserve">
     <value>select 0 from UserMaster where Email = @email and PwdHash = @oldPwdHash;</value>
@@ -146,5 +192,18 @@
   </data>
   <data name="SetMaxOrderNumber" xml:space="preserve">
     <value>update Setup set IntValue = @value where MKey = 'MaxOrderNumber'</value>
+  </data>
+  <data name="UpdateProfile" xml:space="preserve">
+    <value>update UserProfiles 
+	set FirstName = @firstName,
+	LastName = @lastName,
+	Phone = @phone,
+	Birthday = @birthDay,
+	MailingAddress1 = @mailingAddress1,
+	MailingAddress2 = @mailingAddress2,
+	MailingCity = @mailingCity,
+	MailingState = @mailingState,
+	MailingZip = @mailingZip
+	where Id = @id;</value>
   </data>
 </root>

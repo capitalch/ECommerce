@@ -97,7 +97,7 @@ filterOn('forgot:passowrd').subscribe(d => {
     }
 });
 
-filterOn('current:offer').subscribe(d => {
+filterOn('common:result:data').subscribe(d => {
     if (d.result) {
         if (d.result.error) {
             d.next(d.result.error);
@@ -110,7 +110,7 @@ filterOn('current:offer').subscribe(d => {
     }
 });
 
-filterOn('common:result').subscribe(d => {
+filterOn('common:result:no:data').subscribe(d => {
     if (d.result) {
         if (d.result.error) {
             d.next(d.result.error);

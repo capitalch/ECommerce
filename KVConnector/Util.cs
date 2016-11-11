@@ -10,10 +10,6 @@ using System.Net.Mail;
 using System.Net;
 using System.Linq;
 using KVConnector.Properties;
-
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using TBSeed;
 //using TBUtility;
 

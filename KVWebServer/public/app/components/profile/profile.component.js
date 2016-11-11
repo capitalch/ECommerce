@@ -11,12 +11,53 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var Profile = (function () {
+    // firstName: string;
+    // lastName: string;
+    // phone: string;
+    // birthday: string;
+    // mailingAddress1: string;
+    // mailingAddress2: string;
+    // mailingCity: string;
+    // mailingState: string;
+    // mailingZip: string;
+    // id: number;
+    //email: string;
     function Profile(appService) {
+        var _this = this;
         this.appService = appService;
+        this.profile = {};
+        this.getProfileSubscription = appService.filterOn('get:user:profile')
+            .subscribe(function (d) {
+            if (d.data.error) {
+                console.log(d.data.error);
+            }
+            else {
+                var profileArray = JSON.parse(d.data).Table;
+                if (profileArray.length > 0) {
+                    _this.profile = profileArray[0];
+                }
+            }
+        }, function (err) {
+            console.log(err);
+        });
+        this.saveProfileSubscription = appService.filterOn('post:save:profile')
+            .subscribe(function (d) {
+            console.log(d);
+        });
     }
     ;
+    Profile.prototype.ngOnInit = function () {
+        var token = this.appService.getToken();
+        this.appService.httpGet('get:user:profile', { token: token });
+    };
+    ;
+    Profile.prototype.submit = function () {
+        var token = this.appService.getToken();
+        this.appService.httpPost('post:save:profile', { token: token, profile: this.profile });
+    };
     Profile.prototype.ngOnDestroy = function () {
-        //this.subscription.unsubscribe();
+        this.getProfileSubscription.unsubscribe();
+        this.saveProfileSubscription.unsubscribe();
     };
     ;
     Profile = __decorate([

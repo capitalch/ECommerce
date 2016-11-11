@@ -5,14 +5,12 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Dynamic;
 using KVConnector.Properties;
 using TBSeed;
 using System.Collections;
-using System.Transactions;
 
 namespace KVConnector
 {
@@ -36,6 +34,7 @@ namespace KVConnector
                 RoutingDictionary.Add("create:account", CreateAccountAsync);
                 RoutingDictionary.Add("sql:query", ExecuteSqlQueryAsync);
                 RoutingDictionary.Add("save:order", SaveOrderAsync);
+                RoutingDictionary.Add("update:Insert:profile", UpdateOrInsertProfileAsync);
             }
         }
         #endregion
@@ -428,7 +427,13 @@ namespace KVConnector
                     if (ex.Data.Keys.Count > 0)
                     {
                         var entryList = ex.Data.Cast<DictionaryEntry>();
-                        int errorNo = int.Parse(entryList.ElementAt(0).Key.ToString());
+                        int errorNo = 0;
+                        int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
+                        if (errorNo == 0)
+                        {
+                            errorNo = 520;
+                        }
+                        //int errorNo = int.Parse(entryList.ElementAt(0).Key.ToString());
                         string errorMessage = entryList.ElementAt(0).Value.ToString();
                         Util.SetError(result, errorNo, errorMessage, errorMessage);
                     }
@@ -460,21 +465,11 @@ namespace KVConnector
                     {
                         paramsList.Add(new SqlParameter(x.Key, x.Value));
                     });
-                    string sql = SqlResource.GetCurrentOffer;
+                    string sql = SqlResource.ResourceManager.GetString(sqlKey);
                     DataSet ds = new DataSet();
                     ds = seedDataAccess.ExecuteDataSet(sql, paramsList);
                     results = JsonConvert.SerializeObject(ds);
-                    ds.Dispose();
-                    //success = true;
-                    //if (success)
-                    //{
-                    //    results.status = 200;
-                    //    results.sqlQuery = true;
-                    //}
-                    //else
-                    //{
-                    //    Util.SetError(results, 405, Resources.ErrSqlQueryFailed, Resources.MessSqlQueryFailed);
-                    //}
+                    ds.Dispose();                    
                 }
                 catch (Exception ex)
                 {
@@ -496,7 +491,7 @@ namespace KVConnector
             {
                 try
                 {
-                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;                    
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
 
                     if (objDictionary.ContainsKey("order") && (objDictionary.ContainsKey("email")))
                     {
@@ -516,7 +511,6 @@ namespace KVConnector
                 {
                     result = new ExpandoObject();
                     Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
-
                 }
                 return (result);
             });
@@ -524,6 +518,93 @@ namespace KVConnector
             return (result);
         }
         #endregion
+
+        #region UpdateOrInsertProfileAsync
+        public async Task<object> UpdateOrInsertProfileAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+
+                    if (objDictionary.ContainsKey("profile") && (objDictionary.ContainsKey("email")))
+                    {
+                        string email = objDictionary["email"].ToString();
+                        dynamic profile = objDictionary["profile"];
+                        bool isUpdate = (bool)objDictionary["isUpdate"];
+                        if (isUpdate)
+                        {
+                            List<SqlParameter> parms = new List<SqlParameter>();
+                            parms.Add(new SqlParameter("firstName", profile.firstName));
+                            parms.Add(new SqlParameter("lastName", profile.lastName));
+                            parms.Add(new SqlParameter("phone", profile.phone));
+                            parms.Add(new SqlParameter("birthDay", profile.birthDay));
+                            parms.Add(new SqlParameter("mailingAddress1", profile.mailingAddress1));
+                            parms.Add(new SqlParameter("mailingAddress2", profile.mailingAddress2));
+                            parms.Add(new SqlParameter("mailingCity", profile.mailingCity));
+                            parms.Add(new SqlParameter("mailingState", profile.mailingState));
+                            parms.Add(new SqlParameter("mailingZip", profile.mailingZip));
+                            parms.Add(new SqlParameter("id", profile.id));
+                            var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateProfile, parms);
+                            if (i == 0)
+                            {
+                                Exception exception = new Exception();
+                                exception.Data.Add("501", Resources.ErrUpdateError);
+                                throw exception;
+                            }
+                        }
+                        else
+                        {
+                            profile.UserId = Util.GetUserIdFromEmail(seedDataAccess, email);
+                            List<Seed> saveProfileSeedList = new List<Seed>();
+                            Seed seed = new Seed()
+                            {
+                                PKeyColName = "Id",
+                                IsCustomIDGenerated = false,
+                                TableName = "UserProfiles",
+                                TableDict = SeedUtil.GetDictFromDynamicObject(profile)
+                            };
+                            saveProfileSeedList.Add(seed);
+                            seedDataAccess.SaveSeeds(saveProfileSeedList);
+                        }
+                        result.status = 200;
+                        result.success = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    if (ex.Data.Keys.Count > 0)
+                    {
+                        var entryList = ex.Data.Cast<DictionaryEntry>();
+                        int errorNo = 0;
+                        int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
+                        if (errorNo == 0)
+                        {
+                            errorNo = 520;
+                        }
+                        //int errorNo = int.Parse(entryList.ElementAt(0).Key.ToString());
+                        string errorMessage = entryList.ElementAt(0).Value.ToString();
+                        Util.SetError(result, errorNo, errorMessage, errorMessage);
+                    }
+                    else
+                    {
+                        Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                    }
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
 
         #region EmptyMethodAsync
         public async Task<object> EmptyMethodAsync(dynamic obj)

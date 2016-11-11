@@ -25,7 +25,7 @@ a:focus, a:hover {
 .form-signin {
   max-width: 450px;
   padding: 15px 35px 45px;
-  margin:15% auto;
+  margin:10% auto;
   background-color: #fff;
   border: 1px solid rgba(0,0,0,0.1); 
 }
@@ -50,7 +50,7 @@ a:focus, a:hover {
 .join-mailingList a{ font-weight:bold; font-size:1.2em;}
 
 .signInPanel{ padding-bottom:20px;}
-.mainContainer{padding-top: 80px;}
+.mainContainer{padding-top: 0px;}
 .introText{ margin-bottom:20px; padding:20px; background-color:#f5f2eb; border:solid 1px #ddd; /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fcfcfc+0,f5f2e9+100 */
 background: #fcfcfc; /* Old browsers */
 background: -moz-linear-gradient(top,  #fcfcfc 0%, #f5f2e9 100%); /* FF3.6-15 */
@@ -73,3 +73,13 @@ border-radius: 5px 5px 5px 5px;
 
 .hidefieldvalidationMsg{display: none; }
 .showfieldvalidationMsg{color: #94070d; display:block; }
+
+
+.Loadbox{ width: 40px; height: 40px; margin-left:-20px; margin-top:-20px; top:50%; left:50%; position: absolute; background-image:url(Preloader.gif); background-repeat: no-repeat;}
+.navbar{-webkit-border-radius: 0 0 0 0;
+border-radius: 0 0 0 0;}
+
+.bg-navKistler > .active > a, .bg-navKistler > .active > a:hover, .bg-navKistler > .active > a:focus {
+    background-color: #7a412d;
+    color: #fff;
+}
