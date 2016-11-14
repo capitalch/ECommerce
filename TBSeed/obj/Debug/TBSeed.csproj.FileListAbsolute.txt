@@ -149,4 +149,17 @@ F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.SqlTemplate.resources
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.csproj.GenerateResource.Cache
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.dll
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.pdb
+<<<<<<< HEAD
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.csprojResolveAssemblyReference.cache
+=======
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\TBSeed.dll
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\TBSeed.pdb
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.xml
+C:\Projects\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.xml
+C:\Projects\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.SqlTemplate.resources
+C:\Projects\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.csproj.GenerateResource.Cache
+C:\Projects\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.dll
+C:\Projects\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.pdb
+>>>>>>> 7e038ca7cd15a3facf0c91dfda4e5c41a151cef1
