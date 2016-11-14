@@ -25,7 +25,7 @@ var Login = (function () {
                 appService.resetCredential();
             }
             else {
-                console.log(d.data.token);
+                console.log('token:' + d.data.token);
                 _this.appService.setCredential(_this.email, d.data.token);
                 _this.router.navigate(['order']);
             }

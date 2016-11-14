@@ -2,7 +2,7 @@ import { Http, Response, Headers, RequestOptionsArgs } from '@angular/http';
 import { Injectable } from '@angular/core';
 //import { CanActivate } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
-import { AsyncSubject } from 'rxjs/AsyncSubject';
+//import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { Observable } from 'rxjs/Rx';
 
 import {
@@ -55,9 +55,29 @@ export class AppService {
         localStorage.removeItem('credential');
     };
 
-    httpPost(id: string, body?: {}) {
+    httpPost(id: string, body?: any) {
         let url = urlHash[id];
-        this.http.post(url, body)
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        body.token = this.getToken();
+        this.http.post(url, body,{headers:headers})
+            .map(response => response.json())
+            .subscribe(d =>
+                this.subject.next({
+                    id: id, data: d,body:body
+                }), err =>
+                this.subject.next({
+                    id: id,
+                    data: { error: err }
+                }));
+    };
+    httpGet(id: string, body?: {}) {
+        let url = urlHash[id];        
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        this.http.get(url, { headers: headers })
             .map(response => response.json())
             .subscribe(d =>
                 this.subject.next({
@@ -68,26 +88,22 @@ export class AppService {
                     data: { error: err }
                 }));
     };
-    httpGet(id: string,body?:{}) {
+    httpDelete(id: string, body?: any) {
         let url = urlHash[id];
-        let requestOptionsArgs: RequestOptionsArgs = {
-            body: body
-        };
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
-        this.http.get(url,{headers:headers})
+        this.http.delete(url, { headers: headers, body: { id: body.id } })
             .map(response => response.json())
             .subscribe(d =>
                 this.subject.next({
-                    id: id, data: d
+                    id: id, data: d, index: body.index
                 }), err =>
                 this.subject.next({
                     id: id,
                     data: { error: err }
                 }));
-    };    
-
+    };
     //application wide events
     emit(id: string, options?: any) {
         this.subject.next({

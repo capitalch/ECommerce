@@ -12,11 +12,26 @@ var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var OrderHistory = (function () {
     function OrderHistory(appService) {
+        var _this = this;
         this.appService = appService;
+        this.subscription = appService.filterOn('get:order:headers')
+            .subscribe(function (d) {
+            _this.orderHeaders = JSON.parse(d.data).Table;
+            console.log(d);
+        });
     }
     ;
+    OrderHistory.prototype.showDetails = function (id) {
+        console.log(id);
+    };
+    ;
+    OrderHistory.prototype.ngOnInit = function () {
+        var token = this.appService.getToken();
+        this.appService.httpGet('get:order:headers', { token: token });
+    };
+    ;
     OrderHistory.prototype.ngOnDestroy = function () {
-        //this.subscription.unsubscribe();
+        this.subscription.unsubscribe();
     };
     ;
     OrderHistory = __decorate([

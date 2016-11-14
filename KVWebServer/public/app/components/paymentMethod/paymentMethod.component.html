@@ -1,1 +1,38 @@
-<h2>Payment Method</h2>
+<h2>Secure Payment Methods</h2>
+<form class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-4">
+            <button type="button" class="btn btn-default" (click)="addCard()">Add Card</button>
+        </div>
+    </div>
+    <div *ngFor="let card of cards; let i=index">
+        <div *ngIf="card.isNew">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="cardName">Card Name:</label>
+                <input type="text" class="col-sm-2" [(ngModel)]="card.cardName" id="cardName" name="cardName" placeholder="Enter Card Name">               
+                <button type="button" class="col-sm-1" (click)='removeNew(i)'>Remove</button>                
+                <button type="button" class="col-sm-1" (click) = 'save(card)'>Save</button>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="cardNumber">Card Number:</label>
+                <input type="text" [(ngModel)]="card.cardNumber" class="col-sm-2" id="cardNumber" name="cardNumber" placeholder="Enter Card Number">
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="expiryDate">Expiry Date:</label>
+                <input type="date" [(ngModel)]="card.expiryDate" class="col-sm-2" id="expiryDate" name="expiryDate" placeholder="Enter Expiry Date">
+            </div>
+        </div>
+        <div *ngIf="!card.isNew">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="cardName">Card Name:</label>
+                <label class="control-label col-sm-2">{{card.cardName}}</label>
+                <button type="button" class="col-sm-1" (click)="remove(card,i)">Remove</button>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2 " for="cardNumber ">Card Number:</label>
+                <label class="control-label col-sm-2">{{card.cardNumber}}</label>
+            </div>
+            <hr>
+        </div>
+    </div>   
+</form>

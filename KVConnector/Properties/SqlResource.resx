@@ -206,4 +206,42 @@ select b.id, firstName,lastName, phone, birthDay, mailingAddress1
 	MailingZip = @mailingZip
 	where Id = @id;</value>
   </data>
+  <data name="GetOrderHeaders" xml:space="preserve">
+    <value>--declare @email varchar(50);
+--select @email = 'sagarwal@netwoven.com';
+select b.id,mDate,orderNo,descr,amount,invoice
+	from UserMaster a join OrderMaster b
+		on a.Id = b.UserId
+			where Email = @email;</value>
+  </data>
+  <data name="GetShippingAddress" xml:space="preserve">
+    <value>--declare @email varchar(100);
+--select @email = 'sagarwal@netwoven.com';
+select b.id,address1,zip,street,city, isDefault
+	from UserMaster a join ShippingAddresses b
+		on a.Id = b.UserId
+			where email = @email;</value>
+  </data>
+  <data name="UpdateAddress" xml:space="preserve">
+    <value>update ShippingAddresses
+	set Address1 = @address1,
+	City = @city,
+	Zip = @zip,
+	Street = @street,
+	IsDefault = @isDefault
+	where Id = @id;</value>
+  </data>
+  <data name="DeleteCreditCard" xml:space="preserve">
+    <value>--declare @id int;
+--set @id = 2;
+delete from CreditCards where id = @id</value>
+  </data>
+  <data name="GetCreditCards" xml:space="preserve">
+    <value>--declare @email varchar(50);
+--set @email = 'sagarwal@netwoven.com';
+select b.id, cardName,cardNumber, expiryDate
+	from UserMaster a join CreditCards b
+		on a.Id = b.UserId
+		where email = @email;</value>
+  </data>
 </root>

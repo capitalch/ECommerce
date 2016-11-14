@@ -1,3 +1,14 @@
+//pages
+1. Approval
+2. Receipt
+3. Order History
+4. Shipping Address
+5. Payment Methods
+6. Change Order to Request
+7. validations
+8. current tab disable
+
+
 https://shop.threestickswines.com/account.html
 waltdp@msn.com: Netwoven1
 

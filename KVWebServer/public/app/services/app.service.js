@@ -12,6 +12,7 @@ var http_1 = require('@angular/http');
 var core_1 = require('@angular/core');
 //import { CanActivate } from '@angular/router';
 var Subject_1 = require('rxjs/Subject');
+//import { AsyncSubject } from 'rxjs/AsyncSubject';
 var Rx_1 = require('rxjs/Rx');
 var router_1 = require('@angular/router');
 require('rxjs/add/operator/map'); //this is how operator is imported
@@ -58,7 +59,31 @@ var AppService = (function () {
     AppService.prototype.httpPost = function (id, body) {
         var _this = this;
         var url = config_1.urlHash[id];
-        this.http.post(url, body)
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        body.token = this.getToken();
+        this.http.post(url, body, { headers: headers })
+            .map(function (response) { return response.json(); })
+            .subscribe(function (d) {
+            return _this.subject.next({
+                id: id, data: d, body: body
+            });
+        }, function (err) {
+            return _this.subject.next({
+                id: id,
+                data: { error: err }
+            });
+        });
+    };
+    ;
+    AppService.prototype.httpGet = function (id, body) {
+        var _this = this;
+        var url = config_1.urlHash[id];
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        this.http.get(url, { headers: headers })
             .map(function (response) { return response.json(); })
             .subscribe(function (d) {
             return _this.subject.next({
@@ -72,20 +97,17 @@ var AppService = (function () {
         });
     };
     ;
-    AppService.prototype.httpGet = function (id, body) {
+    AppService.prototype.httpDelete = function (id, body) {
         var _this = this;
         var url = config_1.urlHash[id];
-        var requestOptionsArgs = {
-            body: body
-        };
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
-        this.http.get(url, { headers: headers })
+        this.http.delete(url, { headers: headers, body: { id: body.id } })
             .map(function (response) { return response.json(); })
             .subscribe(function (d) {
             return _this.subject.next({
-                id: id, data: d
+                id: id, data: d, index: body.index
             });
         }, function (err) {
             return _this.subject.next({

@@ -185,7 +185,7 @@ router.get('/api/current/offer', function (req, res, next) {
     }
 });
 
-router.post('/api/order', function (req, res,next) {
+router.post('/api/order', function (req, res, next) {
     try {
         let data = { action: 'save:order', order: req.body.order, email: req.user.email };
         handler.edgePush(res, next, 'common:result:no:data', data);
@@ -197,7 +197,7 @@ router.post('/api/order', function (req, res,next) {
 
 router.get('/api/profile', function (req, res, next) {
     try {
-        let data = { action: 'sql:query', sqlKey: 'GetProfile', sqlParms: {email:req.user.email} };
+        let data = { action: 'sql:query', sqlKey: 'GetProfile', sqlParms: { email: req.user.email } };
         handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);
@@ -208,10 +208,85 @@ router.get('/api/profile', function (req, res, next) {
 router.post('/api/profile', function (req, res, next) {
     try {
         let data = {
-            action: 'update:Insert:profile',
+            action: 'update:insert:profile',
             profile: req.body.profile,
             email: req.user.email,
-            isUpdate : req.body.profile.id ? true : false
+            isUpdate: req.body.profile.id ? true : false
+        };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/order/headers', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetOrderHeaders', sqlParms: { email: req.user.email } };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/shipping/address', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetShippingAddress', sqlParms: { email: req.user.email } };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.post('/api/shipping/address', function (req, res, next) {
+    try {
+        let data = {
+            action: 'update:insert:address',
+            addresses: req.body.addresses,
+            email: req.user.email
+        };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/credit/card', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetCreditCards', sqlParms: { email: req.user.email } };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.delete('/api/credit/card', function (req, res, next) {
+    try {
+        let data = {
+            action: 'sql:delete',
+            sqlKey: 'DeleteCreditCard',
+            sqlParms: {
+                id: req.body.id,
+                email: req.user.email
+            }
+        };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.post('/api/credit/card', function (req, res, next) {
+    try {
+        let data = {
+            action: 'insert:credit:card',
+            card: req.body.card,
+            email: req.user.email
         };
         handler.edgePush(res, next, 'common:result:no:data', data);
     } catch (error) {

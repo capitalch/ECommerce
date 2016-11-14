@@ -12,11 +12,57 @@ var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var ShippingAddress = (function () {
     function ShippingAddress(appService) {
+        var _this = this;
         this.appService = appService;
+        this.isDefault = true;
+        this.getSubscription = appService.filterOn("get:shipping:address")
+            .subscribe(function (d) {
+            _this.addresses = JSON.parse(d.data).Table;
+            console.log(d);
+        });
+        this.postSubscription = appService.filterOn("post:shipping:address")
+            .subscribe(function (d) {
+            console.log(d);
+        });
     }
     ;
+    ShippingAddress.prototype.ngOnInit = function () {
+        var token = this.appService.getToken();
+        this.appService.httpGet('get:shipping:address', { token: token });
+    };
+    ShippingAddress.prototype.toggleEdit = function (address) {
+        // if (address.isEdit) {
+        //     address.isEdit = false;
+        // } else {
+        //     address.isEdit = true;
+        // }
+        this.addresses.map(function (d, i) { return d.isEdit = false; });
+        address.isEdit = true;
+        address.isDirty = true;
+    };
+    ;
+    ShippingAddress.prototype.setDefault = function (address) {
+        this.addresses.map(function (d, i) { d.isDefault = false; d.isDirty = true; });
+        address.isDefault = true;
+    };
+    ;
+    ShippingAddress.prototype.submit = function () {
+        var dirtyAddresses = this.addresses.filter(function (v, i) { return v.isDirty; });
+        if (dirtyAddresses.length > 0) {
+            var token = this.appService.getToken();
+            this.appService.httpPost('post:shipping:address', { token: token, addresses: dirtyAddresses });
+        }
+    };
+    ;
+    ShippingAddress.prototype.addAddress = function () {
+        var address = { address1: '', city: '', zip: '', street: '' };
+        this.addresses.unshift(address);
+        this.toggleEdit(address);
+    };
+    ;
     ShippingAddress.prototype.ngOnDestroy = function () {
-        //this.subscription.unsubscribe();
+        this.getSubscription.unsubscribe();
+        this.postSubscription.unsubscribe();
     };
     ;
     ShippingAddress = __decorate([

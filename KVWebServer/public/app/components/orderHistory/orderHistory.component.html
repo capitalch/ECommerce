@@ -1,1 +1,16 @@
 <h1>Order history</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1">Date</div>
+        <div class="col-md-1">Invoice</div>
+        <div class="col-md-2">Order Summary</div>
+        <div class="col-md-1">Amount</div>
+    </div>
+    <div class="row" *ngFor="let order of orderHeaders" (click)="showDetails(order.id)">
+        <div class="col-md-1">{{order.mDate | date:'MM/dd/yyyy'}}</div>
+        <div class="col-md-1">{{order.invoice}}</div>
+        <div class="col-md-2">{{order.descr}}</div>
+        <div class="col-md-1">{{order.amount | currency:'USD':true}}</div>
+    </div>
+    
+</div>

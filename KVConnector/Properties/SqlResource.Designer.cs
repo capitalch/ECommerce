@@ -70,6 +70,31 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --declare @id int;
+        ///--set @id = 2;
+        ///delete from CreditCards where id = @id.
+        /// </summary>
+        internal static string DeleteCreditCard {
+            get {
+                return ResourceManager.GetString("DeleteCreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --declare @email varchar(50);
+        ///--set @email = &apos;sagarwal@netwoven.com&apos;;
+        ///select b.id, cardName,cardNumber, expiryDate
+        ///	from UserMaster a join CreditCards b
+        ///		on a.Id = b.UserId
+        ///		where email = @email;.
+        /// </summary>
+        internal static string GetCreditCards {
+            get {
+                return ResourceManager.GetString("GetCreditCards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select Id, Item, Price, Packing, AvailableQty from OfferMaster;.
         /// </summary>
         internal static string GetCurrentOffer {
@@ -97,6 +122,20 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to --declare @email varchar(50);
+        ///--select @email = &apos;sagarwal@netwoven.com&apos;;
+        ///select b.id,mDate,orderNo,descr,amount,invoice
+        ///	from UserMaster a join OrderMaster b
+        ///		on a.Id = b.UserId
+        ///			where Email = @email;.
+        /// </summary>
+        internal static string GetOrderHeaders {
+            get {
+                return ResourceManager.GetString("GetOrderHeaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to --declare @email varchar(256);
         ///--select @email = &apos;sagarwal@netwoven.com&apos;;
         ///select b.id, firstName,lastName, phone, birthDay, mailingAddress1
@@ -117,6 +156,20 @@ namespace KVConnector.Properties {
         internal static string GetPwdHash {
             get {
                 return ResourceManager.GetString("GetPwdHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --declare @email varchar(100);
+        ///--select @email = &apos;sagarwal@netwoven.com&apos;;
+        ///select b.id,address1,zip,street,city, isDefault
+        ///	from UserMaster a join ShippingAddresses b
+        ///		on a.Id = b.UserId
+        ///			where email = @email;.
+        /// </summary>
+        internal static string GetShippingAddress {
+            get {
+                return ResourceManager.GetString("GetShippingAddress", resourceCulture);
             }
         }
         
@@ -187,6 +240,21 @@ namespace KVConnector.Properties {
         internal static string SetMaxOrderNumber {
             get {
                 return ResourceManager.GetString("SetMaxOrderNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update ShippingAddresses
+        ///	set Address1 = @address1,
+        ///	City = @city,
+        ///	Zip = @zip,
+        ///	Street = @street,
+        ///	IsDefault = @isDefault
+        ///	where Id = @id;.
+        /// </summary>
+        internal static string UpdateAddress {
+            get {
+                return ResourceManager.GetString("UpdateAddress", resourceCulture);
             }
         }
         

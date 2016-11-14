@@ -115,7 +115,7 @@ filterOn('common:result:no:data').subscribe(d => {
         if (d.result.error) {
             d.next(d.result.error);
         } else {
-            d.res.status(200).json({ success: true });
+            d.res.status(200).json({ success: true, result:d.result });
         }
     } else {
         let err = new def.NError(520, messages.errUnknown, messages.messErrorUnknown);

@@ -8,18 +8,7 @@ import { AppService } from '../../services/app.service';
 export class Profile {
     getProfileSubscription: Subscription;
     saveProfileSubscription: Subscription;
-    profile: {} = {};
-    // firstName: string;
-    // lastName: string;
-    // phone: string;
-    // birthday: string;
-    // mailingAddress1: string;
-    // mailingAddress2: string;
-    // mailingCity: string;
-    // mailingState: string;
-    // mailingZip: string;
-    // id: number;
-    //email: string;
+    profile: {} = {};    
     constructor(private appService: AppService) {
         this.getProfileSubscription = appService.filterOn('get:user:profile')
             .subscribe(d => {

@@ -12,11 +12,63 @@ var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var PaymentMethod = (function () {
     function PaymentMethod(appService) {
+        var _this = this;
         this.appService = appService;
+        this.getSubscription = appService.filterOn("get:credit:card")
+            .subscribe(function (d) {
+            if (d.data.error) {
+                console.log(d);
+            }
+            else {
+                _this.cards = JSON.parse(d.data).Table;
+            }
+        });
+        this.postSubscription = appService.filterOn("insert:credit:card")
+            .subscribe(function (d) {
+            if (d.data.error) {
+                console.log(d);
+            }
+            else {
+                d.body.card.isNew = false;
+            }
+        });
+        this.deleteSubscription = appService.filterOn("delete:credit:card")
+            .subscribe(function (d) {
+            if (d.data.error) {
+                console.log("Error occured");
+            }
+            else {
+                _this.cards.splice(d.index, 1);
+            }
+        });
     }
     ;
+    PaymentMethod.prototype.addCard = function () {
+        var card = { cardName: '', cardNumber: '', isNew: false };
+        card.isNew = true;
+        this.cards.unshift(card);
+    };
+    ;
+    PaymentMethod.prototype.removeNew = function (index) {
+        this.cards.splice(index, 1);
+    };
+    ;
+    PaymentMethod.prototype.remove = function (card, index) {
+        //let token = this.appService.getToken();
+        this.appService.httpDelete('delete:credit:card', { id: card.id, index: index });
+    };
+    ;
+    PaymentMethod.prototype.save = function (card) {
+        this.appService.httpPost('insert:credit:card', { card: card });
+    };
+    ;
+    PaymentMethod.prototype.ngOnInit = function () {
+        var token = this.appService.getToken();
+        this.appService.httpGet('get:credit:card', { token: token });
+    };
     PaymentMethod.prototype.ngOnDestroy = function () {
-        //this.subscription.unsubscribe();
+        this.getSubscription.unsubscribe();
+        this.postSubscription.unsubscribe();
     };
     ;
     PaymentMethod = __decorate([

@@ -34,7 +34,10 @@ namespace KVConnector
                 RoutingDictionary.Add("create:account", CreateAccountAsync);
                 RoutingDictionary.Add("sql:query", ExecuteSqlQueryAsync);
                 RoutingDictionary.Add("save:order", SaveOrderAsync);
-                RoutingDictionary.Add("update:Insert:profile", UpdateOrInsertProfileAsync);
+                RoutingDictionary.Add("update:insert:profile", UpdateOrInsertProfileAsync);
+                RoutingDictionary.Add("update:insert:address", UpdateOrInsertAddressesAsync);
+                RoutingDictionary.Add("sql:delete", SqlDeleteAsync);
+                RoutingDictionary.Add("insert:credit:card", InsertCreditCardAsync);
             }
         }
         #endregion
@@ -469,7 +472,7 @@ namespace KVConnector
                     DataSet ds = new DataSet();
                     ds = seedDataAccess.ExecuteDataSet(sql, paramsList);
                     results = JsonConvert.SerializeObject(ds);
-                    ds.Dispose();                    
+                    ds.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -605,6 +608,199 @@ namespace KVConnector
         }
         #endregion
 
+        #region UpdateOrInsertAddressesAsync
+        public async Task<object> UpdateOrInsertAddressesAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+
+                    if (objDictionary.ContainsKey("addresses") && (objDictionary.ContainsKey("email")))
+                    {
+                        string email = objDictionary["email"].ToString();
+                        dynamic addresses = objDictionary["addresses"];
+                        foreach (var address in addresses)
+                        {
+                            IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(address);
+                            if (dict.ContainsKey("id"))
+                            {
+                                List<SqlParameter> parms = new List<SqlParameter>();
+                                parms.Add(new SqlParameter("address1", address.address1));
+                                parms.Add(new SqlParameter("zip", address.zip));
+                                parms.Add(new SqlParameter("city", address.city));
+                                parms.Add(new SqlParameter("street", address.street));
+                                parms.Add(new SqlParameter("isDefault", address.isDefault));
+                                parms.Add(new SqlParameter("id", address.id));
+                                var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateAddress, parms);
+                                if (i == 0)
+                                {
+                                    Exception exception = new Exception();
+                                    exception.Data.Add("501", Resources.ErrUpdateError);
+                                    throw exception;
+                                }
+                            }
+                            else
+                            {
+                                dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
+                                dict.Remove("isEdit");
+                                dict.Remove("isDirty");
+                                List<Seed> saveProfileSeedList = new List<Seed>();
+                                Seed seed = new Seed()
+                                {
+                                    PKeyColName = "Id",
+                                    IsCustomIDGenerated = false,
+                                    TableName = "ShippingAddresses",
+                                    TableDict = dict
+                                };
+                                saveProfileSeedList.Add(seed);
+                                seedDataAccess.SaveSeeds(saveProfileSeedList);
+                            }
+                        }
+                        result.status = 200;
+                        result.success = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    if (ex.Data.Keys.Count > 0)
+                    {
+                        var entryList = ex.Data.Cast<DictionaryEntry>();
+                        int errorNo = 0;
+                        int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
+                        if (errorNo == 0)
+                        {
+                            errorNo = 520;
+                        }
+                        string errorMessage = entryList.ElementAt(0).Value.ToString();
+                        Util.SetError(result, errorNo, errorMessage, errorMessage);
+                    }
+                    else
+                    {
+                        Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                    }
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region SqlDeleteAsync
+        public async Task<object> SqlDeleteAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    string sqlKey = objDictionary["sqlKey"].ToString();
+                    IDictionary<string, object> parmsDict = (IDictionary<string, object>)objDictionary["sqlParms"];
+                    List<SqlParameter> paramsList = new List<SqlParameter>();
+                    var id = parmsDict["id"];
+                    parmsDict.ToList<KeyValuePair<string, object>>().ForEach(x =>
+                    {
+                        paramsList.Add(new SqlParameter(x.Key, x.Value));
+                    });
+                    string sql = SqlResource.ResourceManager.GetString(sqlKey);
+                    int i = seedDataAccess.ExecuteNonQuery(sql, paramsList);
+                    if (i > 0)
+                    {
+                        result.status = 200;
+                        result.success = true;
+                        result.id = id;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region InsertCreditCardAsync
+        public async Task<object> InsertCreditCardAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+
+                    if (objDictionary.ContainsKey("card") && (objDictionary.ContainsKey("email")))
+                    {
+                        string email = objDictionary["email"].ToString();
+                        dynamic card = objDictionary["card"];
+                        List<Seed> seedList = new List<Seed>();
+                        //foreach (var card in cards)
+                        //{
+                        IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(card);
+                        dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
+                        dict.Remove("isNew");
+                        Seed seed = new Seed()
+                        {
+                            PKeyColName = "Id",
+                            IsCustomIDGenerated = false,
+                            TableName = "CreditCards",
+                            TableDict = dict
+                        };
+                        seedList.Add(seed);
+                        //}
+                        seedDataAccess.SaveSeeds(seedList);
+                        result.status = 200;
+                        result.success = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                    //if (ex.Data.Keys.Count > 0)
+                    //{
+                    //    var entryList = ex.Data.Cast<DictionaryEntry>();
+                    //    int errorNo = 0;
+                    //    int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
+                    //    if (errorNo == 0)
+                    //    {
+                    //        errorNo = 520;
+                    //    }
+                    //    string errorMessage = entryList.ElementAt(0).Value.ToString();
+                    //    Util.SetError(result, errorNo, errorMessage, errorMessage);
+                    //}
+                    //else
+                    //{
+                    //    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                    //}
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
 
         #region EmptyMethodAsync
         public async Task<object> EmptyMethodAsync(dynamic obj)

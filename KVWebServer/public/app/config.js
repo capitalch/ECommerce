@@ -9,7 +9,13 @@ exports.urlHash = {
     'get:current:offer': '/api/current/offer',
     'post:save:order': '/api/order',
     'get:user:profile': '/api/profile',
-    'post:save:profile': '/api/profile'
+    'post:save:profile': '/api/profile',
+    'get:order:headers': '/api/order/headers',
+    'get:shipping:address': '/api/shipping/address',
+    'post:shipping:address': '/api/shipping/address',
+    'get:credit:card': '/api/credit/card',
+    'delete:credit:card': '/api/credit/card',
+    'insert:credit:card': '/api/credit/card'
 };
 exports.messages = {
     'mess:order:intro:text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a tortor imperdiet, porttitor purus ut, pretium diam. Nulla convallis vel ipsum quis mattis. Nam in erat massa. Praesent bibendum dapibus lectus, nec imperdiet eros pharetra et. Vestibulum euismod velit sit amet nulla ornare iaculis viverra eget augue. Etiam dolor lacus, rhoncus in rhoncus eget, faucibus at nisi. Nulla nec mollis orci. Pellentesque pharetra facilisis dolor vel tincidunt. Suspendisse ullamcorper fermentum nunc, a dapibus tellus imperdiet vitae.',

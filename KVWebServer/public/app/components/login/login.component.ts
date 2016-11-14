@@ -19,7 +19,7 @@ export class Login {
           console.log(d.data.error.status)
           appService.resetCredential();          
         } else {
-          console.log(d.data.token);
+          console.log('token:' + d.data.token);
           this.appService.setCredential(this.email, d.data.token);
           this.router.navigate(['order']);
         }
