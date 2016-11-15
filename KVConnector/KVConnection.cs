@@ -647,6 +647,7 @@ namespace KVConnector
                                 dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
                                 dict.Remove("isEdit");
                                 dict.Remove("isDirty");
+                                dict.Remove("isNew");
                                 List<Seed> saveProfileSeedList = new List<Seed>();
                                 Seed seed = new Seed()
                                 {
@@ -670,22 +671,7 @@ namespace KVConnector
                 catch (Exception ex)
                 {
                     result = new ExpandoObject();
-                    if (ex.Data.Keys.Count > 0)
-                    {
-                        var entryList = ex.Data.Cast<DictionaryEntry>();
-                        int errorNo = 0;
-                        int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
-                        if (errorNo == 0)
-                        {
-                            errorNo = 520;
-                        }
-                        string errorMessage = entryList.ElementAt(0).Value.ToString();
-                        Util.SetError(result, errorNo, errorMessage, errorMessage);
-                    }
-                    else
-                    {
-                        Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
-                    }
+                    Util.SetError(result, 520,Resources.ErrGenericError, ex.Message);                    
                 }
                 return (result);
             });

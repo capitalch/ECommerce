@@ -18,21 +18,24 @@ export class ShippingAddress {
             });
         this.postSubscription = appService.filterOn("post:shipping:address")
             .subscribe(d => {
-                console.log(d);
+                if (d.data.error) {
+                    console.log(d.data.error);
+                } else {
+                    this.appService.httpGet('get:shipping:address', { token: this.appService.getToken() });
+                }                
             });
     };
     ngOnInit() {
-        let token = this.appService.getToken();
-        this.appService.httpGet('get:shipping:address', { token: token });
+        this.appService.httpGet('get:shipping:address', { token: this.appService.getToken() });
     }
     toggleEdit(address) {
-        // if (address.isEdit) {
-        //     address.isEdit = false;
-        // } else {
-        //     address.isEdit = true;
-        // }
+        let isEdit = address.isEdit;
         this.addresses.map((d: any, i) => d.isEdit = false);
-        address.isEdit = true;
+        if (isEdit) {
+            address.isEdit = false;
+        } else {
+            address.isEdit = true;
+        }
         address.isDirty = true;
     };
     setDefault(address) {
@@ -47,9 +50,11 @@ export class ShippingAddress {
         }
     };
     addAddress() {
-        let address = {address1:'',city:'',zip:'',street:''};
+        let address = {address1:'',city:'',zip:'',street:'',isNew:true,isDirty:true};
         this.addresses.unshift(address);
-        this.toggleEdit(address);
+    };
+    removeNew(index) {
+      this.addresses.splice(index,1);  
     };
     ngOnDestroy() {
         this.getSubscription.unsubscribe();

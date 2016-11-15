@@ -22,22 +22,27 @@ var ShippingAddress = (function () {
         });
         this.postSubscription = appService.filterOn("post:shipping:address")
             .subscribe(function (d) {
-            console.log(d);
+            if (d.data.error) {
+                console.log(d.data.error);
+            }
+            else {
+                _this.appService.httpGet('get:shipping:address', { token: _this.appService.getToken() });
+            }
         });
     }
     ;
     ShippingAddress.prototype.ngOnInit = function () {
-        var token = this.appService.getToken();
-        this.appService.httpGet('get:shipping:address', { token: token });
+        this.appService.httpGet('get:shipping:address', { token: this.appService.getToken() });
     };
     ShippingAddress.prototype.toggleEdit = function (address) {
-        // if (address.isEdit) {
-        //     address.isEdit = false;
-        // } else {
-        //     address.isEdit = true;
-        // }
+        var isEdit = address.isEdit;
         this.addresses.map(function (d, i) { return d.isEdit = false; });
-        address.isEdit = true;
+        if (isEdit) {
+            address.isEdit = false;
+        }
+        else {
+            address.isEdit = true;
+        }
         address.isDirty = true;
     };
     ;
@@ -55,9 +60,12 @@ var ShippingAddress = (function () {
     };
     ;
     ShippingAddress.prototype.addAddress = function () {
-        var address = { address1: '', city: '', zip: '', street: '' };
+        var address = { address1: '', city: '', zip: '', street: '', isNew: true, isDirty: true };
         this.addresses.unshift(address);
-        this.toggleEdit(address);
+    };
+    ;
+    ShippingAddress.prototype.removeNew = function (index) {
+        this.addresses.splice(index, 1);
     };
     ;
     ShippingAddress.prototype.ngOnDestroy = function () {
