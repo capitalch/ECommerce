@@ -25,7 +25,6 @@ namespace KVConnector
             if (RoutingDictionary == null)
             {
                 RoutingDictionary = new Dictionary<string, Func<object, Task<object>>>();
-                //RoutingDictionary.Add("query", ExecuteSqlQueryAsync);
                 RoutingDictionary.Add("init", InitAsync);
                 RoutingDictionary.Add("authenticate", AuthenticateAsync);
                 RoutingDictionary.Add("isEmailExist", IsEmailExistAsync);
@@ -36,8 +35,9 @@ namespace KVConnector
                 RoutingDictionary.Add("save:order", SaveOrderAsync);
                 RoutingDictionary.Add("update:insert:profile", UpdateOrInsertProfileAsync);
                 RoutingDictionary.Add("update:insert:address", UpdateOrInsertAddressesAsync);
-                RoutingDictionary.Add("sql:delete", SqlDeleteAsync);
+                RoutingDictionary.Add("sql:non:query", ExecuteSqlNonQueryAsync);
                 RoutingDictionary.Add("insert:credit:card", InsertCreditCardAsync);
+                RoutingDictionary.Add("sql:scalar", ExecuteScalarAsync);
             }
         }
         #endregion
@@ -113,12 +113,14 @@ namespace KVConnector
                                     {
                                         var pwdHash = ds.Tables[0].Rows[0]["PwdHash"].ToString();
                                         var role = ds.Tables[0].Rows[0]["Role"].ToString();
+                                        var userId = ds.Tables[0].Rows[0]["id"].ToString();
                                         if (hash == pwdHash)
                                         {
                                             success = true;
                                             result.authenticated = true;
                                             dynamic user = new ExpandoObject();
                                             user.email = email;
+                                            user.userId = userId;
                                             user.role = role;
                                             result.user = user;
                                         }
@@ -671,7 +673,7 @@ namespace KVConnector
                 catch (Exception ex)
                 {
                     result = new ExpandoObject();
-                    Util.SetError(result, 520,Resources.ErrGenericError, ex.Message);                    
+                    Util.SetError(result, 520, Resources.ErrGenericError, ex.Message);
                 }
                 return (result);
             });
@@ -680,8 +682,8 @@ namespace KVConnector
         }
         #endregion
 
-        #region SqlDeleteAsync
-        public async Task<object> SqlDeleteAsync(dynamic obj)
+        #region ExecuteSqlNonQueryAsync
+        public async Task<object> ExecuteSqlNonQueryAsync(dynamic obj)
         {
             dynamic result = new ExpandoObject();
             Task<object> t = Task.Run<object>(() =>
@@ -692,7 +694,6 @@ namespace KVConnector
                     string sqlKey = objDictionary["sqlKey"].ToString();
                     IDictionary<string, object> parmsDict = (IDictionary<string, object>)objDictionary["sqlParms"];
                     List<SqlParameter> paramsList = new List<SqlParameter>();
-                    var id = parmsDict["id"];
                     parmsDict.ToList<KeyValuePair<string, object>>().ForEach(x =>
                     {
                         paramsList.Add(new SqlParameter(x.Key, x.Value));
@@ -703,11 +704,51 @@ namespace KVConnector
                     {
                         result.status = 200;
                         result.success = true;
-                        result.id = id;
                     }
                     else
                     {
                         Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region ExecuteScalarAsync
+        public async Task<object> ExecuteScalarAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    string sqlKey = objDictionary["sqlKey"].ToString();
+                    IDictionary<string, object> parmsDict = (IDictionary<string, object>)objDictionary["sqlParms"];
+                    List<SqlParameter> paramsList = new List<SqlParameter>();
+                    parmsDict.ToList<KeyValuePair<string, object>>().ForEach(x =>
+                    {
+                        paramsList.Add(new SqlParameter(x.Key, x.Value));
+                    });
+                    string sql = SqlResource.ResourceManager.GetString(sqlKey);
+                    var res = seedDataAccess.ExecuteScalarAsString(sql, paramsList);
+                    if (string.IsNullOrEmpty(res))
+                    {
+                        Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
+                    }
+                    else
+                    {
+                        result.status = 200;
+                        result.success = true;
+                        result.result = res;
                     }
                 }
                 catch (Exception ex)
@@ -737,23 +778,30 @@ namespace KVConnector
                         string email = objDictionary["email"].ToString();
                         dynamic card = objDictionary["card"];
                         List<Seed> seedList = new List<Seed>();
-                        //foreach (var card in cards)
-                        //{
+
                         IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(card);
                         dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
                         dict.Remove("isNew");
                         Seed seed = new Seed()
                         {
                             PKeyColName = "Id",
+                            PKeyTagName = "Card",
                             IsCustomIDGenerated = false,
                             TableName = "CreditCards",
                             TableDict = dict
                         };
+                        object id = null;
+                        Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> action = (d1, d2, s) =>
+                        {
+                            id = d2["Card"];
+                        };
+                        seed.PostSaveAction = action;                       
                         seedList.Add(seed);
-                        //}
+
                         seedDataAccess.SaveSeeds(seedList);
                         result.status = 200;
                         result.success = true;
+                        result.id = id;
                     }
                     else
                     {
@@ -764,22 +812,6 @@ namespace KVConnector
                 {
                     result = new ExpandoObject();
                     Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
-                    //if (ex.Data.Keys.Count > 0)
-                    //{
-                    //    var entryList = ex.Data.Cast<DictionaryEntry>();
-                    //    int errorNo = 0;
-                    //    int.TryParse(entryList.ElementAt(0).Key.ToString(), out errorNo);
-                    //    if (errorNo == 0)
-                    //    {
-                    //        errorNo = 520;
-                    //    }
-                    //    string errorMessage = entryList.ElementAt(0).Value.ToString();
-                    //    Util.SetError(result, errorNo, errorMessage, errorMessage);
-                    //}
-                    //else
-                    //{
-                    //    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
-                    //}
                 }
                 return (result);
             });

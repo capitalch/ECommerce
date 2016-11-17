@@ -10,7 +10,7 @@ export class PaymentMethod {
     postSubscription: Subscription;
     deleteSubscription: Subscription;
     //isNewCard:boolean=false;
-    cards:[{}];
+    cards:[any];
     constructor(private appService: AppService) {
         this.getSubscription = appService.filterOn("get:credit:card")
             .subscribe(d => {
@@ -26,6 +26,7 @@ export class PaymentMethod {
                     console.log(d);
                 }
                 else {
+                    this.cards[0].id = d.data.result.id;
                     d.body.card.isNew = false;
                 }
             });

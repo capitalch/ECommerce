@@ -5,11 +5,11 @@ import {CreateAccount } from '../createAccount/createAccount.component';
 import {ForgotPassword, SendPassword, ChangePassword } from '../managePassword/managePassword.component';
 import { Order } from '../order/order.component';
 import { Profile } from '../profile/profile.component';
-import { Approve } from '../approve/approve.component';
 import { Receipt } from '../receipt/receipt.component';
 import { OrderHistory } from '../orderHistory/orderHistory.component';
 import { ShippingAddress } from '../shippingAddress/shippingAddress.component';
-import { PaymentMethod } from '../PaymentMethod/PaymentMethod.component';
+import { PaymentMethod } from '../paymentMethod/paymentMethod.component';
+import{ApproveOrder} from '../approveOrder/approveOrder.component';
 import {LoginGuard} from '../../services/app.service';
 
 const routes: Routes = [
@@ -50,8 +50,8 @@ const routes: Routes = [
         ,canActivate:[LoginGuard]
     },
     {
-        path:'approve',
-        component: Approve
+        path:'approve/order',
+        component: ApproveOrder
         ,canActivate:[LoginGuard]
     },
     {

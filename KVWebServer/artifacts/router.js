@@ -267,7 +267,7 @@ router.get('/api/credit/card', function (req, res, next) {
 router.delete('/api/credit/card', function (req, res, next) {
     try {
         let data = {
-            action: 'sql:delete',
+            action: 'sql:non:query',
             sqlKey: 'DeleteCreditCard',
             sqlParms: {
                 id: req.body.id,
@@ -289,6 +289,26 @@ router.post('/api/credit/card', function (req, res, next) {
             email: req.user.email
         };
         handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/shipping/address/default', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetDefaultShippingAddress', sqlParms: { userId: req.user.userId } };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/shipping/address', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetAllShippingAddresses', sqlParms: { userId: req.user.userId } };
+        handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);
         next(err);

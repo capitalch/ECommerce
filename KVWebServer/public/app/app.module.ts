@@ -11,20 +11,26 @@ import { Order } from './components/order/order.component';
 import { AppService, LoginGuard } from './services/app.service';
 //import { LoginGuard } from './services/app.loginGuard';
 import { Routing } from './components/routes/app.routes';
+
 import { Profile } from './components/profile/profile.component';
-import { Approve } from './components/approve/approve.component';
+import { ApproveOrder } from './components/approveOrder/approveOrder.component';
 import { Receipt } from './components/receipt/receipt.component';
 import { OrderHistory } from './components/orderHistory/orderHistory.component';
 import { ShippingAddress } from './components/shippingAddress/shippingAddress.component';
-import { PaymentMethod } from './components/PaymentMethod/PaymentMethod.component';
+import { PaymentMethod } from './components/paymentMethod/paymentMethod.component';
+//import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import {ModalModule} from'ng2-modal';
+//import { jquery } from 'jquery';
 //import {Route1, Route2, Home} from './app.routes.components';
 //import {ComponentStub1} from './componentStub1';
 
 @NgModule({
-  imports: [BrowserModule, HttpModule, Routing, FormsModule]
+  imports: [BrowserModule, HttpModule, Routing,FormsModule 
+  ,ModalModule
+  ]
   , declarations: [AppComponent, Login, Order, ForgotPassword
     , SendPassword, ChangePassword, CreateAccount,
-    Profile, Approve, Receipt, OrderHistory, ShippingAddress, PaymentMethod]
+    Profile, ApproveOrder, Receipt, OrderHistory, ShippingAddress, PaymentMethod]
   , providers: [AppService, LoginGuard]
   , bootstrap: [AppComponent]
 })

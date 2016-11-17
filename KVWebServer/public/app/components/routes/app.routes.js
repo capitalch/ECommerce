@@ -5,11 +5,11 @@ var createAccount_component_1 = require('../createAccount/createAccount.componen
 var managePassword_component_1 = require('../managePassword/managePassword.component');
 var order_component_1 = require('../order/order.component');
 var profile_component_1 = require('../profile/profile.component');
-var approve_component_1 = require('../approve/approve.component');
 var receipt_component_1 = require('../receipt/receipt.component');
 var orderHistory_component_1 = require('../orderHistory/orderHistory.component');
 var shippingAddress_component_1 = require('../shippingAddress/shippingAddress.component');
-var PaymentMethod_component_1 = require('../PaymentMethod/PaymentMethod.component');
+var paymentMethod_component_1 = require('../paymentMethod/paymentMethod.component');
+var approveOrder_component_1 = require('../approveOrder/approveOrder.component');
 var app_service_1 = require('../../services/app.service');
 var routes = [
     {
@@ -49,8 +49,8 @@ var routes = [
         canActivate: [app_service_1.LoginGuard]
     },
     {
-        path: 'approve',
-        component: approve_component_1.Approve,
+        path: 'approve/order',
+        component: approveOrder_component_1.ApproveOrder,
         canActivate: [app_service_1.LoginGuard]
     },
     {
@@ -70,7 +70,7 @@ var routes = [
     },
     {
         path: 'payment/method',
-        component: PaymentMethod_component_1.PaymentMethod,
+        component: paymentMethod_component_1.PaymentMethod,
         canActivate: [app_service_1.LoginGuard]
     },
     {

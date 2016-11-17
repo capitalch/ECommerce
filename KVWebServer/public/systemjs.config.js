@@ -19,7 +19,11 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js'
       // other libraries
       , 'rxjs': 'npm:rxjs'
-      ,'angular-in-memory-web-api': 'npm:angular-in-memory-web-api'
+      , 'angular-in-memory-web-api': 'npm:angular-in-memory-web-api'
+      ,'ng2-modal': 'node_modules/ng2-modal'
+      //, 'ng2-bootstrap/ng2-bootstrap': 'npm:ng2-bootstrap/bundles/ng2-bootstrap.umd.js'
+      // , 'jquery': 'npm:jquery/dist/jquery.min.js'
+      // , 'bootstrap':'npm:bootstrap/dist/js/bootstrap.min.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -27,13 +31,17 @@
         main: './main.js',
         defaultExtension: 'js'
       }
-      ,rxjs: {
+      , rxjs: {
         defaultExtension: 'js'
       }
-      ,'angular-in-memory-web-api': {
+      , 'angular-in-memory-web-api': {
         main: './index.js',
         defaultExtension: 'js'
       }
+      ,'ng2-modal': { "main": "index.js", "defaultExtension": "js" }
+      // , 'ng2-bootstrap/ng2-bootstrap': {
+      //   defaultExtension: 'js'
+      // }
     }
   });
 })(this);

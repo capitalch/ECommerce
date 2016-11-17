@@ -29,6 +29,7 @@ var PaymentMethod = (function () {
                 console.log(d);
             }
             else {
+                _this.cards[0].id = d.data.result.id;
                 d.body.card.isNew = false;
             }
         });
@@ -80,4 +81,4 @@ var PaymentMethod = (function () {
     return PaymentMethod;
 }());
 exports.PaymentMethod = PaymentMethod;
-//# sourceMappingURL=PaymentMethod.component.js.map
+//# sourceMappingURL=paymentMethod.component.js.map
