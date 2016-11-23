@@ -9,4 +9,3 @@ F:\Niraj\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibra
 F:\Niraj\Kistler\kistlerDev\TBSeed\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.xml
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.dll
 F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.pdb
-F:\Niraj\Kistler\kistlerDev\TBSeed\obj\Debug\TBSeed.csprojResolveAssemblyReference.cache

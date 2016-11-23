@@ -1,3 +1,24 @@
+//To Do
+1. Order page to approve page navigation and data transfer
+2. Approve page
+	a) Database adjustment
+	b) Sales tax
+	c) shipping
+	d) Save approved order
+3. Receipt
+4. Orders history
+5. User simulation for placing order
+6. Alerts for show error and success
+7. Validations
+	date pickers
+	credit cards
+8. Revisit forgot password
+9. Holiday gift in Order
+
+//validations
+Standard date-picker like this? https://material.angularjs.org/latest/demo/datepicker
+Credit card validation like this? https://spin.atomicobject.com/2014/11/10/credit-card-validation-angularjs/
+
 //pages
 1. Approval
 2. Receipt

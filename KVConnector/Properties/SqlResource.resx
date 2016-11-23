@@ -223,11 +223,10 @@ select b.Id, b.CardName
   <data name="DeleteCreditCard" xml:space="preserve">
     <value>delete from CreditCards where id = @id</value>
   </data>
-  <data name="GetCreditCards" xml:space="preserve">
-    <value>select b.id, cardName,cardNumber, expiryDate
-	from UserMaster a join CreditCards b
-		on a.Id = b.UserId
-		where email = @email;</value>
+  <data name="GetAllCreditCards" xml:space="preserve">
+    <value>select id, cardName,cardNumber, expiryDate, isDefault
+	from CreditCards 
+		where UserId = @userId;</value>
   </data>
   <data name="GetDefaultShippingAddress" xml:space="preserve">
     <value>select id, address1,zip,street,city
@@ -238,5 +237,32 @@ select b.Id, b.CardName
     <value>select id,address1,zip,street,city, isDefault
 	from ShippingAddresses
 		where userId =@userId;</value>
+  </data>
+  <data name="GetDefaultCreditCard" xml:space="preserve">
+    <value>select cardName,cardNumber,ExpiryDate
+	from CreditCards
+		where UserId = @userId
+			and IsDefault = 1;</value>
+  </data>
+  <data name="SetDefaultCreditCard" xml:space="preserve">
+    <value>update CreditCards
+	set IsDefault = 0
+			where UserId=@userId;
+update CreditCards
+	set IsDefault = 1
+		where Id = @cardId;</value>
+  </data>
+  <data name="InsertCreditCard" xml:space="preserve">
+    <value>declare @cnt int;
+declare @id int;
+insert into CreditCards (CardName,UserId,CardNumber,ExpiryDate)
+	values(@cardName,@userId,@cardNumber,@expiryDate);
+	SELECT @id = CAST(scope_identity() AS int);
+	select @cnt = count(*) from CreditCards
+	where userId = @userId;
+if(@cnt = 1)
+	update CreditCards set IsDefault = 1
+		where id = @id;
+select(@id);</value>
   </data>
 </root>

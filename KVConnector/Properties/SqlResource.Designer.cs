@@ -79,6 +79,17 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select id, cardName,cardNumber, expiryDate, isDefault
+        ///	from CreditCards 
+        ///		where UserId = @userId;.
+        /// </summary>
+        internal static string GetAllCreditCards {
+            get {
+                return ResourceManager.GetString("GetAllCreditCards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select id,address1,zip,street,city, isDefault
         ///	from ShippingAddresses
         ///		where userId =@userId;.
@@ -90,23 +101,23 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select b.id, cardName,cardNumber, expiryDate
-        ///	from UserMaster a join CreditCards b
-        ///		on a.Id = b.UserId
-        ///		where email = @email;.
-        /// </summary>
-        internal static string GetCreditCards {
-            get {
-                return ResourceManager.GetString("GetCreditCards", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to select Id, Item, Price, Packing, AvailableQty from OfferMaster;.
         /// </summary>
         internal static string GetCurrentOffer {
             get {
                 return ResourceManager.GetString("GetCurrentOffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select cardName,cardNumber,ExpiryDate
+        ///	from CreditCards
+        ///		where UserId = @userId
+        ///			and IsDefault = 1;.
+        /// </summary>
+        internal static string GetDefaultCreditCard {
+            get {
+                return ResourceManager.GetString("GetDefaultCreditCard", resourceCulture);
             }
         }
         
@@ -186,11 +197,55 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select b.Id, FirstName,LastName, Phone, Birthday, MailingAddress1
+        ///	, MailingAddress2, MailingCity, MailingState, MailingZip
+        ///	from UserMaster a join UserProfiles b
+        ///		on a.Id = b.UserId
+        ///			where Email = @email;
+        ///
+        ///select b.Id, MDate, OrderNo,Descr, Isdelivered
+        ///	from UserMaster a join OrderMaster b
+        ///		on a.Id = b.UserId
+        ///			where Email = @email;
+        ///
+        ///
+        ///select c.Id, d.Item, d.Price, d.Packing, c.OrderQty,c.WishList
+        ///	from UserMaster a join OrderMaster b
+        ///		on a.Id = b.UserId			
+        ///			join OrderDetails c
+        ///				o [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetUserData {
+            get {
+                return ResourceManager.GetString("GetUserData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select MAX(Id) from UserMaster where Email = @email;.
         /// </summary>
         internal static string GetUserIdFromEmail {
             get {
                 return ResourceManager.GetString("GetUserIdFromEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to declare @cnt int;
+        ///declare @id int;
+        ///insert into CreditCards (CardName,UserId,CardNumber,ExpiryDate)
+        ///	values(@cardName,@userId,@cardNumber,@expiryDate);
+        ///	SELECT @id = CAST(scope_identity() AS int);
+        ///	select @cnt = count(*) from CreditCards
+        ///	where userId = @userId;
+        ///if(@cnt = 1)
+        ///	update CreditCards set IsDefault = 1
+        ///		where id = @id;
+        ///select(@id);.
+        /// </summary>
+        internal static string InsertCreditCard {
+            get {
+                return ResourceManager.GetString("InsertCreditCard", resourceCulture);
             }
         }
         
@@ -218,6 +273,20 @@ namespace KVConnector.Properties {
         internal static string NewPasswordHash {
             get {
                 return ResourceManager.GetString("NewPasswordHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update CreditCards
+        ///	set IsDefault = 0
+        ///			where UserId=@userId;
+        ///update CreditCards
+        ///	set IsDefault = 1
+        ///		where Id = @cardId;.
+        /// </summary>
+        internal static string SetDefaultCreditCard {
+            get {
+                return ResourceManager.GetString("SetDefaultCreditCard", resourceCulture);
             }
         }
         

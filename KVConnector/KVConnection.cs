@@ -739,17 +739,17 @@ namespace KVConnector
                         paramsList.Add(new SqlParameter(x.Key, x.Value));
                     });
                     string sql = SqlResource.ResourceManager.GetString(sqlKey);
-                    var res = seedDataAccess.ExecuteScalarAsString(sql, paramsList);
-                    if (string.IsNullOrEmpty(res))
-                    {
-                        Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
-                    }
-                    else
-                    {
-                        result.status = 200;
-                        result.success = true;
-                        result.result = res;
-                    }
+                    var res = seedDataAccess.ExecuteScalar(sql, paramsList);
+                    //if (res==null)
+                    //{
+                    //    Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
+                    //}
+                    //else
+                    //{
+                    result.status = 200;
+                    result.success = true;
+                    result.result = res;
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -795,7 +795,7 @@ namespace KVConnector
                         {
                             id = d2["Card"];
                         };
-                        seed.PostSaveAction = action;                       
+                        seed.PostSaveAction = action;
                         seedList.Add(seed);
 
                         seedDataAccess.SaveSeeds(seedList);
