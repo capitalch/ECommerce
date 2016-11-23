@@ -32,12 +32,13 @@ namespace KVConnector
                 RoutingDictionary.Add("new:password", NewPasswordAsync);
                 RoutingDictionary.Add("create:account", CreateAccountAsync);
                 RoutingDictionary.Add("sql:query", ExecuteSqlQueryAsync);
-                RoutingDictionary.Add("save:order", SaveOrderAsync);
+                //RoutingDictionary.Add("save:order", SaveOrderAsync);
                 RoutingDictionary.Add("update:insert:profile", UpdateOrInsertProfileAsync);
                 RoutingDictionary.Add("update:insert:address", UpdateOrInsertAddressesAsync);
                 RoutingDictionary.Add("sql:non:query", ExecuteSqlNonQueryAsync);
                 RoutingDictionary.Add("insert:credit:card", InsertCreditCardAsync);
                 RoutingDictionary.Add("sql:scalar", ExecuteScalarAsync);
+                RoutingDictionary.Add("save:approve:request", SaveApproveRequestAsync);
             }
         }
         #endregion
@@ -485,44 +486,7 @@ namespace KVConnector
             results = await t;
             return (results);
         }
-        #endregion
-
-        #region SaveOrderAsync
-        public async Task<object> SaveOrderAsync(dynamic obj)
-        {
-
-            dynamic result = new ExpandoObject();
-            Task<object> t = Task.Run<object>(() =>
-            {
-                try
-                {
-                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
-
-                    if (objDictionary.ContainsKey("order") && (objDictionary.ContainsKey("email")))
-                    {
-                        string email = objDictionary["email"].ToString();
-                        dynamic order = objDictionary["order"];
-                        List<Seed> saveOrderSeedList = Util.GetSaveOrderSeedList(seedDataAccess, email, order);
-                        seedDataAccess.SaveSeeds(saveOrderSeedList);
-                        result.status = 200;
-                        result.saveOrder = true;
-                    }
-                    else
-                    {
-                        Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    result = new ExpandoObject();
-                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
-                }
-                return (result);
-            });
-            result = await t;
-            return (result);
-        }
-        #endregion
+        #endregion        
 
         #region UpdateOrInsertProfileAsync
         public async Task<object> UpdateOrInsertProfileAsync(dynamic obj)
@@ -806,6 +770,54 @@ namespace KVConnector
                     else
                     {
                         Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region SaveApproveRequestAsync
+        public async Task<object> SaveApproveRequestAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    if (objDictionary.ContainsKey("orderBundle"))
+                    {
+                        List<Seed> seedList = KVHelper.GetApproveRequestSeedList(seedDataAccess, objDictionary);
+                        seedDataAccess.SaveSeeds(seedList);
+                        //send mail
+                        var email = objDictionary["email"];
+                        if (email != null)
+                        {
+                            var emailItem = (dynamic)objDictionary["emailItem"];
+                            MailItem item = new MailItem()
+                            {
+                                From = emailItem.fromUser,
+                                FromName = emailItem.fromUserName,
+                                Host = emailItem.host,
+                                IsBodyHtml = true,
+                                Body = emailItem.htmlBody,
+                                Password = emailItem.fromUserPassword,
+                                Port = emailItem.port,
+                                Subject = emailItem.subject,
+                                To = email.ToString()
+                            };
+
+                            Util.SendMail(item);
+
+                        }
                     }
                 }
                 catch (Exception ex)

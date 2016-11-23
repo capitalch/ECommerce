@@ -11,76 +11,14 @@ using System.Net;
 using System.Linq;
 using KVConnector.Properties;
 using TBSeed;
+
 //using TBUtility;
 
 namespace KVConnector
 {
     public class Util
-    {
-        public static List<Seed> GetSaveOrderSeedList(SeedDataAccess seedDataAccess,string email, dynamic order)
-        {
-            List<Seed> seedList = new List<Seed>();
-            AttachOrderMaster(seedDataAccess, email, seedList);
-            AttachOrderDetails(order,seedList);
-            return (seedList);
-        }
-
-        private static void AttachOrderDetails(dynamic order, List<Seed> seedList)
-        {
-            object[] orders = (object[])order;
-            List<dynamic> orderList = orders.ToList();
-            KeyValuePair<string, string> kvDetails = new KeyValuePair<string, string>("OrderId", "order");
-            List<KeyValuePair<string, string>> kvListDetails = new List<KeyValuePair<string, string>>();
-            kvListDetails.Add(kvDetails);
-            
-            orderList.ForEach(x =>
-            {
-                //x.OfferId = x.Id;
-                //x.Id = null;
-                Seed seed = new Seed()
-                {
-                    PKeyColName = "Id",
-                    TableName = "OrderDetails",
-                    TableDict = SeedUtil.GetDictFromDynamicObject(x),
-                    IsCustomIDGenerated = false,
-                    DetailsTableColNameTagNamePairs = kvListDetails
-                };
-                seedList.Add(seed);
-            });
-        }
-
-        private static void AttachOrderMaster(SeedDataAccess seedDataAccess, string email,List<Seed> seedList)
-        {
-            Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> preSaveAction = (d1, d2, l) =>
-            {
-                string maxOrderNo = seedDataAccess.ExecuteScalarAsString(SqlResource.GetMaxOrderNumber);
-                int maxNo = int.Parse(maxOrderNo);
-                d1["OrderNo"] = maxNo + 1;
-            };
-
-            Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> postSaveAction = (d1, d2, l) =>
-            {
-                var value = d1["OrderNo"];
-                List<SqlParameter> parms = new List<SqlParameter>();
-                parms.Add(new SqlParameter("value", value));
-                seedDataAccess.ExecuteScalar(SqlResource.SetMaxOrderNumber, parms);
-            };
-
-            dynamic orderMaster = new ExpandoObject();
-            orderMaster.UserId = GetUserIdFromEmail(seedDataAccess, email);
-            Seed seed = new Seed()
-            {
-                TableName = "OrderMaster",
-                TableDict = SeedUtil.GetDictFromDynamicObject(orderMaster),
-                PKeyColName = "Id",
-                IsCustomIDGenerated = false,
-                PKeyTagName = "order",
-                PreSaveAction = preSaveAction,
-                PostSaveAction = postSaveAction
-            };
-            seedList.Add(seed);
-        }
-
+    {        
+        
         #region GetUserIdFromEmail
         public static int GetUserIdFromEmail(SeedDataAccess seedDataAccess, string email)
         {
@@ -152,7 +90,6 @@ namespace KVConnector
             //client.EnableSsl = true;
         }
         #endregion 
-
 
     }
 }

@@ -90,9 +90,13 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id,address1,zip,street,city, isDefault
-        ///	from ShippingAddresses
-        ///		where userId =@userId;.
+        ///   Looks up a localized string similar to select id,address1,a.zip,street,city, isDefault,
+        ///	defaultSalesTaxPerc = (select StringValue from Setup where MKey = &apos;DefaultSalesTax&apos;),
+        ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
+        ///	b.salesTaxPerc, b.shippingCharges
+        ///	from ShippingAddresses  a left join TaxNShipping b
+        ///			on a.zip = b.zip
+        ///				where UserId=@userId;.
         /// </summary>
         internal static string GetAllShippingAddresses {
             get {
@@ -101,7 +105,28 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select Id, Item, Price, Packing, AvailableQty from OfferMaster;.
+        ///   Looks up a localized string similar to select id, cardName,cardNumber,expiryDate
+        ///	from CreditCards
+        ///		where UserId = @userId
+        ///			and IsDefault = 1;
+        ///select id, address1,a.zip,street,city,
+        ///	defaultSalesTaxPerc=(select StringValue from Setup where MKey = &apos;DefaultSalesTaxPerc&apos;),
+        ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
+        ///	b.salesTaxPerc, b.shippingCharges
+        ///	from ShippingAddresses a left join TaxNShipping b
+        ///			on a.zip = b.zip
+        ///				where UserId=@userId and IsDefault = 1;
+        ///
+        ///select prevBalanceW [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetApproveArtifacts {
+            get {
+                return ResourceManager.GetString("GetApproveArtifacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id, item, price, packing, availableQty from OfferMaster;.
         /// </summary>
         internal static string GetCurrentOffer {
             get {
@@ -110,7 +135,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select cardName,cardNumber,ExpiryDate
+        ///   Looks up a localized string similar to select id,cardName,cardNumber,ExpiryDate
         ///	from CreditCards
         ///		where UserId = @userId
         ///			and IsDefault = 1;.
@@ -122,9 +147,13 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id, address1,zip,street,city
-        ///	from ShippingAddresses
-        ///		where UserId=@userId and IsDefault = 1;.
+        ///   Looks up a localized string similar to select id, address1,a.zip,street,city,
+        ///	defaultSalesTaxPerc=(select StringValue from Setup where MKey = &apos;DefaultSalesTaxPerc&apos;),
+        ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
+        ///	b.salesTax, b.shippingCharges
+        ///	from ShippingAddresses a left join TaxNShipping b
+        ///			on a.zip = b.zip
+        ///				where UserId=@userId and IsDefault = 1;.
         /// </summary>
         internal static string GetDefaultShippingAddress {
             get {
@@ -151,10 +180,9 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select b.id,mDate,orderNo,descr,amount,invoice
-        ///	from UserMaster a join OrderMaster b
-        ///		on a.Id = b.UserId
-        ///			where Email = @email;.
+        ///   Looks up a localized string similar to select id,mDate,orderNo,descr,amount,invoice
+        ///	from orderMaster 
+        ///		where UserId=@userId;.
         /// </summary>
         internal static string GetOrderHeaders {
             get {
@@ -193,31 +221,6 @@ namespace KVConnector.Properties {
         internal static string GetShippingAddress {
             get {
                 return ResourceManager.GetString("GetShippingAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to select b.Id, FirstName,LastName, Phone, Birthday, MailingAddress1
-        ///	, MailingAddress2, MailingCity, MailingState, MailingZip
-        ///	from UserMaster a join UserProfiles b
-        ///		on a.Id = b.UserId
-        ///			where Email = @email;
-        ///
-        ///select b.Id, MDate, OrderNo,Descr, Isdelivered
-        ///	from UserMaster a join OrderMaster b
-        ///		on a.Id = b.UserId
-        ///			where Email = @email;
-        ///
-        ///
-        ///select c.Id, d.Item, d.Price, d.Packing, c.OrderQty,c.WishList
-        ///	from UserMaster a join OrderMaster b
-        ///		on a.Id = b.UserId			
-        ///			join OrderDetails c
-        ///				o [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string GetUserData {
-            get {
-                return ResourceManager.GetString("GetUserData", resourceCulture);
             }
         }
         

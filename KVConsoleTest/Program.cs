@@ -21,10 +21,10 @@ namespace KVConsoleTest
         {
             //SendMail();
             //RandomAlphaNumeric();
-            //AddUser();
+            AddUser();
             //CheckException();
             //CheckJObject();
-            SaveOrder();
+            //SaveOrder();
         }
 
         private static void SaveOrder()
@@ -147,7 +147,7 @@ namespace KVConsoleTest
 
         private static void AddUser()
         {
-            var connString = "server=(local);Database=KistlerDB;Integrated Security=SSPI";
+            var connString = "Data Source=SRV-SQL2012-SP\\SQL2012SP;Database=KistlerDB;Integrated Security=True";
             SeedDataAccess seedDataAccess = new SeedDataAccess(connString);
             dynamic user = new ExpandoObject();
             var email = "sa@gmail.com";
