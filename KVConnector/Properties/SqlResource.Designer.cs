@@ -180,7 +180,24 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id,mDate,orderNo,descr,amount,invoice
+        ///   Looks up a localized string similar to select a.id, address1,zip,street,city
+        ///	from OrderImpDetails a join ShippingAddresses b
+        ///		on a.addressId = b.id		
+        ///	where orderId = @orderId
+        ///select a.id, cardName,cardNumber
+        ///	from OrderImpDetails a join CreditCards b
+        ///		on a.CreditCardId = b.id
+        ///	where orderId = @orderId.
+        /// </summary>
+        internal static string GetOrderDetails {
+            get {
+                return ResourceManager.GetString("GetOrderDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id,mDate,orderNo,descr,isDelivered,invoice, amount, salesTaxWine, salesTaxAddl
+        ///	, shippingWine, shippingAddl, totalPriceWine, totalPriceAddl
         ///	from orderMaster 
         ///		where UserId=@userId;.
         /// </summary>

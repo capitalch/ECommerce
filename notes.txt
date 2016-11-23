@@ -1,11 +1,11 @@
 //To Do
-1. Order page to approve page navigation and data transfer
-2. Approve page
-	a) Database adjustment
-	b) Sales tax
-	c) shipping
-	d) Save approved order
-3. Receipt
+		1. Order page to approve page navigation and data transfer
+		2. Approve page
+			a) Database adjustment
+			b) Sales tax
+			c) shipping
+			d) Save approved order
+		3. Receipt
 4. Orders history
 5. User simulation for placing order
 6. Alerts for show error and success

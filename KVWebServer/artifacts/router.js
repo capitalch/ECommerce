@@ -195,6 +195,17 @@ router.get('/api/order/headers', function (req, res, next) {
     }
 });
 
+router.get('/api/order/details/:orderId', function (req, res, next) {
+    try {
+        let data = { action: 'sql:query', sqlKey: 'GetOrderDetails', sqlParms: { userId: req.user.userId, orderId:req.params.orderId } };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+
 router.post('/api/order', function (req, res, next) {
     try {
         let data = { action: 'save:order', order: req.body.order, email: req.user.email };
