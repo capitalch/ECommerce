@@ -180,10 +180,13 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select a.id, address1,zip,street,city
+        ///   Looks up a localized string similar to select a.id, item, packing, orderQty, wishList,a.price
+        ///	from OrderDetails a join OfferMaster b
+        ///		on a.offerId = b.id
+        ///			where orderId = @orderId;select a.id, address1,zip,street,city
         ///	from OrderImpDetails a join ShippingAddresses b
         ///		on a.addressId = b.id		
-        ///	where orderId = @orderId
+        ///	where orderId = @orderId;
         ///select a.id, cardName,cardNumber
         ///	from OrderImpDetails a join CreditCards b
         ///		on a.CreditCardId = b.id
