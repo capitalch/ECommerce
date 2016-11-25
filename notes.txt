@@ -1,3 +1,11 @@
+Validation url's
+//Best and upto the mark
+https://scotch.io/tutorials/angular-2-form-validation
+//explaination
+https://coryrylan.com/blog/angular-2-form-builder-and-validation-management
+//example code
+http://plnkr.co/edit/WTu5G9db3p4pKzs0WvW6?p=preview
+
 //To Do
 		1. Order page to approve page navigation and data transfer
 		2. Approve page
@@ -12,7 +20,7 @@
 7. Validations
 	date pickers
 	credit cards
-	address
+	address (postal service)
 8. Revisit forgot password
 9. Holiday gift in Order
 
