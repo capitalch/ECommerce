@@ -6,12 +6,13 @@
 			c) shipping
 			d) Save approved order
 		3. Receipt
-4. Orders history
+		4. Orders history
 5. User simulation for placing order
 6. Alerts for show error and success
 7. Validations
 	date pickers
 	credit cards
+	address
 8. Revisit forgot password
 9. Holiday gift in Order
 

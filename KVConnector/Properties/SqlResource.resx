@@ -121,7 +121,7 @@
     <value>update UserMaster set PwdHash = @newPwdHash where email = @email and PwdHash = @oldPwdHash</value>
   </data>
   <data name="GetCurrentOffer" xml:space="preserve">
-    <value>select id, item, price, packing, availableQty from OfferMaster;</value>
+    <value>select id, item,tastingNotes,descr,imageUrl, price, packing, availableQty from OfferMaster;</value>
   </data>
   <data name="GetHashAndRole" xml:space="preserve">
     <value>select id, Role,PwdHash from UserMaster where Email = @email;</value>

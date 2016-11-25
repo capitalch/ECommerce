@@ -126,7 +126,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id, item, price, packing, availableQty from OfferMaster;.
+        ///   Looks up a localized string similar to select id, item,tastingNotes,descr,imageUrl, price, packing, availableQty from OfferMaster;.
         /// </summary>
         internal static string GetCurrentOffer {
             get {
