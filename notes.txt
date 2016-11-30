@@ -1,40 +1,18 @@
-Validation url's
-//Best and upto the mark
-https://scotch.io/tutorials/angular-2-form-validation
-//explaination
-https://coryrylan.com/blog/angular-2-form-builder-and-validation-management
-//example code
-http://plnkr.co/edit/WTu5G9db3p4pKzs0WvW6?p=preview
+//change log
+1. Router.js changed
+2. styles changed
+3. config.json
+4. app.component.ts
 
 //To Do
-		1. Order page to approve page navigation and data transfer
-		2. Approve page
-			a) Database adjustment
-			b) Sales tax
-			c) shipping
-			d) Save approved order
-		3. Receipt
-		4. Orders history
-5. User simulation for placing order
-6. Alerts for show error and success
-7. Validations
-	date pickers
-	credit cards
-	address (postal service)
-8. Revisit forgot password
-9. Holiday gift in Order
-
-//validations
-Standard date-picker like this? https://material.angularjs.org/latest/demo/datepicker
-Credit card validation like this? https://spin.atomicobject.com/2014/11/10/credit-card-validation-angularjs/
-
-//pages
-1. Approval
-2. Receipt
-3. Order History
-4. User simulate for placing order
-7. validations framework and result of a query framework
-8. current tab disable
+1. Async validation
+2. Shipping Address modal
+3. Credit card modal
+4. Validation for Credit Card, Phone and zip code
+5. Profile validation
+6. Forgot password validation and revisit
+7. Optimize speed
+8. Logout
 
 
 https://shop.threestickswines.com/account.html
