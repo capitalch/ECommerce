@@ -6,19 +6,12 @@ import { CustomValidators } from '../../services/customValidators';
 import { AppService } from '../../services/app.service';
 import { viewBoxConfig } from '../../config';
 import { md5 } from '../../vendor/md5';
-import { AlertModule } from 'ng2-bootstrap';
+//import { AlertModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 
 @Component({
-    templateUrl: 'app/components/login/login.component.html'
-    // , styles: [`
-    //     input[type=password].ng-valid, input[type=email].ng-valid{
-    //       border: 1px solid #42A948;
-    //     }
-    //     input[type=password].ng-invalid, input[type=email].ng-invalid{
-    //         border: 1px solid #a94442;
-    //     }
-    // `]
+    templateUrl: 'app/components/login/login.component.html'    
 })
 export class Login {
     alert: any = {
@@ -59,11 +52,7 @@ export class Login {
         else {
             this.alert.show = true;
         }
-    };
-    logout() {
-        this.appService.resetCredential();
-        this.router.navigate(['/login']);
-    }
+    };    
 
     ngOnInit() {
         this.loginFormChangesSubscription = this.loginForm.valueChanges.subscribe(x => {

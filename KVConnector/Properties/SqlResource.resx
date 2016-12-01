@@ -173,18 +173,29 @@
 	from orderMaster 
 		where UserId=@userId;</value>
   </data>
-  <data name="GetShippingAddress" xml:space="preserve">
-    <value>select b.id,address1,zip,street,city, isDefault
-	from UserMaster a join ShippingAddresses b
-		on a.Id = b.UserId
-			where email = @email;</value>
-  </data>
-  <data name="UpdateAddress" xml:space="preserve">
-    <value>update ShippingAddresses
+  <data name="UpdateShippingAddress" xml:space="preserve">
+    <value>DECLARE @cnt int;
+select @cnt = count(*) from shippingAddresses where UserId = @userId;
+if(@cnt=1)
+	begin
+		select @isDefault = 1;
+	end
+else
+	begin
+		if @isDefault = 1
+			begin
+				update ShippingAddresses
+					set IsDefault = 0
+						where UserId = @userId;
+			end
+	end
+
+
+update ShippingAddresses
 	set Address1 = @address1,
 	City = @city,
 	Zip = @zip,
-	Street = @street,
+	State = @state,
 	IsDefault = @isDefault
 	where Id = @id;</value>
   </data>
@@ -197,7 +208,7 @@
 		where UserId = @userId;</value>
   </data>
   <data name="GetDefaultShippingAddress" xml:space="preserve">
-    <value>select id, address1,a.zip,street,city,
+    <value>select id, address1,a.zip,state,city,
 	defaultSalesTaxPerc=(select StringValue from Setup where MKey = 'DefaultSalesTaxPerc'),
 	defaultShippingCharges=(select StringValue from Setup where MKey = 'DefaultShippingCharges'),
 	b.salesTax, b.shippingCharges
@@ -206,7 +217,7 @@
 				where UserId=@userId and IsDefault = 1;</value>
   </data>
   <data name="GetAllShippingAddresses" xml:space="preserve">
-    <value>select id,address1,a.zip,street,city, isDefault,
+    <value>select id,address1,a.zip,city, isDefault, state,
 	defaultSalesTaxPerc = (select StringValue from Setup where MKey = 'DefaultSalesTax'),
 	defaultShippingCharges=(select StringValue from Setup where MKey = 'DefaultShippingCharges'),
 	b.salesTaxPerc, b.shippingCharges
@@ -246,7 +257,7 @@ select(@id);</value>
 	from CreditCards
 		where UserId = @userId
 			and IsDefault = 1;
-select id, address1,a.zip,street,city,
+select id, address1,a.zip,state,city,
 	defaultSalesTaxPerc=(select StringValue from Setup where MKey = 'DefaultSalesTaxPerc'),
 	defaultShippingCharges=(select StringValue from Setup where MKey = 'DefaultShippingCharges'),
 	b.salesTaxPerc, b.shippingCharges
@@ -268,5 +279,22 @@ select a.id, cardName,cardNumber
 	from OrderImpDetails a join CreditCards b
 		on a.CreditCardId = b.id
 	where orderId = @orderId</value>
+  </data>
+  <data name="InsertShippingAddress" xml:space="preserve">
+    <value>--insert
+if @isDefault is null
+	select @isDefault = 0;
+
+if @isDefault = 1
+begin
+	update ShippingAddresses
+		set IsDefault = 0
+			where UserId = @userId;
+end
+if not exists(select 0 from ShippingAddresses where UserId = @userId)
+	select @isDefault = 1;
+
+insert into ShippingAddresses(Address1,City,State,Zip,IsDefault,UserId)
+	values(@address1,@city,@state,@zip,@isDefault,@userId);</value>
   </data>
 </root>

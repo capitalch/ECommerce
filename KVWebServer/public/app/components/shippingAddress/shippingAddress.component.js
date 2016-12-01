@@ -10,11 +10,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
+var forms_1 = require('@angular/forms');
+var ng2_modal_1 = require("ng2-modal");
 var ShippingAddress = (function () {
-    function ShippingAddress(appService) {
+    //isDefault: boolean = true;
+    function ShippingAddress(appService, fb) {
         var _this = this;
         this.appService = appService;
-        this.isDefault = true;
+        this.fb = fb;
+        this.alert = {};
+        this.initshippingForm();
         this.getSubscription = appService.filterOn("get:shipping:address")
             .subscribe(function (d) {
             _this.addresses = JSON.parse(d.data).Table;
@@ -23,61 +28,102 @@ var ShippingAddress = (function () {
         this.postSubscription = appService.filterOn("post:shipping:address")
             .subscribe(function (d) {
             if (d.data.error) {
-                console.log(d.data.error);
+                _this.appService.showAlert(_this.alert, true, 'addressSaveFailed');
             }
             else {
-                _this.appService.httpGet('get:shipping:address', { token: _this.appService.getToken() });
+                _this.appService.httpGet('get:shipping:address');
+                _this.initshippingForm();
+                _this.appService.showAlert(_this.alert, false);
+                _this.shippingModal.close();
+            }
+        });
+        this.putSubscription = appService.filterOn("put:shipping:address")
+            .subscribe(function (d) {
+            if (d.data.error) {
+                _this.appService.showAlert(_this.alert, true, 'addressSaveFailed');
+            }
+            else {
+                _this.appService.httpGet('get:shipping:address');
+                _this.initshippingForm();
+                _this.appService.showAlert(_this.alert, false);
+                _this.shippingModal.close();
             }
         });
     }
     ;
+    ShippingAddress.prototype.initshippingForm = function () {
+        this.shippingForm = this.fb.group({
+            id: [''],
+            address1: ['', forms_1.Validators.required],
+            city: ['', forms_1.Validators.required],
+            state: ['', forms_1.Validators.required],
+            zip: ['', forms_1.Validators.required],
+            isDefault: [false]
+        });
+    };
     ShippingAddress.prototype.ngOnInit = function () {
         this.appService.httpGet('get:shipping:address', { token: this.appService.getToken() });
     };
-    ShippingAddress.prototype.toggleEdit = function (address) {
-        var isEdit = address.isEdit;
-        this.addresses.map(function (d, i) { return d.isEdit = false; });
-        if (isEdit) {
-            address.isEdit = false;
+    ShippingAddress.prototype.edit = function (address) {
+        this.shippingForm.patchValue({
+            id: address.id,
+            address1: address.address1,
+            city: address.city,
+            state: address.state,
+            zip: address.zip,
+            isDefault: address.isDefault
+        });
+        this.shippingModal.open();
+    };
+    ;
+    ShippingAddress.prototype.delete = function (address) {
+        if (confirm('Are you sure to delete this address')) {
+            console.log('true');
         }
         else {
-            address.isEdit = true;
+            console.log(false);
         }
-        address.isDirty = true;
     };
-    ;
-    ShippingAddress.prototype.setDefault = function (address) {
-        this.addresses.map(function (d, i) { d.isDefault = false; d.isDirty = true; });
-        address.isDefault = true;
-    };
-    ;
     ShippingAddress.prototype.submit = function () {
-        var dirtyAddresses = this.addresses.filter(function (v, i) { return v.isDirty; });
-        if (dirtyAddresses.length > 0) {
-            var token = this.appService.getToken();
-            this.appService.httpPost('post:shipping:address', { token: token, addresses: dirtyAddresses });
+        var addr = {
+            id: this.shippingForm.controls['id'].value,
+            address1: this.shippingForm.controls['address1'].value,
+            city: this.shippingForm.controls['city'].value,
+            state: this.shippingForm.controls['state'].value,
+            zip: this.shippingForm.controls['zip'].value,
+            isDefault: this.shippingForm.controls['isDefault'].value
+        };
+        if (addr.id) {
+            this.appService.httpPut('put:shipping:address', { address: addr });
+        }
+        else {
+            this.appService.httpPost('post:shipping:address', { address: addr });
         }
     };
-    ;
     ShippingAddress.prototype.addAddress = function () {
-        var address = { address1: '', city: '', zip: '', street: '', isNew: true, isDirty: true };
-        this.addresses.unshift(address);
+        this.shippingModal.open();
     };
     ;
-    ShippingAddress.prototype.removeNew = function (index) {
-        this.addresses.splice(index, 1);
+    ShippingAddress.prototype.cancel = function () {
+        this.appService.showAlert(this.alert, false);
+        this.shippingForm.reset();
+        this.shippingModal.close();
     };
-    ;
     ShippingAddress.prototype.ngOnDestroy = function () {
         this.getSubscription.unsubscribe();
         this.postSubscription.unsubscribe();
+        this.putSubscription.unsubscribe();
     };
     ;
+    __decorate([
+        core_1.ViewChild('shippingModal'), 
+        __metadata('design:type', ng2_modal_1.Modal)
+    ], ShippingAddress.prototype, "shippingModal", void 0);
     ShippingAddress = __decorate([
         core_1.Component({
             templateUrl: 'app/components/shippingAddress/shippingAddress.component.html'
         }), 
-        __metadata('design:paramtypes', [app_service_1.AppService])
+        __metadata('design:paramtypes', [app_service_1.AppService, forms_1.FormBuilder])
     ], ShippingAddress);
     return ShippingAddress;
 }());

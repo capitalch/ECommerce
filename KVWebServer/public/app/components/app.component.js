@@ -12,7 +12,6 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var app_service_1 = require('../services/app.service');
 var config_1 = require('../config');
-//import * as Rx from 'rxjs/rx';
 var AppComponent = (function () {
     function AppComponent(appService, router) {
         var _this = this;
@@ -30,7 +29,6 @@ var AppComponent = (function () {
                 _this.kistler = d.data.kistler;
             }
         });
-        //Catching up Router event by name 'NavigationEnd'
         router.events.filter(function (e, t) {
             return (e.constructor.name === 'NavigationEnd');
         }).subscribe(function (event) {
@@ -39,6 +37,9 @@ var AppComponent = (function () {
         });
     }
     ;
+    AppComponent.prototype.logout = function () {
+        this.appService.resetCredential();
+    };
     AppComponent.prototype.ngOnInit = function () {
         this.appService.httpGet('get:init:data');
     };

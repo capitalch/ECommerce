@@ -34,7 +34,7 @@ namespace KVConnector
                 RoutingDictionary.Add("sql:query", ExecuteSqlQueryAsync);
                 //RoutingDictionary.Add("save:order", SaveOrderAsync);
                 RoutingDictionary.Add("update:insert:profile", UpdateOrInsertProfileAsync);
-                RoutingDictionary.Add("update:insert:address", UpdateOrInsertAddressesAsync);
+                //RoutingDictionary.Add("update:insert:address", UpdateOrInsertAddressAsync);
                 RoutingDictionary.Add("sql:non:query", ExecuteSqlNonQueryAsync);
                 RoutingDictionary.Add("insert:credit:card", InsertCreditCardAsync);
                 RoutingDictionary.Add("sql:scalar", ExecuteScalarAsync);
@@ -574,77 +574,78 @@ namespace KVConnector
         }
         #endregion
 
-        #region UpdateOrInsertAddressesAsync
-        public async Task<object> UpdateOrInsertAddressesAsync(dynamic obj)
-        {
-            dynamic result = new ExpandoObject();
-            Task<object> t = Task.Run<object>(() =>
-            {
-                try
-                {
-                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+        //#region UpdateOrInsertAddressAsync
+        //public async Task<object> UpdateOrInsertAddressAsync(dynamic obj)
+        //{
+        //    dynamic result = new ExpandoObject();
+        //    Task<object> t = Task.Run<object>(() =>
+        //    {
+        //        try
+        //        {
+        //            IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
 
-                    if (objDictionary.ContainsKey("addresses") && (objDictionary.ContainsKey("email")))
-                    {
-                        string email = objDictionary["email"].ToString();
-                        dynamic addresses = objDictionary["addresses"];
-                        foreach (var address in addresses)
-                        {
-                            IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(address);
-                            if (dict.ContainsKey("id"))
-                            {
-                                List<SqlParameter> parms = new List<SqlParameter>();
-                                parms.Add(new SqlParameter("address1", address.address1));
-                                parms.Add(new SqlParameter("zip", address.zip));
-                                parms.Add(new SqlParameter("city", address.city));
-                                parms.Add(new SqlParameter("street", address.street));
-                                parms.Add(new SqlParameter("isDefault", address.isDefault));
-                                parms.Add(new SqlParameter("id", address.id));
-                                var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateAddress, parms);
-                                if (i == 0)
-                                {
-                                    Exception exception = new Exception();
-                                    exception.Data.Add("501", Resources.ErrUpdateError);
-                                    throw exception;
-                                }
-                            }
-                            else
-                            {
-                                dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
-                                dict.Remove("isEdit");
-                                dict.Remove("isDirty");
-                                dict.Remove("isNew");
-                                List<Seed> saveProfileSeedList = new List<Seed>();
-                                Seed seed = new Seed()
-                                {
-                                    PKeyColName = "Id",
-                                    IsCustomIDGenerated = false,
-                                    TableName = "ShippingAddresses",
-                                    TableDict = dict
-                                };
-                                saveProfileSeedList.Add(seed);
-                                seedDataAccess.SaveSeeds(saveProfileSeedList);
-                            }
-                        }
-                        result.status = 200;
-                        result.success = true;
-                    }
-                    else
-                    {
-                        Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    result = new ExpandoObject();
-                    Util.SetError(result, 520, Resources.ErrGenericError, ex.Message);
-                }
-                return (result);
-            });
-            result = await t;
-            return (result);
-        }
-        #endregion
+        //            if (objDictionary.ContainsKey("address") && (objDictionary.ContainsKey("userId")))
+        //            {
+        //                string userId = objDictionary["userId"].ToString();
+        //                dynamic address = objDictionary["address"];
+        //                //foreach (var address in addresses)
+        //                //{
+        //                IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(address);
+        //                if (dict.ContainsKey("id"))
+        //                {
+        //                    List<SqlParameter> parms = new List<SqlParameter>();
+        //                    parms.Add(new SqlParameter("address1", address.address1));
+        //                    parms.Add(new SqlParameter("city", address.city));
+        //                    parms.Add(new SqlParameter("state", address.street));
+        //                    parms.Add(new SqlParameter("zip", address.zip));
+        //                    parms.Add(new SqlParameter("isDefault", address.isDefault));
+        //                    parms.Add(new SqlParameter("id", address.id));
+        //                    parms.Add(new SqlParameter("userId", userId));
+        //                    var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateShippingAddress, parms);
+        //                    if (i == 0)
+        //                    {
+        //                        Exception exception = new Exception();
+        //                        exception.Data.Add("501", Resources.ErrUpdateError);
+        //                        throw exception;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    dict["userId"] = userId;
+        //                    //dict.Remove("isEdit");
+        //                    //dict.Remove("isDirty");
+        //                    //dict.Remove("isNew");
+        //                    List<Seed> saveProfileSeedList = new List<Seed>();
+        //                    Seed seed = new Seed()
+        //                    {
+        //                        PKeyColName = "Id",
+        //                        IsCustomIDGenerated = false,
+        //                        TableName = "ShippingAddresses",
+        //                        TableDict = dict
+        //                    };
+        //                    saveProfileSeedList.Add(seed);
+        //                    seedDataAccess.SaveSeeds(saveProfileSeedList);
+        //                }
+        //                //}
+        //                result.status = 200;
+        //                result.success = true;
+        //            }
+        //            else
+        //            {
+        //                Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            result = new ExpandoObject();
+        //            Util.SetError(result, 520, Resources.ErrGenericError, ex.Message);
+        //        }
+        //        return (result);
+        //    });
+        //    result = await t;
+        //    return (result);
+        //}
+        //#endregion
 
         #region ExecuteSqlNonQueryAsync
         public async Task<object> ExecuteSqlNonQueryAsync(dynamic obj)
@@ -870,3 +871,78 @@ namespace KVConnector
         #endregion
     }
 }
+
+//deprecated
+/*
+#region UpdateOrInsertAddressesAsync
+public async Task<object> UpdateOrInsertAddressesAsync(dynamic obj)
+{
+    dynamic result = new ExpandoObject();
+    Task<object> t = Task.Run<object>(() =>
+    {
+        try
+        {
+            IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+
+            if (objDictionary.ContainsKey("addresses") && (objDictionary.ContainsKey("email")))
+            {
+                string email = objDictionary["email"].ToString();
+                dynamic addresses = objDictionary["addresses"];
+                foreach (var address in addresses)
+                {
+                    IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(address);
+                    if (dict.ContainsKey("id"))
+                    {
+                        List<SqlParameter> parms = new List<SqlParameter>();
+                        parms.Add(new SqlParameter("address1", address.address1));
+                        parms.Add(new SqlParameter("zip", address.zip));
+                        parms.Add(new SqlParameter("city", address.city));
+                        parms.Add(new SqlParameter("street", address.street));
+                        parms.Add(new SqlParameter("isDefault", address.isDefault));
+                        parms.Add(new SqlParameter("id", address.id));
+                        var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateAddress, parms);
+                        if (i == 0)
+                        {
+                            Exception exception = new Exception();
+                            exception.Data.Add("501", Resources.ErrUpdateError);
+                            throw exception;
+                        }
+                    }
+                    else
+                    {
+                        dict["userId"] = Util.GetUserIdFromEmail(seedDataAccess, email);
+                        dict.Remove("isEdit");
+                        dict.Remove("isDirty");
+                        dict.Remove("isNew");
+                        List<Seed> saveProfileSeedList = new List<Seed>();
+                        Seed seed = new Seed()
+                        {
+                            PKeyColName = "Id",
+                            IsCustomIDGenerated = false,
+                            TableName = "ShippingAddresses",
+                            TableDict = dict
+                        };
+                        saveProfileSeedList.Add(seed);
+                        seedDataAccess.SaveSeeds(saveProfileSeedList);
+                    }
+                }
+                result.status = 200;
+                result.success = true;
+            }
+            else
+            {
+                Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
+            }
+        }
+        catch (Exception ex)
+        {
+            result = new ExpandoObject();
+            Util.SetError(result, 520, Resources.ErrGenericError, ex.Message);
+        }
+        return (result);
+    });
+    result = await t;
+    return (result);
+}
+#endregion
+*/

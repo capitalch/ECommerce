@@ -1,9 +1,10 @@
 import { Http, Response, Headers, RequestOptionsArgs } from '@angular/http';
 import { Injectable } from '@angular/core';
-//import { CanActivate } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-//import { AsyncSubject } from 'rxjs/AsyncSubject';
-import { Observable } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
+// import { Observable } from 'rxjs/Observable';
+// import {Subject} from 'rxjs/Subject';
+// import 'rxjs/Observable/of';
+// import 'rxjs/add/operator/of'
 
 import {
     CanActivate,
@@ -11,7 +12,7 @@ import {
     ActivatedRouteSnapshot,
     RouterStateSnapshot
 } from '@angular/router';
-import 'rxjs/add/operator/map'; //this is how operator is imported
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 //import * as _ from 'lodash';
 import { urlHash, messages, validationErrorMessages } from '../config';
@@ -118,6 +119,23 @@ export class AppService {
             .subscribe(d =>
                 this.subject.next({
                     id: id, data: d, index: body.index
+                }), err =>
+                this.subject.next({
+                    id: id,
+                    data: { error: err }
+                }));
+    };
+    httpPut(id: string, body?: any) {
+        let url = urlHash[id];
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        body.token = this.getToken();
+        this.http.put(url, body, { headers: headers })
+            .map(response => response.json())
+            .subscribe(d =>
+                this.subject.next({
+                    id: id, data: d, body: body
                 }), err =>
                 this.subject.next({
                     id: id,

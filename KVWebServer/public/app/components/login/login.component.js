@@ -58,10 +58,6 @@ var Login = (function () {
         }
     };
     ;
-    Login.prototype.logout = function () {
-        this.appService.resetCredential();
-        this.router.navigate(['/login']);
-    };
     Login.prototype.ngOnInit = function () {
         var _this = this;
         this.loginFormChangesSubscription = this.loginForm.valueChanges.subscribe(function (x) {

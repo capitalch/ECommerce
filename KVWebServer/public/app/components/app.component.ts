@@ -4,7 +4,6 @@ import { Router, NavigationEnd, Event } from '@angular/router';
 import { Subscription } from 'rxjs/subscription';
 import { AppService } from '../services/app.service';
 import { viewBoxConfig } from '../config';
-//import * as Rx from 'rxjs/rx';
 
 @Component({
   selector: 'my-app',
@@ -26,8 +25,7 @@ export class AppComponent {
         this.home = d.data.host;
         this.kistler = d.data.kistler;
       }
-    });
-    //Catching up Router event by name 'NavigationEnd'
+    });    
     router.events.filter((e: Event, t: number) => {
       return (e.constructor.name === 'NavigationEnd');
     }).subscribe((event: any) => {
@@ -35,6 +33,9 @@ export class AppComponent {
       this.viewBox = viewBoxConfig[url];
     });
   };
+  logout() {
+    this.appService.resetCredential();
+  }
   ngOnInit() {
     this.appService.httpGet('get:init:data');
   };

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Subscription';
 import { PaginationModule } from 'ng2-bootstrap';
 import { AppService } from '../../services/app.service';
 

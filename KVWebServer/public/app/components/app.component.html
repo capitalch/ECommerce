@@ -16,6 +16,7 @@
             <li *ngIf="viewBox.needHelp"><a routerLink="#">Need Help?</a></li>
             <li *ngIf="viewBox.order"><a routerLink="/order">Order</a></li>
             <li *ngIf="viewBox.myAccount"><a routerLink="/profile">My Account</a></li>
+            <li *ngIf="viewBox.logout"><a routerLink="/login" (click)="logout()">Log Out</a></li>
         </ul>
     </div>
 </nav>

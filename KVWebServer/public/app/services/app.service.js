@@ -10,12 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var http_1 = require('@angular/http');
 var core_1 = require('@angular/core');
-//import { CanActivate } from '@angular/router';
-var Subject_1 = require('rxjs/Subject');
-//import { AsyncSubject } from 'rxjs/AsyncSubject';
 var Rx_1 = require('rxjs/Rx');
+// import { Observable } from 'rxjs/Observable';
+// import {Subject} from 'rxjs/Subject';
+// import 'rxjs/Observable/of';
+// import 'rxjs/add/operator/of'
 var router_1 = require('@angular/router');
-require('rxjs/add/operator/map'); //this is how operator is imported
+require('rxjs/add/operator/map');
 require('rxjs/add/operator/filter');
 //import * as _ from 'lodash';
 var config_1 = require('../config');
@@ -23,7 +24,7 @@ var AppService = (function () {
     function AppService(http) {
         this.http = http;
         this.globalHash = {};
-        this.subject = new Subject_1.Subject();
+        this.subject = new Rx_1.Subject();
         this.channel = {};
     }
     ;
@@ -129,6 +130,27 @@ var AppService = (function () {
             .subscribe(function (d) {
             return _this.subject.next({
                 id: id, data: d, index: body.index
+            });
+        }, function (err) {
+            return _this.subject.next({
+                id: id,
+                data: { error: err }
+            });
+        });
+    };
+    ;
+    AppService.prototype.httpPut = function (id, body) {
+        var _this = this;
+        var url = config_1.urlHash[id];
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('x-access-token', this.getToken());
+        body.token = this.getToken();
+        this.http.put(url, body, { headers: headers })
+            .map(function (response) { return response.json(); })
+            .subscribe(function (d) {
+            return _this.subject.next({
+                id: id, data: d, body: body
             });
         }, function (err) {
             return _this.subject.next({

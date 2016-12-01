@@ -90,7 +90,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id,address1,a.zip,street,city, isDefault,
+        ///   Looks up a localized string similar to select id,address1,a.zip,city, isDefault, state,
         ///	defaultSalesTaxPerc = (select StringValue from Setup where MKey = &apos;DefaultSalesTax&apos;),
         ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
         ///	b.salesTaxPerc, b.shippingCharges
@@ -109,7 +109,7 @@ namespace KVConnector.Properties {
         ///	from CreditCards
         ///		where UserId = @userId
         ///			and IsDefault = 1;
-        ///select id, address1,a.zip,street,city,
+        ///select id, address1,a.zip,state,city,
         ///	defaultSalesTaxPerc=(select StringValue from Setup where MKey = &apos;DefaultSalesTaxPerc&apos;),
         ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
         ///	b.salesTaxPerc, b.shippingCharges
@@ -117,7 +117,7 @@ namespace KVConnector.Properties {
         ///			on a.zip = b.zip
         ///				where UserId=@userId and IsDefault = 1;
         ///
-        ///select prevBalanceW [rest of string was truncated]&quot;;.
+        ///select prevBalanceWi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetApproveArtifacts {
             get {
@@ -147,7 +147,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id, address1,a.zip,street,city,
+        ///   Looks up a localized string similar to select id, address1,a.zip,state,city,
         ///	defaultSalesTaxPerc=(select StringValue from Setup where MKey = &apos;DefaultSalesTaxPerc&apos;),
         ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
         ///	b.salesTax, b.shippingCharges
@@ -233,18 +233,6 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select b.id,address1,zip,street,city, isDefault
-        ///	from UserMaster a join ShippingAddresses b
-        ///		on a.Id = b.UserId
-        ///			where email = @email;.
-        /// </summary>
-        internal static string GetShippingAddress {
-            get {
-                return ResourceManager.GetString("GetShippingAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to select MAX(Id) from UserMaster where Email = @email;.
         /// </summary>
         internal static string GetUserIdFromEmail {
@@ -269,6 +257,29 @@ namespace KVConnector.Properties {
         internal static string InsertCreditCard {
             get {
                 return ResourceManager.GetString("InsertCreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --insert
+        ///if @isDefault is null
+        ///	select @isDefault = 0;
+        ///
+        ///if @isDefault = 1
+        ///begin
+        ///	update ShippingAddresses
+        ///		set IsDefault = 0
+        ///			where UserId = @userId;
+        ///end
+        ///if not exists(select 0 from ShippingAddresses where UserId = @userId)
+        ///	select @isDefault = 1;
+        ///
+        ///insert into ShippingAddresses(Address1,City,State,Zip,IsDefault,UserId)
+        ///	values(@address1,@city,@state,@zip,@isDefault,@userId);.
+        /// </summary>
+        internal static string InsertShippingAddress {
+            get {
+                return ResourceManager.GetString("InsertShippingAddress", resourceCulture);
             }
         }
         
@@ -323,21 +334,6 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update ShippingAddresses
-        ///	set Address1 = @address1,
-        ///	City = @city,
-        ///	Zip = @zip,
-        ///	Street = @street,
-        ///	IsDefault = @isDefault
-        ///	where Id = @id;.
-        /// </summary>
-        internal static string UpdateAddress {
-            get {
-                return ResourceManager.GetString("UpdateAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to update UserProfiles 
         ///	set FirstName = @firstName,
         ///	LastName = @lastName,
@@ -353,6 +349,38 @@ namespace KVConnector.Properties {
         internal static string UpdateProfile {
             get {
                 return ResourceManager.GetString("UpdateProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DECLARE @cnt int;
+        ///select @cnt = count(*) from shippingAddresses where UserId = @userId;
+        ///if(@cnt=1)
+        ///	begin
+        ///		select @isDefault = 1;
+        ///	end
+        ///else
+        ///	begin
+        ///		if @isDefault = 1
+        ///			begin
+        ///				update ShippingAddresses
+        ///					set IsDefault = 0
+        ///						where UserId = @userId;
+        ///			end
+        ///	end
+        ///
+        ///
+        ///update ShippingAddresses
+        ///	set Address1 = @address1,
+        ///	City = @city,
+        ///	Zip = @zip,
+        ///	State = @state,
+        ///	IsDefault = @isDefault
+        ///	where Id = @id;.
+        /// </summary>
+        internal static string UpdateShippingAddress {
+            get {
+                return ResourceManager.GetString("UpdateShippingAddress", resourceCulture);
             }
         }
     }

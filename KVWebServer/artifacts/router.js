@@ -6,7 +6,7 @@ var config, def, messages, data;
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
 
-router.init = function (app) {
+router.init = function(app) {
     config = app.get('config');
     def = app.get('def');
     messages = app.get('messages');
@@ -14,12 +14,12 @@ router.init = function (app) {
     handler.init(app, data);
 }
 
-router.post('/api/validate/token', function (req, res, next) {
+router.post('/api/validate/token', function(req, res, next) {
     try {
         var ret = false;
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
         if (token) {
-            jwt.verify(token, config.jwtKey, function (error, decoded) {
+            jwt.verify(token, config.jwtKey, function(error, decoded) {
                 if (!error) {
                     ret = true;
                 }
@@ -35,8 +35,13 @@ router.post('/api/validate/token', function (req, res, next) {
     }
 });
 
+router.get('/api/init/data', function(req, res, next) {
+    let initData = { kistler: config.homePageUrl, host: config.host };
+    res.status(200).json(initData);
+});
+
 //authenticate
-router.post('/api/authenticate', function (req, res, next) {
+router.post('/api/authenticate', function(req, res, next) {
     try {
         let auth = req.body.auth;
         let err;
@@ -55,11 +60,11 @@ router.post('/api/authenticate', function (req, res, next) {
 });
 
 //forgot password url
-router.post('/api/send/password', function (req, res, next) {
+router.post('/api/send/password', function(req, res, next) {
     try {
         let auth = req.body.auth;
         if (auth) {
-            jwt.verify(auth, config.jwtKey, function (error, decoded) {
+            jwt.verify(auth, config.jwtKey, function(error, decoded) {
                 if (error) {
                     res.status(406).send(false);
                 } else {
@@ -94,7 +99,7 @@ router.post('/api/send/password', function (req, res, next) {
 });
 
 //forgot password
-router.post('/api/forgot/password', function (req, res, next) {
+router.post('/api/forgot/password', function(req, res, next) {
     try {
         let auth = req.body.auth;
         if (auth) {
@@ -111,7 +116,7 @@ router.post('/api/forgot/password', function (req, res, next) {
         next(err);
     }
 });
-router.post('/api/create/account', function (req, res, next) {
+router.post('/api/create/account', function(req, res, next) {
     try {
         let account = req.body;
         if (account) {
@@ -127,17 +132,13 @@ router.post('/api/create/account', function (req, res, next) {
     }
 });
 
-router.get('/api/init/data', function (req, res, next) {
-    let initData = { kistler: config.homePageUrl, host: config.host };
-    res.status(200).json(initData);
-});
 
-router.all('/api*', function (req, res, next) {
+router.all('/api*', function(req, res, next) {
     // implementation for token verification
     try {
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
         if (token) {
-            jwt.verify(token, config.jwtKey, function (error, decoded) {
+            jwt.verify(token, config.jwtKey, function(error, decoded) {
                 if (error) {
                     let err = new def.NError(401, messages.errInvalidToken, messages.messInvalidToken);
                     next(err);
@@ -159,7 +160,7 @@ router.all('/api*', function (req, res, next) {
 });
 
 //change password. auth is base64(email:hashOfOldPassword:hashOfNewPassword)
-router.post('/api/change/password', function (req, res, next) {
+router.post('/api/change/password', function(req, res, next) {
     try {
         let auth = req.body.auth;
         if (auth) {
@@ -180,7 +181,7 @@ router.post('/api/change/password', function (req, res, next) {
         next(err);
     }
 });
-router.get('/api/current/offer', function (req, res, next) {
+router.get('/api/current/offer', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetCurrentOffer', sqlParms: {} };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -190,7 +191,7 @@ router.get('/api/current/offer', function (req, res, next) {
     }
 });
 
-router.get('/api/order/headers', function (req, res, next) {
+router.get('/api/order/headers', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetOrderHeaders', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -200,7 +201,7 @@ router.get('/api/order/headers', function (req, res, next) {
     }
 });
 
-router.get('/api/order/details/:orderId', function (req, res, next) {
+router.get('/api/order/details/:orderId', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetOrderDetails', sqlParms: { userId: req.user.userId, orderId: req.params.orderId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -211,7 +212,7 @@ router.get('/api/order/details/:orderId', function (req, res, next) {
 });
 
 
-router.post('/api/order', function (req, res, next) {
+router.post('/api/order', function(req, res, next) {
     try {
         let data = { action: 'save:order', order: req.body.order, email: req.user.email };
         handler.edgePush(res, next, 'common:result:no:data', data);
@@ -221,7 +222,7 @@ router.post('/api/order', function (req, res, next) {
     }
 });
 
-router.get('/api/profile', function (req, res, next) {
+router.get('/api/profile', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetProfile', sqlParms: { email: req.user.email } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -231,7 +232,7 @@ router.get('/api/profile', function (req, res, next) {
     }
 });
 
-router.post('/api/profile', function (req, res, next) {
+router.post('/api/profile', function(req, res, next) {
     try {
         let data = {
             action: 'update:insert:profile',
@@ -246,7 +247,7 @@ router.post('/api/profile', function (req, res, next) {
     }
 });
 
-router.get('/api/shipping/address', function (req, res, next) {
+router.get('/api/shipping/address', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetAllShippingAddresses', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -256,12 +257,19 @@ router.get('/api/shipping/address', function (req, res, next) {
     }
 });
 
-router.post('/api/shipping/address', function (req, res, next) {
+router.post('/api/shipping/address', function(req, res, next) {
     try {
         let data = {
-            action: 'update:insert:address',
-            addresses: req.body.addresses,
-            email: req.user.email
+            action: 'sql:non:query',
+            sqlKey:'InsertShippingAddress',
+            sqlParms:{
+                address1:req.body.address.address1,
+                city:req.body.address.city,
+                state:req.body.address.state,
+                zip:req.body.address.zip,
+                isDefault:req.body.address.isDefault,
+                userId:req.user.userId
+            }
         };
         handler.edgePush(res, next, 'common:result:no:data', data);
     } catch (error) {
@@ -270,7 +278,29 @@ router.post('/api/shipping/address', function (req, res, next) {
     }
 });
 
-router.get('/api/shipping/address/default', function (req, res, next) {
+router.put('/api/shipping/address', function(req, res, next) {
+    try {
+        let data = {
+            action: 'sql:non:query',
+            sqlKey:'UpdateShippingAddress',
+            sqlParms:{
+                id:req.body.address.id,
+                address1:req.body.address.address1,
+                city:req.body.address.city,
+                state:req.body.address.state,
+                zip:req.body.address.zip,
+                isDefault:req.body.address.isDefault,
+                userId:req.user.userId
+            }
+        };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.get('/api/shipping/address/default', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetDefaultShippingAddress', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -280,7 +310,7 @@ router.get('/api/shipping/address/default', function (req, res, next) {
     }
 });
 
-router.get('/api/credit/card', function (req, res, next) {
+router.get('/api/credit/card', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetAllCreditCards', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -290,7 +320,7 @@ router.get('/api/credit/card', function (req, res, next) {
     }
 });
 
-router.post('/api/credit/card', function (req, res, next) {
+router.post('/api/credit/card', function(req, res, next) {
     try {
         let data = {
             action: 'sql:scalar',
@@ -309,7 +339,7 @@ router.post('/api/credit/card', function (req, res, next) {
     }
 });
 
-router.delete('/api/credit/card', function (req, res, next) {
+router.delete('/api/credit/card', function(req, res, next) {
     try {
         let data = {
             action: 'sql:non:query',
@@ -326,7 +356,7 @@ router.delete('/api/credit/card', function (req, res, next) {
     }
 });
 
-router.get('/api/credit/card/default', function (req, res, next) {
+router.get('/api/credit/card/default', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetDefaultCreditCard', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -336,7 +366,7 @@ router.get('/api/credit/card/default', function (req, res, next) {
     }
 });
 
-router.post('/api/credit/card/default', function (req, res, next) {
+router.post('/api/credit/card/default', function(req, res, next) {
     try {
         let data = {
             action: 'sql:non:query',
@@ -353,7 +383,7 @@ router.post('/api/credit/card/default', function (req, res, next) {
     }
 });
 
-router.get('/api/approve/artifact', function (req, res, next) {
+router.get('/api/approve/artifact', function(req, res, next) {
     try {
         let data = { action: 'sql:query', sqlKey: 'GetApproveArtifacts', sqlParms: { userId: req.user.userId } };
         handler.edgePush(res, next, 'common:result:data', data);
@@ -363,7 +393,7 @@ router.get('/api/approve/artifact', function (req, res, next) {
     }
 });
 
-router.post('/api/approve/request', function (req, res, next) {
+router.post('/api/approve/request', function(req, res, next) {
     try {
         let orderBundle = req.body;
         orderBundle.orderMaster.userId = req.user.userId

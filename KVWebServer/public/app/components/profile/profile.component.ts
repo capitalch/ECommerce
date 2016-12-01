@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Subscription';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { CustomValidators } from '../../services/customValidators';
 import { AppService } from '../../services/app.service';
