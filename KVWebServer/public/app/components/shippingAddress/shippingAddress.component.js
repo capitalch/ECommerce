@@ -11,15 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var app_service_1 = require('../../services/app.service');
 var forms_1 = require('@angular/forms');
+var customValidators_1 = require('../../services/customValidators');
 var ng2_modal_1 = require("ng2-modal");
 var ShippingAddress = (function () {
-    //isDefault: boolean = true;
     function ShippingAddress(appService, fb) {
         var _this = this;
         this.appService = appService;
         this.fb = fb;
         this.alert = {};
-        this.initshippingForm();
+        this.selectedISOCode = '';
+        this.isDataReady = false;
+        this.initShippingForm();
+        this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(function (d) {
+            _this.countries = _this.appService.getCountries();
+            _this.isDataReady = true;
+        });
         this.getSubscription = appService.filterOn("get:shipping:address")
             .subscribe(function (d) {
             _this.addresses = JSON.parse(d.data).Table;
@@ -32,7 +38,7 @@ var ShippingAddress = (function () {
             }
             else {
                 _this.appService.httpGet('get:shipping:address');
-                _this.initshippingForm();
+                _this.initShippingForm();
                 _this.appService.showAlert(_this.alert, false);
                 _this.shippingModal.close();
             }
@@ -44,35 +50,47 @@ var ShippingAddress = (function () {
             }
             else {
                 _this.appService.httpGet('get:shipping:address');
-                _this.initshippingForm();
+                _this.initShippingForm();
                 _this.appService.showAlert(_this.alert, false);
                 _this.shippingModal.close();
             }
         });
     }
     ;
-    ShippingAddress.prototype.initshippingForm = function () {
+    ShippingAddress.prototype.initShippingForm = function () {
         this.shippingForm = this.fb.group({
             id: [''],
-            address1: ['', forms_1.Validators.required],
+            co: [''],
+            name: ['', forms_1.Validators.required],
+            street1: ['', forms_1.Validators.required],
+            street2: [''],
             city: ['', forms_1.Validators.required],
-            state: ['', forms_1.Validators.required],
+            state: [''],
             zip: ['', forms_1.Validators.required],
+            countryName: ['', forms_1.Validators.required],
+            isoCode: [''],
+            phone: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
             isDefault: [false]
         });
     };
     ShippingAddress.prototype.ngOnInit = function () {
-        this.appService.httpGet('get:shipping:address', { token: this.appService.getToken() });
+        this.appService.httpGet('get:shipping:address');
     };
     ShippingAddress.prototype.edit = function (address) {
         this.shippingForm.patchValue({
             id: address.id,
-            address1: address.address1,
+            name: address.name,
+            street1: address.street1,
+            street2: address.street2,
             city: address.city,
             state: address.state,
             zip: address.zip,
+            countryName: address.country,
+            isoCode: address.isoCode,
+            phone: address.phone,
             isDefault: address.isDefault
         });
+        this.selectedISOCode = address.isoCode;
         this.shippingModal.open();
     };
     ;
@@ -85,14 +103,22 @@ var ShippingAddress = (function () {
         }
     };
     ShippingAddress.prototype.submit = function () {
+        var _this = this;
         var addr = {
             id: this.shippingForm.controls['id'].value,
-            address1: this.shippingForm.controls['address1'].value,
+            name: this.shippingForm.controls['name'].value,
+            street1: this.shippingForm.controls['street1'].value,
+            street2: this.shippingForm.controls['street2'].value,
             city: this.shippingForm.controls['city'].value,
             state: this.shippingForm.controls['state'].value,
             zip: this.shippingForm.controls['zip'].value,
+            country: '',
+            isoCode: '',
+            phone: this.shippingForm.controls['phone'].value,
             isDefault: this.shippingForm.controls['isDefault'].value
         };
+        addr.isoCode = this.selectedISOCode;
+        addr.country = this.countries.filter(function (d) { return d.isoCode == _this.selectedISOCode; })[0].countryName;
         if (addr.id) {
             this.appService.httpPut('put:shipping:address', { address: addr });
         }
@@ -100,19 +126,22 @@ var ShippingAddress = (function () {
             this.appService.httpPost('post:shipping:address', { address: addr });
         }
     };
+    ;
     ShippingAddress.prototype.addAddress = function () {
+        this.initShippingForm();
         this.shippingModal.open();
     };
     ;
     ShippingAddress.prototype.cancel = function () {
         this.appService.showAlert(this.alert, false);
-        this.shippingForm.reset();
         this.shippingModal.close();
     };
+    ;
     ShippingAddress.prototype.ngOnDestroy = function () {
         this.getSubscription.unsubscribe();
         this.postSubscription.unsubscribe();
         this.putSubscription.unsubscribe();
+        this.dataReadySubs.unsubscribe();
     };
     ;
     __decorate([

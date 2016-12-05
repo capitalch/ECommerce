@@ -87,7 +87,7 @@ export class ChangePassword {
 
         } else {
           this.appService.resetCredential();
-          this.appService.showAlert(this.alert, false);
+          this.appService.showAlert(this.alert,true,'','success');
         }
       });
   };
@@ -124,7 +124,7 @@ export class ChangePassword {
       }
     }
     return (ret);
-  }
+  };
   changePassword(oldPwd, newPwd1, newPwd2) {
     let credential = this.appService.getCredential();
     if (credential) {

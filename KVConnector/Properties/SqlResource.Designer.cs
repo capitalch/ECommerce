@@ -90,13 +90,18 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id,address1,a.zip,city, isDefault, state,
-        ///	defaultSalesTaxPerc = (select StringValue from Setup where MKey = &apos;DefaultSalesTax&apos;),
-        ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
-        ///	b.salesTaxPerc, b.shippingCharges
-        ///	from ShippingAddresses  a left join TaxNShipping b
-        ///			on a.zip = b.zip
-        ///				where UserId=@userId;.
+        ///   Looks up a localized string similar to select countryId, countryName, isoCode,requiresZip from Countries order by countryName;.
+        /// </summary>
+        internal static string GetAllMasters {
+            get {
+                return ResourceManager.GetString("GetAllMasters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id,co,code,name,phone,street1,street2,city,state,zip,country,isoCode, isDefault, phone
+        ///from ShippingAddresses	
+        ///	where UserId=@userId;.
         /// </summary>
         internal static string GetAllShippingAddresses {
             get {
@@ -183,7 +188,8 @@ namespace KVConnector.Properties {
         ///   Looks up a localized string similar to select a.id, item, packing, orderQty, wishList,a.price
         ///	from OrderDetails a join OfferMaster b
         ///		on a.offerId = b.id
-        ///			where orderId = @orderId;select a.id, address1,zip,street,city
+        ///			where orderId = @orderId;
+        ///select a.id, address1,zip,state,city
         ///	from OrderImpDetails a join ShippingAddresses b
         ///		on a.addressId = b.id		
         ///	where orderId = @orderId;
@@ -211,11 +217,9 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select b.id, firstName,lastName, phone, birthDay, mailingAddress1
+        ///   Looks up a localized string similar to select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
         ///	, mailingAddress2, mailingCity, mailingState, mailingZip
-        ///	from userMaster a join userProfiles b
-        ///		on a.Id = b.UserId
-        ///			where email = @email;.
+        ///	from UserProfiles where userId = @userId;.
         /// </summary>
         internal static string GetProfile {
             get {
@@ -274,8 +278,8 @@ namespace KVConnector.Properties {
         ///if not exists(select 0 from ShippingAddresses where UserId = @userId)
         ///	select @isDefault = 1;
         ///
-        ///insert into ShippingAddresses(Address1,City,State,Zip,IsDefault,UserId)
-        ///	values(@address1,@city,@state,@zip,@isDefault,@userId);.
+        ///insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,UserId)
+        ///	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@userID);.
         /// </summary>
         internal static string InsertShippingAddress {
             get {
@@ -371,12 +375,15 @@ namespace KVConnector.Properties {
         ///
         ///
         ///update ShippingAddresses
-        ///	set Address1 = @address1,
-        ///	City = @city,
-        ///	Zip = @zip,
-        ///	State = @state,
-        ///	IsDefault = @isDefault
-        ///	where Id = @id;.
+        ///	set Code=@code,
+        ///	Name=@name,
+        ///	street1=@street1,
+        ///	street2=@street2,
+        ///	city=@city,state=@state,zip=@zip,country=@country,
+        ///	phone=@phone,
+        ///	ISOCode=@isoCode,
+        ///	IsDefault=@isDefault
+        ///	where Id =  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateShippingAddress {
             get {

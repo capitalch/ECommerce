@@ -5,6 +5,7 @@ exports.urlHash = {
     'post:forgot:password': '/api/forgot/password',
     'post:send:password': '/api/send/password',
     'post:change:password': '/api/change/password',
+    'post:create:password': '/api/create/password',
     'post:create:account': '/api/create/account',
     'get:current:offer': '/api/current/offer',
     //'post:save:order': '/api/order',
@@ -25,7 +26,8 @@ exports.urlHash = {
     'get:all:credit:cards': '/api/credit/card',
     'get:approve:artifacts': '/api/approve/artifact',
     'post:save:approve:request': '/api/approve/request',
-    'get:init:data': '/api/init/data'
+    'get:init:data': '/api/init/data',
+    'get:all:masters': '/api/all/master'
 };
 exports.messages = {
     'mess:order:intro:text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a tortor imperdiet, porttitor purus ut, pretium diam. Nulla convallis vel ipsum quis mattis. Nam in erat massa. Praesent bibendum dapibus lectus, nec imperdiet eros pharetra et. Vestibulum euismod velit sit amet nulla ornare iaculis viverra eget augue. Etiam dolor lacus, rhoncus in rhoncus eget, faucibus at nisi. Nulla nec mollis orci. Pellentesque pharetra facilisis dolor vel tincidunt. Suspendisse ullamcorper fermentum nunc, a dapibus tellus imperdiet vitae.',
@@ -39,7 +41,7 @@ exports.messages = {
 exports.validationErrorMessages = {
     'required': 'Value is required',
     'invalidEmail': 'Email address is invalid',
-    'invalidUSPhone': 'Phone number is invalid',
+    'invalidPhone': 'Phone number is invalid',
     'loginFailed': 'Login failed',
     'emptyOrder': 'Empty order is not allowed',
     'excessOrder': 'Request exceeds available quantity',
@@ -49,7 +51,11 @@ exports.validationErrorMessages = {
     'confirmPasswordMismatch': 'New Password and Confirm New Password mismatch',
     'invalidCreditCard': 'Credit card is invalid',
     'addressSaveFailed': 'Saving of shipping address at server failed',
-    'dataSaved': 'Data successfully saved'
+    'dataSaved': 'Data successfully saved',
+    'invalidDate': 'Date is invalid',
+    'dataNotSaved': 'Data could not be saved',
+    'createPasswordFailed': 'Creation of new password failed',
+    'changePasswordSuccess': 'Password successfully changed'
 };
 exports.viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },
@@ -64,6 +70,7 @@ exports.viewBoxConfig = {
     '/create/account': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
     '/forgot/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
     '/send/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
-    '/approve/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true }
+    '/approve/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true },
+    '/create/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false }
 };
 //# sourceMappingURL=config.js.map

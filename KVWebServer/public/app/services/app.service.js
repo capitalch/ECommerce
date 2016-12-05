@@ -11,10 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var http_1 = require('@angular/http');
 var core_1 = require('@angular/core');
 var Rx_1 = require('rxjs/Rx');
-// import { Observable } from 'rxjs/Observable';
-// import {Subject} from 'rxjs/Subject';
-// import 'rxjs/Observable/of';
-// import 'rxjs/add/operator/of'
 var router_1 = require('@angular/router');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/filter');
@@ -22,12 +18,29 @@ require('rxjs/add/operator/filter');
 var config_1 = require('../config');
 var AppService = (function () {
     function AppService(http) {
+        var _this = this;
         this.http = http;
         this.globalHash = {};
         this.subject = new Rx_1.Subject();
+        this.behSubject = new Rx_1.BehaviorSubject({ id: '1', data: {} });
         this.channel = {};
+        this.masterSubscription = this.filterOn('get:all:masters').subscribe(function (d) {
+            if (d.data.error) {
+                console.log(d.data.error);
+            }
+            else {
+                _this.countries = JSON.parse(d.data).Table;
+                _this.behEmit('masters:download:success');
+            }
+        });
+        setTimeout(function () {
+            _this.httpGet('get:all:masters');
+        }, 2000);
     }
     ;
+    AppService.prototype.getCountries = function () {
+        return (this.countries);
+    };
     // getTestAsync(){
     //     setTimeout(function(){ 
     //         return('testError'); 
@@ -67,11 +80,14 @@ var AppService = (function () {
         localStorage.removeItem('credential');
     };
     ;
-    AppService.prototype.showAlert = function (alert, show, id) {
+    AppService.prototype.showAlert = function (alert, show, id, type) {
         alert.show = show;
         if (id) {
             alert.message = this.getValidationErrorMessage(id);
-            alert.type = 'danger';
+            if (!type) {
+                type = 'danger';
+            }
+            alert.type = type;
         }
     };
     ;
@@ -166,8 +182,14 @@ var AppService = (function () {
             id: id, data: options
         });
     };
+    AppService.prototype.behEmit = function (id, options) {
+        this.behSubject.next({ id: id, data: options });
+    };
     AppService.prototype.filterOn = function (id) {
         return (this.subject.filter(function (d) { return (d.id === id); }));
+    };
+    AppService.prototype.behFilterOn = function (id) {
+        return (this.behSubject.filter(function (d) { return (d.id === id); }));
     };
     AppService.prototype.reply = function (key, value) {
         this.channel[key] = value;
@@ -251,6 +273,9 @@ var AppService = (function () {
                 }
             } return t; } };
         return (Base64.encode(inputString));
+    };
+    AppService.prototype.ngOnDestroy = function () {
+        this.masterSubscription.unsubscribe();
     };
     AppService = __decorate([
         core_1.Injectable(), 

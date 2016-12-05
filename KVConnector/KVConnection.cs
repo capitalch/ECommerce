@@ -29,6 +29,7 @@ namespace KVConnector
                 RoutingDictionary.Add("authenticate", AuthenticateAsync);
                 RoutingDictionary.Add("isEmailExist", IsEmailExistAsync);
                 RoutingDictionary.Add("change:password", ChangePasswordAsync);
+                RoutingDictionary.Add("create:password", CreatePasswordAsync);
                 RoutingDictionary.Add("new:password", NewPasswordAsync);
                 RoutingDictionary.Add("create:account", CreateAccountAsync);
                 RoutingDictionary.Add("sql:query", ExecuteSqlQueryAsync);
@@ -372,6 +373,86 @@ namespace KVConnector
         }
         #endregion
 
+        #region CreatePasswordAsync
+        public async Task<object> CreatePasswordAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    bool success = false;
+
+                    if (objDictionary.ContainsKey("data"))
+                    {
+                        dynamic data = (dynamic)objDictionary["data"];
+                        var emailObject = data.emailItem;
+                        string email = emailObject.to;
+                        
+
+                        string encodedHash = data.encodedHash.ToString();
+                        byte[] authBytes = Convert.FromBase64String(encodedHash);
+                        string hash = Encoding.UTF8.GetString(authBytes);
+                        
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            List<SqlParameter> paramsList = new List<SqlParameter>();
+                            paramsList.Add(new SqlParameter("email", email));
+                            paramsList.Add(new SqlParameter("newPwdHash", hash));
+                            int ret = seedDataAccess.ExecuteNonQuery(SqlResource.NewPasswordHash, paramsList);
+                            if (ret > 0)
+                            {
+                                MailItem item = new MailItem()
+                                {
+                                    From = emailObject.fromUser,
+                                    FromName = emailObject.fromUserName,
+                                    Host = emailObject.host,
+                                    IsBodyHtml = true,
+                                    Body = emailObject.htmlBody,
+                                    Password = emailObject.fromUserPassword,
+                                    Port = emailObject.port,
+                                    Subject = emailObject.subject,
+                                    To = emailObject.to
+                                };
+                                try
+                                {
+                                    Util.SendMail(item);
+                                    success = true;
+                                }
+                                catch (Exception ex)
+                                {
+                                    //revert back
+                                    //paramsList = new List<SqlParameter>();
+                                    //paramsList.Add(new SqlParameter("email", email));
+                                    //paramsList.Add(new SqlParameter("newPwdHash", oldPwdHash));
+                                    //ret = seedDataAccess.ExecuteNonQuery(SqlResource.NewPasswordHash, paramsList);
+                                }
+                            }
+                        }
+                    }
+                    if (success)
+                    {
+                        result.status = 200;
+                        result.changedPwdHash = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 405, Resources.ErrGenericError, Resources.MessGenericError);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
         #region CreateAccountAsync
         public async Task<object> CreateAccountAsync(dynamic obj)
         {
@@ -498,10 +579,12 @@ namespace KVConnector
                 {
                     IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
 
-                    if (objDictionary.ContainsKey("profile") && (objDictionary.ContainsKey("email")))
+                    if (objDictionary.ContainsKey("profile") && (objDictionary.ContainsKey("userId")))
                     {
-                        string email = objDictionary["email"].ToString();
+                        //string email = objDictionary["email"].ToString();
                         dynamic profile = objDictionary["profile"];
+
+                        Dictionary<string, object> profileDict = SeedUtil.GetDictFromDynamicObject(profile);
                         bool isUpdate = (bool)objDictionary["isUpdate"];
                         if (isUpdate)
                         {
@@ -511,6 +594,10 @@ namespace KVConnector
                             parms.Add(new SqlParameter("phone", profile.phone));
                             parms.Add(new SqlParameter("birthDay", profile.birthDay));
                             parms.Add(new SqlParameter("mailingAddress1", profile.mailingAddress1));
+                            if (profile.mailingAddress2 == null)
+                            {
+                                profile.mailingAddress2 = DBNull.Value;
+                            }
                             parms.Add(new SqlParameter("mailingAddress2", profile.mailingAddress2));
                             parms.Add(new SqlParameter("mailingCity", profile.mailingCity));
                             parms.Add(new SqlParameter("mailingState", profile.mailingState));
@@ -526,7 +613,7 @@ namespace KVConnector
                         }
                         else
                         {
-                            profile.UserId = Util.GetUserIdFromEmail(seedDataAccess, email);
+                            profile.UserId = objDictionary["userId"];
                             List<Seed> saveProfileSeedList = new List<Seed>();
                             Seed seed = new Seed()
                             {
@@ -572,80 +659,7 @@ namespace KVConnector
             result = await t;
             return (result);
         }
-        #endregion
-
-        //#region UpdateOrInsertAddressAsync
-        //public async Task<object> UpdateOrInsertAddressAsync(dynamic obj)
-        //{
-        //    dynamic result = new ExpandoObject();
-        //    Task<object> t = Task.Run<object>(() =>
-        //    {
-        //        try
-        //        {
-        //            IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
-
-        //            if (objDictionary.ContainsKey("address") && (objDictionary.ContainsKey("userId")))
-        //            {
-        //                string userId = objDictionary["userId"].ToString();
-        //                dynamic address = objDictionary["address"];
-        //                //foreach (var address in addresses)
-        //                //{
-        //                IDictionary<string, object> dict = SeedUtil.GetDictFromDynamicObject(address);
-        //                if (dict.ContainsKey("id"))
-        //                {
-        //                    List<SqlParameter> parms = new List<SqlParameter>();
-        //                    parms.Add(new SqlParameter("address1", address.address1));
-        //                    parms.Add(new SqlParameter("city", address.city));
-        //                    parms.Add(new SqlParameter("state", address.street));
-        //                    parms.Add(new SqlParameter("zip", address.zip));
-        //                    parms.Add(new SqlParameter("isDefault", address.isDefault));
-        //                    parms.Add(new SqlParameter("id", address.id));
-        //                    parms.Add(new SqlParameter("userId", userId));
-        //                    var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateShippingAddress, parms);
-        //                    if (i == 0)
-        //                    {
-        //                        Exception exception = new Exception();
-        //                        exception.Data.Add("501", Resources.ErrUpdateError);
-        //                        throw exception;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    dict["userId"] = userId;
-        //                    //dict.Remove("isEdit");
-        //                    //dict.Remove("isDirty");
-        //                    //dict.Remove("isNew");
-        //                    List<Seed> saveProfileSeedList = new List<Seed>();
-        //                    Seed seed = new Seed()
-        //                    {
-        //                        PKeyColName = "Id",
-        //                        IsCustomIDGenerated = false,
-        //                        TableName = "ShippingAddresses",
-        //                        TableDict = dict
-        //                    };
-        //                    saveProfileSeedList.Add(seed);
-        //                    seedDataAccess.SaveSeeds(saveProfileSeedList);
-        //                }
-        //                //}
-        //                result.status = 200;
-        //                result.success = true;
-        //            }
-        //            else
-        //            {
-        //                Util.SetError(result, 406, Resources.ErrInputDataWrong, Resources.ErrInputDataWrong);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            result = new ExpandoObject();
-        //            Util.SetError(result, 520, Resources.ErrGenericError, ex.Message);
-        //        }
-        //        return (result);
-        //    });
-        //    result = await t;
-        //    return (result);
-        //}
-        //#endregion
+        #endregion        
 
         #region ExecuteSqlNonQueryAsync
         public async Task<object> ExecuteSqlNonQueryAsync(dynamic obj)

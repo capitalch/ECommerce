@@ -1,22 +1,30 @@
 //change log
-1. Router.js changed
-2. styles changed
-3. config.json
-4. app.component.ts
+1. package.json: primeng
 
 //To Do
-1. Async validation
-2. Shipping Address modal
+		1. Async validation
+		2. Shipping Address modal
 3. Credit card modal
-4. Validation for Credit Card, Phone and zip code
+4. Validation for Credit Card, Phone
+4.5 Address validation
+		4.6 remove home
 5. Profile validation
 6. Forgot password validation and revisit
-7. Optimize speed
-8. Logout
+7. Optimize Angular 2 speed
+		8. Logout
+9. Access link create password
+		10. menu drop collapse in mobile phone
 
+Internal UAT 12/12/16
+External beta 12/26/16
+External launch by 1/6/17
 
+//urls
+//Web site demo
 https://shop.threestickswines.com/account.html
 waltdp@msn.com: Netwoven1
+//address verification USA
+https://www.ups.com/upsdeveloperkit/downloadresource?loc=en_US
 
 //
 1. Accordian

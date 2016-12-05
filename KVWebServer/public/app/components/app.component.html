@@ -1,6 +1,6 @@
 <nav class="navbar navbar-dark navbar-inverse bg-navKistler">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+    <div class="navbar-header" (window:resize)="onResize($event)">
+        <button type="button" class="navbar-toggle" (click)="menuToggle()">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -8,10 +8,10 @@
         </button>
         <a class="navbar-brand" [href]="kistler">Kistler</a>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
+    <div class="navbar-collapse collapse1" *ngIf="showMenu">
+        <!--<ul class="nav navbar-nav">
             <li class="active"><a [href]="home">Home</a></li>
-        </ul>
+        </ul>-->
         <ul class="nav navbar-nav navbar-right">
             <li *ngIf="viewBox.needHelp"><a routerLink="#">Need Help?</a></li>
             <li *ngIf="viewBox.order"><a routerLink="/order">Order</a></li>
@@ -21,17 +21,13 @@
     </div>
 </nav>
 
-
-
 <div class="container navbar KistlerSubMenu" role="navigation" *ngIf="viewBox.menuBar">
-    <div class="navbar-header">
-        <div class="navbar-toggle mobileMenu" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-               My Account
-       </div>
-       
-        
+    <div class="navbar-header"(window:resize)="onResize($event)">
+        <div class="navbar-toggle mobileMenu" (click)="myAccountToggle()">
+            My Account
+        </div>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+    <div class="navbar-collapse"  *ngIf="myAccountshowMenu">
         <ul class="nav navbar-nav">
             <li class=""><a routerLink="/profile">Profile</a></li>
             <li class=""><a routerLink="/order/history">Order History</a></li>

@@ -20,12 +20,14 @@ var AppComponent = (function () {
         this.home = '#';
         this.kistler = '#';
         this.viewBox = config_1.viewBoxConfig['/login'];
+        this.showMenu = true;
+        this.myAccountshowMenu = true;
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
-                _this.home = d.data.host;
+                //this.home = d.data.host;
                 _this.kistler = d.data.kistler;
             }
         });
@@ -48,6 +50,38 @@ var AppComponent = (function () {
         this.subscription.unsubscribe();
         this.initDataSub.unsubscribe();
     };
+    ;
+    AppComponent.prototype.menuToggle = function () {
+        if (this.showMenu) {
+            this.showMenu = false;
+        }
+        else {
+            this.showMenu = true;
+        }
+    };
+    ;
+    AppComponent.prototype.myAccountToggle = function () {
+        if (this.myAccountshowMenu) {
+            this.myAccountshowMenu = false;
+        }
+        else {
+            this.myAccountshowMenu = true;
+        }
+    };
+    ;
+    AppComponent.prototype.onResize = function (event) {
+        if (event.target.innerWidth < 768) {
+            if (this.showMenu || this.myAccountshowMenu) {
+                this.showMenu = false;
+                this.myAccountshowMenu = false;
+            }
+        }
+        else {
+            this.showMenu = true;
+            this.myAccountshowMenu = true;
+        }
+    };
+    ;
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',

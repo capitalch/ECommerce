@@ -136,11 +136,9 @@
     <value>select MAX(Id) from UserMaster where Email = @email;</value>
   </data>
   <data name="GetProfile" xml:space="preserve">
-    <value>select b.id, firstName,lastName, phone, birthDay, mailingAddress1
+    <value>select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
 	, mailingAddress2, mailingCity, mailingState, mailingZip
-	from userMaster a join userProfiles b
-		on a.Id = b.UserId
-			where email = @email;</value>
+	from UserProfiles where userId = @userId;</value>
   </data>
   <data name="IsEmailAndHashExist" xml:space="preserve">
     <value>select 0 from UserMaster where Email = @email and PwdHash = @oldPwdHash;</value>
@@ -192,11 +190,14 @@ else
 
 
 update ShippingAddresses
-	set Address1 = @address1,
-	City = @city,
-	Zip = @zip,
-	State = @state,
-	IsDefault = @isDefault
+	set Code=@code,
+	Name=@name,
+	street1=@street1,
+	street2=@street2,
+	city=@city,state=@state,zip=@zip,country=@country,
+	phone=@phone,
+	ISOCode=@isoCode,
+	IsDefault=@isDefault
 	where Id = @id;</value>
   </data>
   <data name="DeleteCreditCard" xml:space="preserve">
@@ -217,13 +218,9 @@ update ShippingAddresses
 				where UserId=@userId and IsDefault = 1;</value>
   </data>
   <data name="GetAllShippingAddresses" xml:space="preserve">
-    <value>select id,address1,a.zip,city, isDefault, state,
-	defaultSalesTaxPerc = (select StringValue from Setup where MKey = 'DefaultSalesTax'),
-	defaultShippingCharges=(select StringValue from Setup where MKey = 'DefaultShippingCharges'),
-	b.salesTaxPerc, b.shippingCharges
-	from ShippingAddresses  a left join TaxNShipping b
-			on a.zip = b.zip
-				where UserId=@userId;</value>
+    <value>select id,co,code,name,phone,street1,street2,city,state,zip,country,isoCode, isDefault, phone
+from ShippingAddresses	
+	where UserId=@userId;</value>
   </data>
   <data name="GetDefaultCreditCard" xml:space="preserve">
     <value>select id,cardName,cardNumber,ExpiryDate
@@ -271,7 +268,8 @@ select prevBalanceWine,prevBalanceAddl from UserProfiles where UserId = @userId;
     <value>select a.id, item, packing, orderQty, wishList,a.price
 	from OrderDetails a join OfferMaster b
 		on a.offerId = b.id
-			where orderId = @orderId;select a.id, address1,zip,street,city
+			where orderId = @orderId;
+select a.id, address1,zip,state,city
 	from OrderImpDetails a join ShippingAddresses b
 		on a.addressId = b.id		
 	where orderId = @orderId;
@@ -279,6 +277,9 @@ select a.id, cardName,cardNumber
 	from OrderImpDetails a join CreditCards b
 		on a.CreditCardId = b.id
 	where orderId = @orderId</value>
+  </data>
+  <data name="GetAllMasters" xml:space="preserve">
+    <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName;</value>
   </data>
   <data name="InsertShippingAddress" xml:space="preserve">
     <value>--insert
@@ -294,7 +295,7 @@ end
 if not exists(select 0 from ShippingAddresses where UserId = @userId)
 	select @isDefault = 1;
 
-insert into ShippingAddresses(Address1,City,State,Zip,IsDefault,UserId)
-	values(@address1,@city,@state,@zip,@isDefault,@userId);</value>
+insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,UserId)
+	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@userID);</value>
   </data>
 </root>
