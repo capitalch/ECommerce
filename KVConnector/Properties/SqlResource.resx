@@ -254,7 +254,7 @@ select(@id);</value>
 	from CreditCards
 		where UserId = @userId
 			and IsDefault = 1;
-select id, address1,a.zip,state,city,
+select id, name,phone,co,street1,street2,city,state,a.zip, country,isoCode,
 	defaultSalesTaxPerc=(select StringValue from Setup where MKey = 'DefaultSalesTaxPerc'),
 	defaultShippingCharges=(select StringValue from Setup where MKey = 'DefaultShippingCharges'),
 	b.salesTaxPerc, b.shippingCharges
@@ -280,6 +280,14 @@ select a.id, cardName,cardNumber
   </data>
   <data name="GetAllMasters" xml:space="preserve">
     <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName;</value>
+  </data>
+  <data name="GetShippingSalesTaxPerc" xml:space="preserve">
+    <value>--declare @zip varchar(100);
+--declare @bottles int;
+--select @zip = 'a';
+--select @bottles = 10;
+select shipping = 20, salesTaxPerc = 8.5 
+	where @zip like'%' and @bottles &gt; 0;</value>
   </data>
   <data name="InsertShippingAddress" xml:space="preserve">
     <value>--insert

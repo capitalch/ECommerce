@@ -462,6 +462,17 @@ router.post('/api/approve/request', function (req, res, next) {
         next(err);
     }
 });
-
+router.get('/api/generic/query', function (req, res, next) {
+    try {
+        let body = JSON.parse(req.headers['data']);
+        let sqlKey = body.sqlKey;
+        let sqlParms = body.sqlParms;
+        let data = { action: 'sql:query', sqlKey: sqlKey, sqlParms: sqlParms };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
 
 module.exports = router;

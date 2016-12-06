@@ -114,15 +114,13 @@ namespace KVConnector.Properties {
         ///	from CreditCards
         ///		where UserId = @userId
         ///			and IsDefault = 1;
-        ///select id, address1,a.zip,state,city,
+        ///select id, name,phone,co,street1,street2,city,state,a.zip, country,isoCode,
         ///	defaultSalesTaxPerc=(select StringValue from Setup where MKey = &apos;DefaultSalesTaxPerc&apos;),
         ///	defaultShippingCharges=(select StringValue from Setup where MKey = &apos;DefaultShippingCharges&apos;),
         ///	b.salesTaxPerc, b.shippingCharges
         ///	from ShippingAddresses a left join TaxNShipping b
         ///			on a.zip = b.zip
-        ///				where UserId=@userId and IsDefault = 1;
-        ///
-        ///select prevBalanceWi [rest of string was truncated]&quot;;.
+        ///				where UserId=@userId and  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetApproveArtifacts {
             get {
@@ -233,6 +231,20 @@ namespace KVConnector.Properties {
         internal static string GetPwdHash {
             get {
                 return ResourceManager.GetString("GetPwdHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to --declare @zip varchar(100);
+        ///--declare @bottles int;
+        ///--select @zip = &apos;a&apos;;
+        ///--select @bottles = 10;
+        ///select shipping = 20, salesTaxPerc = 8.5 
+        ///	where @zip like&apos;%&apos; and @bottles &gt; 0;.
+        /// </summary>
+        internal static string GetShippingSalesTaxPerc {
+            get {
+                return ResourceManager.GetString("GetShippingSalesTaxPerc", resourceCulture);
             }
         }
         

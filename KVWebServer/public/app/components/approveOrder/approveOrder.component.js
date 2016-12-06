@@ -62,6 +62,15 @@ var ApproveOrder = (function () {
                 _this.router.navigate(['receipt']);
             }
         });
+        this.getShippingSalesTaxPercSub = appService.filterOn('get:generic:query').subscribe(function (d) {
+            if (d.data.error) {
+                console.log(d.data.error);
+            }
+            else {
+                // shipping and salesTax perc in data
+                console.log(d.data);
+            }
+        });
         this.approveArtifactsSub = appService.filterOn('get:approve:artifacts').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
@@ -232,6 +241,10 @@ var ApproveOrder = (function () {
     ;
     ApproveOrder.prototype.ngOnInit = function () {
         this.appService.httpGet('get:approve:artifacts');
+        //Place this call appropriately.
+        var body = {};
+        body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
+        this.appService.httpGet('get:generic:query', body);
     };
     ;
     ApproveOrder.prototype.ngOnDestroy = function () {

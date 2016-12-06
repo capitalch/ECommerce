@@ -1,4 +1,4 @@
-import { Http, Response, Headers, RequestOptionsArgs } from '@angular/http';
+import { Http, Response, Headers, RequestOptionsArgs, ResponseContentType } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Subject, Observable, BehaviorSubject } from 'rxjs/Rx';
 
@@ -79,12 +79,12 @@ export class AppService {
     resetCredential() {
         localStorage.removeItem('credential');
     };
-    showAlert(alert: any, show: boolean, id?: string, type?:string ) {
+    showAlert(alert: any, show: boolean, id?: string, type?: string) {
         alert.show = show;
         if (id) {
             alert.message = this.getValidationErrorMessage(id);
-            if(!type){
-                type='danger';
+            if (!type) {
+                type = 'danger';
             }
             alert.type = type;
         }
@@ -107,14 +107,30 @@ export class AppService {
                     data: { error: err }
                 }));
     };
+
+    // interface RequestOptionsArgs {
+    //     url: string
+    //     method: string | RequestMethod
+    //     search: string | URLSearchParams
+    //     headers: Headers
+    //     body: any
+    //     withCredentials: boolean
+    //     responseType: ResponseContentType
+    // }
+
     httpGet(id: string, body?: any) {
         var url = urlHash[id];
-        if (body && body.id) {
-            url = url.replace(':id', body.id);
-        }
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
+        if (body) {
+            if (body.id) {
+                url = url.replace(':id', body.id);
+            }
+            if(body.data){
+                headers.append('data',body.data);
+            }
+        }
         this.http.get(url, { headers: headers })
             .map(response => response.json())
             .subscribe(d =>

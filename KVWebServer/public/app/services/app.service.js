@@ -112,15 +112,29 @@ var AppService = (function () {
         });
     };
     ;
+    // interface RequestOptionsArgs {
+    //     url: string
+    //     method: string | RequestMethod
+    //     search: string | URLSearchParams
+    //     headers: Headers
+    //     body: any
+    //     withCredentials: boolean
+    //     responseType: ResponseContentType
+    // }
     AppService.prototype.httpGet = function (id, body) {
         var _this = this;
         var url = config_1.urlHash[id];
-        if (body && body.id) {
-            url = url.replace(':id', body.id);
-        }
         var headers = new http_1.Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
+        if (body) {
+            if (body.id) {
+                url = url.replace(':id', body.id);
+            }
+            if (body.data) {
+                headers.append('data', body.data);
+            }
+        }
         this.http.get(url, { headers: headers })
             .map(function (response) { return response.json(); })
             .subscribe(function (d) {

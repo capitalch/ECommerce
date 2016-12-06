@@ -12,6 +12,7 @@ import { AlertModule } from 'ng2-bootstrap';
 export class ApproveOrder {
     approveArtifactsSub: Subscription;
     postApproveSubscription: Subscription;
+    getShippingSalesTaxPercSub: Subscription;
     selectedAddress: any = {};
     selectedCard: any = {};
     allTotals: {} = {};
@@ -50,6 +51,14 @@ export class ApproveOrder {
             } else {
                 this.appService.reset('orders');
                 this.router.navigate(['receipt']);
+            }
+        });
+        this.getShippingSalesTaxPercSub = appService.filterOn('get:generic:query').subscribe(d => {
+            if (d.data.error) {
+                console.log(d.data.error)
+            } else {
+                // shipping and salesTax perc in data
+                console.log(d.data);
             }
         });
         this.approveArtifactsSub = appService.filterOn('get:approve:artifacts').subscribe(d => {
@@ -143,7 +152,7 @@ export class ApproveOrder {
                         , WishList: a.wishList
                         , Price: a.price
                     });
-            });       
+            });
         orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
@@ -174,8 +183,8 @@ export class ApproveOrder {
 
         //grand totals
         this.footer.grandTotals = {
-            wine: this.footer.wineTotals.wine/1 + this.footer.salesTaxTotals.wine/1 + this.footer.shippingTotals.wine/1
-            + this.footer.prevBalances.wine/1
+            wine: this.footer.wineTotals.wine / 1 + this.footer.salesTaxTotals.wine / 1 + this.footer.shippingTotals.wine / 1
+            + this.footer.prevBalances.wine / 1
             , addl: this.footer.wineTotals.addl / 1 + this.footer.salesTaxTotals.addl / 1 + this.footer.shippingTotals.addl / 1
             + this.footer.prevBalances.addl / 1
         };
@@ -213,7 +222,11 @@ export class ApproveOrder {
         }
     };
     ngOnInit() {
-        this.appService.httpGet('get:approve:artifacts')
+        this.appService.httpGet('get:approve:artifacts');
+        //Place this call appropriately.
+        let body:any={};
+        body.data = JSON.stringify({sqlKey:'GetShippingSalesTaxPerc', sqlParms:{zip:'1111',bottles:100}});
+        this.appService.httpGet('get:generic:query',body);
     };
     ngOnDestroy() {
         this.approveArtifactsSub.unsubscribe();
