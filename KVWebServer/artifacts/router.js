@@ -5,7 +5,7 @@ var router = express.Router();
 var config, def, messages, data;
 var jwt = require('jsonwebtoken');
 var crypto = require('crypto');
-
+//var lodash = require('lodash');
 router.init = function (app) {
     config = app.get('config');
     def = app.get('def');
@@ -137,7 +137,7 @@ router.post('/api/create/password', function (req, res, next) {
                     let emailItem = config.sendMail;
                     emailItem.htmlBody = body;
                     emailItem.subject = config.createPassword.subject;
-                    emailItem.to=decoded.data;        
+                    emailItem.to = decoded.data;
                     var data = { action: 'create:password', data: { emailItem: emailItem, encodedHash: encodedHash } };
                     handler.edgePush(res, next, 'common:result:no:data', data);
                 }
@@ -467,7 +467,37 @@ router.get('/api/generic/query', function (req, res, next) {
         let body = JSON.parse(req.headers['data']);
         let sqlKey = body.sqlKey;
         let sqlParms = body.sqlParms;
+        if(!sqlParms){
+            sqlParms={};
+        }
+        sqlParms.userId = req.user.userId;
         let data = { action: 'sql:query', sqlKey: sqlKey, sqlParms: sqlParms };
+        handler.edgePush(res, next, 'common:result:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.post('/api/generic/non/query', function (req, res, next) {
+    try {
+        let sqlKey = req.body.sqlKey;
+        let sqlParms = req.body.sqlParms;
+        sqlParms.userId = req.user.userId;
+        let data = { action: 'sql:non:query', sqlKey: req.body.sqlKey, sqlParms: req.body.sqlParms };
+        handler.edgePush(res, next, 'common:result:no:data', data);
+    } catch (error) {
+        let err = new def.NError(500, messages.errInternalServerError, error.message);
+        next(err);
+    }
+});
+
+router.post('/api/generic/scalar', function (req, res, next) {
+    try {
+        let sqlParms = req.body.sqlParms;
+        sqlParms.userId = req.user.userId;
+        //let sql = handler.insertSqlFromObject(req.body.tableName, req.body.sqlObject);
+        let data = { action: 'sql:scalar', sqlKey: req.body.sqlKey, sqlParms : sqlParms };        
         handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);

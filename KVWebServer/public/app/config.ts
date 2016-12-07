@@ -28,7 +28,12 @@ export var urlHash = {
     'post:save:approve:request': '/api/approve/request',
     'get:init:data':'/api/init/data',
     'get:all:masters':'/api/all/master',
-    'get:generic:query':'/api/generic/query'
+    'get:shipping:sales:tax:perc':'/api/generic/query',
+    'get:payment:method':'/api/generic/query',
+    
+    'post:payment:method':'/api/generic/scalar',
+    'post:delete:payment:method':'/api/generic/non/query',
+    'post:set:default:payment:method':'/api/generic/non/query'
 };
 export var messages = {
     'mess:order:intro:text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a tortor imperdiet, porttitor purus ut, pretium diam. Nulla convallis vel ipsum quis mattis. Nam in erat massa. Praesent bibendum dapibus lectus, nec imperdiet eros pharetra et. Vestibulum euismod velit sit amet nulla ornare iaculis viverra eget augue. Etiam dolor lacus, rhoncus in rhoncus eget, faucibus at nisi. Nulla nec mollis orci. Pellentesque pharetra facilisis dolor vel tincidunt. Suspendisse ullamcorper fermentum nunc, a dapibus tellus imperdiet vitae.',
@@ -56,7 +61,8 @@ export var validationErrorMessages = {
     'invalidDate':'Date is invalid',
     'dataNotSaved':'Data could not be saved',
     'createPasswordFailed':'Creation of new password failed',
-    'changePasswordSuccess':'Password successfully changed'
+    'changePasswordSuccess':'Password successfully changed',
+    'payMethodInsertFailed':'Payment method insert failed'
 };
 export var viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:false },

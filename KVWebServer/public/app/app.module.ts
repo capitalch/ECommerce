@@ -23,6 +23,7 @@ import { PaginationModule } from 'ng2-bootstrap';
 import { AlertModule } from 'ng2-bootstrap';
 // import { MyDatePickerModule } from 'mydatepicker/dist/my-date-picker.module';
 import { CalendarModule } from 'primeng/primeng';
+// import { SpinnerModule } from 'primeng/primeng';
 //import { jquery } from 'jquery';
 
 @NgModule({
@@ -35,6 +36,7 @@ import { CalendarModule } from 'primeng/primeng';
     // , DatepickerModule,
     // , MyDatePickerModule
     , CalendarModule
+    // , SpinnerModule
   ]
   , declarations: [AppComponent, Login, Order, ForgotPassword
     , SendPassword, ChangePassword, CreateAccount,

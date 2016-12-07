@@ -39,6 +39,7 @@ namespace KVConnector
                 RoutingDictionary.Add("sql:non:query", ExecuteSqlNonQueryAsync);
                 RoutingDictionary.Add("insert:credit:card", InsertCreditCardAsync);
                 RoutingDictionary.Add("sql:scalar", ExecuteScalarAsync);
+                RoutingDictionary.Add("sql:scalar:no:parm", ExecuteScalarNoParmAsync);
                 RoutingDictionary.Add("save:approve:request", SaveApproveRequestAsync);
             }
         }
@@ -719,16 +720,37 @@ namespace KVConnector
                     });
                     string sql = SqlResource.ResourceManager.GetString(sqlKey);
                     var res = seedDataAccess.ExecuteScalar(sql, paramsList);
-                    //if (res==null)
-                    //{
-                    //    Util.SetError(result, 520, Resources.ErrGenericError, Resources.MessGenericError);
-                    //}
-                    //else
-                    //{
+                    
                     result.status = 200;
                     result.success = true;
                     result.result = res;
-                    //}
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region ExecuteScalarNoParmAsync
+        public async Task<object> ExecuteScalarNoParmAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    string sql = objDictionary["sql"].ToString();                    
+                    var res = seedDataAccess.ExecuteScalar(sql);                    
+                    result.status = 200;
+                    result.success = true;
+                    result.result = res;
                 }
                 catch (Exception ex)
                 {

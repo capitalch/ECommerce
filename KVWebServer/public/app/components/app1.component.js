@@ -20,9 +20,8 @@ var AppComponent = (function () {
         this.home = '#';
         this.kistler = '#';
         this.viewBox = config_1.viewBoxConfig['/login'];
-        this.showMenu = false;
-        this.myAccountshowMenu = false;
-        this.initMenu(window.innerWidth);
+        this.showMenu = true;
+        this.myAccountshowMenu = true;
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
@@ -43,7 +42,6 @@ var AppComponent = (function () {
     AppComponent.prototype.logout = function () {
         this.appService.resetCredential();
     };
-    ;
     AppComponent.prototype.ngOnInit = function () {
         this.appService.httpGet('get:init:data');
     };
@@ -54,25 +52,34 @@ var AppComponent = (function () {
     };
     ;
     AppComponent.prototype.menuToggle = function () {
-        this.showMenu = !this.showMenu;
+        if (this.showMenu) {
+            this.showMenu = false;
+        }
+        else {
+            this.showMenu = true;
+        }
     };
     ;
     AppComponent.prototype.myAccountToggle = function () {
-        this.myAccountshowMenu = !this.myAccountshowMenu;
+        if (this.myAccountshowMenu) {
+            this.myAccountshowMenu = false;
+        }
+        else {
+            this.myAccountshowMenu = true;
+        }
     };
     ;
-    AppComponent.prototype.initMenu = function (windowSize) {
-        if (windowSize > 768) {
+    AppComponent.prototype.onResize = function (event) {
+        if (event.target.innerWidth < 768) {
+            if (this.showMenu || this.myAccountshowMenu) {
+                this.showMenu = false;
+                this.myAccountshowMenu = false;
+            }
+        }
+        else {
             this.showMenu = true;
             this.myAccountshowMenu = true;
         }
-        else {
-            this.showMenu = false;
-            this.myAccountshowMenu = false;
-        }
-    };
-    AppComponent.prototype.onResize = function (event) {
-        this.initMenu(event.target.innerWidth);
     };
     ;
     AppComponent = __decorate([
@@ -85,4 +92,4 @@ var AppComponent = (function () {
     return AppComponent;
 }());
 exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+//# sourceMappingURL=app1.component.js.map

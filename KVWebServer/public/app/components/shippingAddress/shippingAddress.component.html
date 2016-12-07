@@ -1,47 +1,32 @@
 <div class="container mainContainer">
     <h2>Shipping Addresses</h2>
-<div class="panel panel-default kistlarShippingAddress">
-
-  <ul class="list-group">
-
-    <li class="list-group-item" *ngFor="let address of addresses; let i=index"> <span><input type="radio" name = "selected"></span>
-                        <span class="name-shipping-address">{{address.name}}</span>
-                        <span>, {{address.street1}}</span>
-                        <span>, {{address.street2}}</span>
-                        <span>, {{address.city}}</span>
-                        <span>, {{address.state}}</span>
-                        <span>, {{address.zip}}</span>
-                        <span>, {{address.country}}</span>
-                        <span>, {{address.phone}}</span>
-                        <span>, Default:<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault"></span>
-                        <button *ngIf="isDataReady" type="button" class="btn btn-link" (click)="edit(address)">Edit</button></li>
-
-
-  </ul>
-   <div class="row panelAddSubmit">
-                <div class="col-xs-12 pull-left">
-                    <button *ngIf='isDataReady' (click)="addAddress()" class="btn btn-md btn-kistler"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Address</button>
-                </div>
+    <div class="panel panel-default kistlarShippingAddress">
+        <ul class="list-group">
+            <li class="list-group-item" *ngFor="let address of addresses; let i=index"> <span><input type="radio" name = "selected"></span>
+                <span class="name-shipping-address">{{address.name}}</span>
+                <span>, {{address.street1}}</span>
+                <span>, {{address.street2}}</span>
+                <span>, {{address.city}}</span>
+                <span>, {{address.state}}</span>
+                <span>, {{address.zip}}</span>
+                <span>, {{address.country}}</span>
+                <span>, {{address.phone}}</span>
+                <span>, Default:<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault"></span>
+                <button *ngIf="isDataReady" type="button" class="btn btn-link" (click)="edit(address)">Edit</button></li>
+        </ul>
+        <div class="row panelAddSubmit">
+            <div class="col-xs-12 pull-left">
+                <button *ngIf='isDataReady' (click)="addAddress()" class="btn btn-md btn-kistler"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Address</button>
             </div>
-</div>
-
-
+        </div>
+    </div>
     <div class="row">
         <modal #shippingModal>
-
             <modal-header>
                 <h2>Shipping Address</h2>
             </modal-header>
-
             <modal-content>
-                <form [formGroup]="shippingForm" novalidate (ngSubmit)="submit()" class="form-horizontal">
-                    <!--<div class="form-group">
-                        <label class="control-label col-sm-2" for="kvCo">Co:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="kvCo" placeholder=" Enter company" formControlName="co">
-                            <control-messages [control]="shippingForm.controls.co"></control-messages>
-                        </div>
-                    </div>-->
+                <form [formGroup]="shippingForm" novalidate (ngSubmit)="submit()" class="form-horizontal">                   
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="kvName">Full name:</label>
                         <div class="col-sm-9">
@@ -85,14 +70,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-3" for="kvCountry">Country:</label>                        
-                        <div class="col-sm-9">                            
-                            <select formControlName='countryName' [(ngModel)]='selectedISOCode'  class="form-control" id="kvCountry" >
+                        <label class="control-label col-sm-3" for="kvCountry">Country:</label>
+                        <div class="col-sm-9">
+                            <select formControlName='countryName' [(ngModel)]='selectedISOCode' class="form-control" id="kvCountry">
                                 <option *ngFor="let country of countries" [value]="country.isoCode">{{country.countryName}}</option>
                             </select>
                             <control-messages [control]="shippingForm.controls.countryName"></control-messages>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="kvPhone">Phone number:</label>
                         <div class="col-sm-9">

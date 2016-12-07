@@ -38,17 +38,6 @@ var ApproveOrder = (function () {
         this.allAddresses = [{}];
         this.allCards = [{}];
         this.alert = { type: "success" };
-        this.alerts = [
-            {
-                type: 'danger',
-                msg: 'Oh snap! Change a few things up and try submitting again.'
-            },
-            {
-                type: 'success',
-                msg: 'Well done! You successfully read this important alert message.',
-                closable: true
-            }
-        ];
         var ords = appService.request('orders');
         if (!ords) {
             router.navigate(['order']);
@@ -62,7 +51,7 @@ var ApproveOrder = (function () {
                 _this.router.navigate(['receipt']);
             }
         });
-        this.getShippingSalesTaxPercSub = appService.filterOn('get:generic:query').subscribe(function (d) {
+        this.getShippingSalesTaxPercSub = appService.filterOn('get:shipping:sales:tax:perc').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
@@ -244,21 +233,13 @@ var ApproveOrder = (function () {
         //Place this call appropriately.
         var body = {};
         body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
-        this.appService.httpGet('get:generic:query', body);
+        this.appService.httpGet('get:shipping:sales:tax:perc', body);
     };
     ;
     ApproveOrder.prototype.ngOnDestroy = function () {
         this.approveArtifactsSub.unsubscribe();
         this.allAddrSubscription.unsubscribe();
         this.allCardSubscription.unsubscribe();
-    };
-    ;
-    ApproveOrder.prototype.closeAlert = function (i) {
-        this.alerts.splice(i, 1);
-    };
-    ;
-    ApproveOrder.prototype.addAlert = function () {
-        this.alerts.push({ msg: 'Another alert!', type: 'warning', closable: true });
     };
     ;
     __decorate([

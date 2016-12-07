@@ -200,8 +200,21 @@ update ShippingAddresses
 	IsDefault=@isDefault
 	where Id = @id;</value>
   </data>
-  <data name="DeleteCreditCard" xml:space="preserve">
-    <value>delete from CreditCards where id = @id</value>
+  <data name="DeletePaymentMethod" xml:space="preserve">
+    <value>declare @isDefault bit;
+select @isDefault = isDefault 
+	from PaymentMethods 
+		where id = @id;
+if(@isDefault = 1)
+	Update t
+		Set t.isDefault = 1
+		From
+		(
+			Select Top 1 isDefault
+			From PaymentMethods
+			Where UserId = @userId
+		) t;
+delete from PaymentMethods where id = @id;</value>
   </data>
   <data name="GetAllCreditCards" xml:space="preserve">
     <value>select id, cardName,cardNumber, expiryDate, isDefault
@@ -228,13 +241,13 @@ from ShippingAddresses
 		where UserId = @userId
 			and IsDefault = 1;</value>
   </data>
-  <data name="SetDefaultCreditCard" xml:space="preserve">
-    <value>update CreditCards
+  <data name="SetDefaultPaymentMethod" xml:space="preserve">
+    <value>update PaymentMethods
 	set IsDefault = 0
 			where UserId=@userId;
-update CreditCards
+update PaymentMethods
 	set IsDefault = 1
-		where Id = @cardId;</value>
+		where Id = @id;</value>
   </data>
   <data name="InsertCreditCard" xml:space="preserve">
     <value>declare @cnt int;
@@ -269,7 +282,7 @@ select prevBalanceWine,prevBalanceAddl from UserProfiles where UserId = @userId;
 	from OrderDetails a join OfferMaster b
 		on a.offerId = b.id
 			where orderId = @orderId;
-select a.id, address1,zip,state,city
+select a.id, street1,zip,state,city
 	from OrderImpDetails a join ShippingAddresses b
 		on a.addressId = b.id		
 	where orderId = @orderId;
@@ -281,6 +294,12 @@ select a.id, cardName,cardNumber
   <data name="GetAllMasters" xml:space="preserve">
     <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName;</value>
   </data>
+  <data name="GetAllPaymentMethods" xml:space="preserve">
+    <value>select id, cardName,ccFirstName,ccLastName,ccType,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4),
+	ccExpiryMonth,ccExpiryYear,ccSecurityCode,name,phone,street1,street2,city,state,zip,country,isoCode,isDefault
+	from PaymentMethods 
+		where UserId = @userId;</value>
+  </data>
   <data name="GetShippingSalesTaxPerc" xml:space="preserve">
     <value>--declare @zip varchar(100);
 --declare @bottles int;
@@ -288,6 +307,25 @@ select a.id, cardName,cardNumber
 --select @bottles = 10;
 select shipping = 20, salesTaxPerc = 8.5 
 	where @zip like'%' and @bottles &gt; 0;</value>
+  </data>
+  <data name="InsertPaymentMethod" xml:space="preserve">
+    <value>declare @cnt int;
+declare @id int;
+select @cnt = count(*) from PaymentMethods
+	where userId = @userId;;
+
+if(@isDefault = 1)
+	update PaymentMethods set isDefault = 0
+		where userId = @userId;
+
+if(@cnt = 0)
+	select @IsDefault = 1;
+
+insert into PaymentMethods (cardName,ccFirstName,ccLastName,ccType,ccNumber,ccExpiryMonth,ccExpiryYear,ccSecurityCode,name,street1,street2,city,state,zip,country,isoCode,phone,isDefault,userId)
+	values(@cardName,@ccFirstName,@ccLastName,@ccType,@ccNumber,@ccExpiryMonth,@ccExpiryYear,@ccSecurityCode,@name,@street1,@street2,@city,@state,@zip,@country,@isoCode,@phone,@isDefault,@userId);
+	SELECT @id = CAST(scope_identity() AS int);
+
+select(@id);</value>
   </data>
   <data name="InsertShippingAddress" xml:space="preserve">
     <value>--insert

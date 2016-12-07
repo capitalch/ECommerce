@@ -53,7 +53,7 @@ export class ApproveOrder {
                 this.router.navigate(['receipt']);
             }
         });
-        this.getShippingSalesTaxPercSub = appService.filterOn('get:generic:query').subscribe(d => {
+        this.getShippingSalesTaxPercSub = appService.filterOn('get:shipping:sales:tax:perc').subscribe(d => {
             if (d.data.error) {
                 console.log(d.data.error)
             } else {
@@ -226,7 +226,7 @@ export class ApproveOrder {
         //Place this call appropriately.
         let body:any={};
         body.data = JSON.stringify({sqlKey:'GetShippingSalesTaxPerc', sqlParms:{zip:'1111',bottles:100}});
-        this.appService.httpGet('get:generic:query',body);
+        this.appService.httpGet('get:shipping:sales:tax:perc',body);
     };
     ngOnDestroy() {
         this.approveArtifactsSub.unsubscribe();
@@ -234,22 +234,22 @@ export class ApproveOrder {
         this.allCardSubscription.unsubscribe();
     };
 
-    public alerts: Array<Object> = [
-        {
-            type: 'danger',
-            msg: 'Oh snap! Change a few things up and try submitting again.'
-        },
-        {
-            type: 'success',
-            msg: 'Well done! You successfully read this important alert message.',
-            closable: true
-        }
-    ];
-    public closeAlert(i: number): void {
-        this.alerts.splice(i, 1);
-    };
+    // public alerts: Array<Object> = [
+    //     {
+    //         type: 'danger',
+    //         msg: 'Oh snap! Change a few things up and try submitting again.'
+    //     },
+    //     {
+    //         type: 'success',
+    //         msg: 'Well done! You successfully read this important alert message.',
+    //         closable: true
+    //     }
+    // ];
+    // public closeAlert(i: number): void {
+    //     this.alerts.splice(i, 1);
+    // };
 
-    public addAlert(): void {
-        this.alerts.push({ msg: 'Another alert!', type: 'warning', closable: true });
-    };
+    // public addAlert(): void {
+    //     this.alerts.push({ msg: 'Another alert!', type: 'warning', closable: true });
+    // };
 }

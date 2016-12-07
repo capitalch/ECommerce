@@ -16,13 +16,10 @@ export class AppComponent {
   home: string = '#';
   kistler: string = '#';
   viewBox: {} = viewBoxConfig['/login'];
-
-  showMenu: boolean = false;
-  myAccountshowMenu: boolean = false;
-
+  showMenu:boolean=true;
+  myAccountshowMenu:boolean=true;
 
   constructor(private appService: AppService, private router: Router) {
-    this.initMenu(window.innerWidth);    
     this.initDataSub = appService.filterOn('get:init:data').subscribe(d => {
       if (d.data.error) {
         console.log(d.data.error);
@@ -30,7 +27,7 @@ export class AppComponent {
         //this.home = d.data.host;
         this.kistler = d.data.kistler;
       }
-    });
+    });    
     router.events.filter((e: Event, t: number) => {
       return (e.constructor.name === 'NavigationEnd');
     }).subscribe((event: any) => {
@@ -40,8 +37,7 @@ export class AppComponent {
   };
   logout() {
     this.appService.resetCredential();
-  };
-
+  }
   ngOnInit() {
     this.appService.httpGet('get:init:data');
   };
@@ -49,22 +45,30 @@ export class AppComponent {
     this.subscription.unsubscribe();
     this.initDataSub.unsubscribe();
   };
-  menuToggle() {
-    this.showMenu = !this.showMenu;
+  menuToggle(){
+  if(this.showMenu){
+   this.showMenu=false;
+  }else{
+    this.showMenu=true;
+   }
   };
-  myAccountToggle() {
-    this.myAccountshowMenu = !this.myAccountshowMenu;
+  myAccountToggle(){
+  if(this.myAccountshowMenu){
+   this.myAccountshowMenu=false;
+  }else{
+    this.myAccountshowMenu=true;
+   }
   };
-  initMenu(windowSize){
-    if (windowSize > 768) {
-      this.showMenu = true;
-      this.myAccountshowMenu = true;
-    } else {
-      this.showMenu = false;
-      this.myAccountshowMenu = false;
-    }
-  }
-  onResize(event) {
-    this.initMenu(event.target.innerWidth);    
-  };
+ onResize(event) {
+  if(event.target.innerWidth < 768){
+      if(this.showMenu || this.myAccountshowMenu){
+        this.showMenu=false;
+        this.myAccountshowMenu=false;
+      }
+ }else{
+      this.showMenu=true;
+      this.myAccountshowMenu=true;
+ }
+};
+
 }

@@ -1,6 +1,7 @@
 "use strict";
 var edge = require('edge');
 var rx = require('rxjs');
+//var _ = require('lodash');
 var jwt = require('jsonwebtoken');
 var nodemailer = require('nodemailer');
 let subject = new rx.Subject();
@@ -37,7 +38,7 @@ function edgePush(res, next, id, data) {
             //subject.next({ res: res, id: id, data: error, next: next });
             next(error);
         } else {
-            subject.next({ res: res,next: next, id: id, result: result });
+            subject.next({ res: res, next: next, id: id, result: result });
         }
     });
 };
@@ -116,52 +117,13 @@ filterOn('common:result:no:data').subscribe(d => {
         if (d.result.error) {
             d.next(d.result.error);
         } else {
-            d.res.status(200).json({ success: true, result:d.result });
+            d.res.status(200).json({ success: true, result: d.result });
         }
     } else {
         let err = new def.NError(520, messages.errUnknown, messages.messErrorUnknown);
         next(err);
     }
 });
-
-// filterOn('new:password').subscribe(d => {
-//     if (d.result) {
-//         if (d.result.error) {
-//             d.next(d.result.error);
-//         } else {
-//             d.res.status(200).json({ "new:password": true });
-//         }
-//     } else {
-//         let err = new def.NError(520, messages.errUnknown, messages.messErrorUnknown);
-//         next(err);
-//     }
-// });
-
-// filterOn('create:account').subscribe(d => {
-//     if (d.result) {
-//         if (d.result.error) {
-//             d.next(d.result.error);
-//         } else {
-//             d.res.status(200).json({ "create:account": true });
-//         }
-//     } else {
-//         let err = new def.NError(520, messages.errUnknown, messages.messErrorUnknown);
-//         next(err);
-//     }
-// });
-
-// filterOn('save:order').subscribe(d => {
-//     if (d.result) {
-//         if (d.result.error) {
-//             d.next(d.result.error);
-//         } else {
-//             d.res.status(200).json({'save:order':true});
-//         }
-//     } else {
-//         let err = new def.NError(520, messages.errUnknown, messages.messErrorUnknown);
-//         d.next(err);
-//     }
-// });
 
 //send mail
 function sendMail(res, next, emailItem) {
@@ -199,5 +161,16 @@ function sendMail(res, next, emailItem) {
         let err = new def.NError(520, messages.errInvalidEmail, messages.errInvalidEmail);
         next(err);
     }
-}
+};
 exports.sendMail = sendMail;
+
+//create Sql
+// function insertSqlFromObject(tableName, sqlObject) {
+//     var keyArray = _.keys(sqlObject);
+//     var valueArray = _.values(sqlObject).map(function (a, b) { return ("'" + a + "'"); });
+//     let sqlTemplate = 'insert into :tableName(:keys) values(:values)';
+//     let sql = sqlTemplate.replace(':tableName',tableName).replace(':keys', keyArray.toString())
+//         .replace(':values', valueArray.toString());
+//     return(sql);
+// };
+// exports.insertSqlFromObject = insertSqlFromObject;

@@ -70,11 +70,24 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to delete from CreditCards where id = @id.
+        ///   Looks up a localized string similar to declare @isDefault bit;
+        ///select @isDefault = isDefault 
+        ///	from PaymentMethods 
+        ///		where id = @id;
+        ///if(@isDefault = 1)
+        ///	Update t
+        ///		Set t.isDefault = 1
+        ///		From
+        ///		(
+        ///			Select Top 1 isDefault
+        ///			From PaymentMethods
+        ///			Where UserId = @userId
+        ///		) t;
+        ///delete from PaymentMethods where id = @id;.
         /// </summary>
-        internal static string DeleteCreditCard {
+        internal static string DeletePaymentMethod {
             get {
-                return ResourceManager.GetString("DeleteCreditCard", resourceCulture);
+                return ResourceManager.GetString("DeletePaymentMethod", resourceCulture);
             }
         }
         
@@ -95,6 +108,18 @@ namespace KVConnector.Properties {
         internal static string GetAllMasters {
             get {
                 return ResourceManager.GetString("GetAllMasters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id, cardName,ccFirstName,ccLastName,ccType,ccNumber=SUBSTRING(ccNumber,1,4) + &apos; XXXX XXXX &apos; + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4),
+        ///	ccExpiryMonth,ccExpiryYear,ccSecurityCode,name,phone,street1,street2,city,state,zip,country,isoCode,isDefault
+        ///	from PaymentMethods 
+        ///		where UserId = @userId;.
+        /// </summary>
+        internal static string GetAllPaymentMethods {
+            get {
+                return ResourceManager.GetString("GetAllPaymentMethods", resourceCulture);
             }
         }
         
@@ -187,7 +212,7 @@ namespace KVConnector.Properties {
         ///	from OrderDetails a join OfferMaster b
         ///		on a.offerId = b.id
         ///			where orderId = @orderId;
-        ///select a.id, address1,zip,state,city
+        ///select a.id, street1,zip,state,city
         ///	from OrderImpDetails a join ShippingAddresses b
         ///		on a.addressId = b.id		
         ///	where orderId = @orderId;
@@ -277,6 +302,28 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to declare @cnt int;
+        ///declare @id int;
+        ///select @cnt = count(*) from PaymentMethods
+        ///	where userId = @userId;;
+        ///
+        ///if(@isDefault = 1)
+        ///	update PaymentMethods set isDefault = 0
+        ///		where userId = @userId;
+        ///
+        ///if(@cnt = 0)
+        ///	select @IsDefault = 1;
+        ///
+        ///insert into PaymentMethods (cardName,ccFirstName,ccLastName,ccType,ccNumber,ccExpiryMonth,ccExpiryYear,ccSecurityCode,name,street1,street2,city,state,zip,country,isoCode,phone,isDefault,userId)
+        ///	values(@cardName,@ccFirstName,@ccLastName,@ccType,@ccNumber,@ccExpiryMonth [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InsertPaymentMethod {
+            get {
+                return ResourceManager.GetString("InsertPaymentMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to --insert
         ///if @isDefault is null
         ///	select @isDefault = 0;
@@ -327,16 +374,16 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update CreditCards
+        ///   Looks up a localized string similar to update PaymentMethods
         ///	set IsDefault = 0
         ///			where UserId=@userId;
-        ///update CreditCards
+        ///update PaymentMethods
         ///	set IsDefault = 1
-        ///		where Id = @cardId;.
+        ///		where Id = @id;.
         /// </summary>
-        internal static string SetDefaultCreditCard {
+        internal static string SetDefaultPaymentMethod {
             get {
-                return ResourceManager.GetString("SetDefaultCreditCard", resourceCulture);
+                return ResourceManager.GetString("SetDefaultPaymentMethod", resourceCulture);
             }
         }
         
