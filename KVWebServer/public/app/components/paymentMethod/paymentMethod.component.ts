@@ -5,6 +5,7 @@ import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms'
 import { CustomValidators } from '../../services/customValidators';
 import { Modal, ModalModule } from "ng2-modal"
 import { AlertModule } from 'ng2-bootstrap/components/alert';
+import {ConfirmDialogModule,ConfirmationService,InputMaskModule} from 'primeng/primeng';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 // import {SpinnerModule} from 'primeng/primeng';
 @Component({
@@ -18,16 +19,18 @@ export class PaymentMethod {
     dataReadySubs: Subscription;
     payMethodForm: FormGroup;
     alert: any = {};
-    // months: [number] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     year: number;
     month: number;
-    // currentYear: number = (new Date()).getFullYear();
     countries: [any];
     selectedISOCode: string = '';
     @ViewChild('payMethodModal') payMethodModal: Modal;    
     payMethods: [any];
     isDataReady: boolean = false;
-    constructor(private appService: AppService, private fb: FormBuilder) {
+
+    display: boolean = false;
+
+    constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService
+    ) {
         this.initPayMethodForm();
         this.getAllPaymentMethodsSub = appService.filterOn("get:payment:method")
             .subscribe(d => {
@@ -72,6 +75,14 @@ export class PaymentMethod {
             }
         });
     };
+    confirm(card) {
+        this.confirmationService.confirm({
+            message: 'Are you sure that you want to perform this action?',
+            accept: () => {
+                this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
+            }
+        });
+    };
     initPayMethodForm() {
         this.year = (new Date()).getFullYear();
         this.month = (new Date()).getMonth() + 1;
@@ -104,12 +115,13 @@ export class PaymentMethod {
     };
     cancel() {
         this.appService.showAlert(this.alert, false);
-        this.payMethodModal.close();
+        this.payMethodModal.close(true);
+            
     }
     
-    remove(card) {        
-        this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
-    };
+    // remove(card) {        
+    //     this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
+    // };
     submit() {
         let payMethod = {
             cardName: this.payMethodForm.controls['cardName'].value

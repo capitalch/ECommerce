@@ -19,10 +19,15 @@ export class AppComponent {
 
   showMenu: boolean = false;
   myAccountshowMenu: boolean = false;
+  currentUser: string = "";
 
 
   constructor(private appService: AppService, private router: Router) {
-    this.initMenu(window.innerWidth);    
+    this.initMenu(window.innerWidth);
+    let credential = appService.getCredential();
+    if (credential) {
+      this.currentUser = credential.email;
+    }
     this.initDataSub = appService.filterOn('get:init:data').subscribe(d => {
       if (d.data.error) {
         console.log(d.data.error);
@@ -55,7 +60,7 @@ export class AppComponent {
   myAccountToggle() {
     this.myAccountshowMenu = !this.myAccountshowMenu;
   };
-  initMenu(windowSize){
+  initMenu(windowSize) {
     if (windowSize > 768) {
       this.showMenu = true;
       this.myAccountshowMenu = true;
@@ -65,6 +70,6 @@ export class AppComponent {
     }
   }
   onResize(event) {
-    this.initMenu(event.target.innerWidth);    
+    this.initMenu(event.target.innerWidth);
   };
 }

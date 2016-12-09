@@ -22,7 +22,12 @@ var AppComponent = (function () {
         this.viewBox = config_1.viewBoxConfig['/login'];
         this.showMenu = false;
         this.myAccountshowMenu = false;
+        this.currentUser = "";
         this.initMenu(window.innerWidth);
+        var credential = appService.getCredential();
+        if (credential) {
+            this.currentUser = credential.email;
+        }
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);

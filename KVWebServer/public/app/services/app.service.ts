@@ -37,8 +37,8 @@ export class AppService {
         setTimeout(() => {
             this.httpGet('get:all:masters')
         }, 2000);
-
     };
+
     getCountries() {
         return (this.countries);
     }
@@ -60,6 +60,7 @@ export class AppService {
         let credential = { email: email, token: token };
         localStorage.setItem('credential', JSON.stringify(credential));
     };
+
     getCredential(): any {
         let credentialString = localStorage.getItem('credential');
         let credential = null;
@@ -68,6 +69,7 @@ export class AppService {
         }
         return (credential);
     };
+
     getToken(): string {
         let token = null;
         let credential = this.getCredential();
@@ -76,9 +78,11 @@ export class AppService {
         }
         return (token);
     }
+
     resetCredential() {
         localStorage.removeItem('credential');
     };
+
     showAlert(alert: any, show: boolean, id?: string, type?: string) {
         alert.show = show;
         if (id) {
@@ -97,7 +101,7 @@ export class AppService {
         headers.append('x-access-token', this.getToken());
         body.token = this.getToken();
         this.http.post(url, body, { headers: headers })
-            .map(response => response.json())
+            .map(response => response.json())            
             .subscribe(d =>
                 this.subject.next({
                     id: id, data: d, body: body
@@ -108,16 +112,6 @@ export class AppService {
                 }));
     };
 
-    // interface RequestOptionsArgs {
-    //     url: string
-    //     method: string | RequestMethod
-    //     search: string | URLSearchParams
-    //     headers: Headers
-    //     body: any
-    //     withCredentials: boolean
-    //     responseType: ResponseContentType
-    // }
-
     httpGet(id: string, body?: any) {
         var url = urlHash[id];
         let headers = new Headers();
@@ -127,8 +121,8 @@ export class AppService {
             if (body.id) {
                 url = url.replace(':id', body.id);
             }
-            if(body.data){
-                headers.append('data',body.data);
+            if (body.data) {
+                headers.append('data', body.data);
             }
         }
         this.http.get(url, { headers: headers })

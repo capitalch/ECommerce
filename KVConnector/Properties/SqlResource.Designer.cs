@@ -190,7 +190,15 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select id, Role,PwdHash from UserMaster where Email = @email;.
+        ///   Looks up a localized string similar to select id, Role,PwdHash 
+        ///	from UserMaster 
+        ///		where Email = @email;
+        ///select adminPwdHash = stringValue
+        ///	from Setup
+        ///		where MKey = &apos;adminPwdHash&apos;;
+        ///select adminIp = stringValue
+        ///	from Setup
+        ///		where MKey = &apos;adminIp&apos;;.
         /// </summary>
         internal static string GetHashAndRole {
             get {

@@ -112,15 +112,6 @@ var AppService = (function () {
         });
     };
     ;
-    // interface RequestOptionsArgs {
-    //     url: string
-    //     method: string | RequestMethod
-    //     search: string | URLSearchParams
-    //     headers: Headers
-    //     body: any
-    //     withCredentials: boolean
-    //     responseType: ResponseContentType
-    // }
     AppService.prototype.httpGet = function (id, body) {
         var _this = this;
         var url = config_1.urlHash[id];

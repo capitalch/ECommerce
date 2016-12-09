@@ -20,7 +20,8 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="phone">Phone:</label>
                     <div class="col-sm-4">
-                        <input type="phone" formControlName="phone" class="form-control" id="phone" name="phone" placeholder="Enter phone number">
+                        <!--<input type="phone" formControlName="phone" class="form-control" id="phone" name="phone" placeholder="Enter phone number">-->
+                        <p-inputMask mask="(999) 999-9999" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>
                         <control-messages [control]="profileForm.controls.phone"></control-messages>
                     </div>
                 </div>
@@ -57,7 +58,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-4" for="mailingState">Mailing state:</label>
+                    <label class="control-label col-sm-4" for="mailingState">Mailing State:</label>
                     <div class="col-sm-4">
                         <input type="text" formControlName="mailingState" class="form-control" id="mailingState" name="mailingState" placeholder="Enter mailing state">
                         <control-messages [control]="profileForm.controls.mailingState"></control-messages>
@@ -79,4 +80,5 @@
             </form>
         </div>
     </div>
+    <p-growl [value]="messages"></p-growl>
 </div>

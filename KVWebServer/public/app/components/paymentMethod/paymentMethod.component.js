@@ -13,15 +13,18 @@ var app_service_1 = require('../../services/app.service');
 var forms_1 = require('@angular/forms');
 var customValidators_1 = require('../../services/customValidators');
 var ng2_modal_1 = require("ng2-modal");
+var primeng_1 = require('primeng/primeng');
 // import {SpinnerModule} from 'primeng/primeng';
 var PaymentMethod = (function () {
-    function PaymentMethod(appService, fb) {
+    function PaymentMethod(appService, fb, confirmationService) {
         var _this = this;
         this.appService = appService;
         this.fb = fb;
+        this.confirmationService = confirmationService;
         this.alert = {};
         this.selectedISOCode = '';
         this.isDataReady = false;
+        this.display = false;
         this.initPayMethodForm();
         this.getAllPaymentMethodsSub = appService.filterOn("get:payment:method")
             .subscribe(function (d) {
@@ -70,6 +73,16 @@ var PaymentMethod = (function () {
         });
     }
     ;
+    PaymentMethod.prototype.confirm = function (card) {
+        var _this = this;
+        this.confirmationService.confirm({
+            message: 'Are you sure that you want to perform this action?',
+            accept: function () {
+                _this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id } });
+            }
+        });
+    };
+    ;
     PaymentMethod.prototype.initPayMethodForm = function () {
         this.year = (new Date()).getFullYear();
         this.month = (new Date()).getMonth() + 1;
@@ -103,12 +116,11 @@ var PaymentMethod = (function () {
     ;
     PaymentMethod.prototype.cancel = function () {
         this.appService.showAlert(this.alert, false);
-        this.payMethodModal.close();
+        this.payMethodModal.close(true);
     };
-    PaymentMethod.prototype.remove = function (card) {
-        this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id } });
-    };
-    ;
+    // remove(card) {        
+    //     this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
+    // };
     PaymentMethod.prototype.submit = function () {
         var _this = this;
         var payMethod = {
@@ -165,7 +177,7 @@ var PaymentMethod = (function () {
         core_1.Component({
             templateUrl: 'app/components/paymentMethod/paymentMethod.component.html'
         }), 
-        __metadata('design:paramtypes', [app_service_1.AppService, forms_1.FormBuilder])
+        __metadata('design:paramtypes', [app_service_1.AppService, forms_1.FormBuilder, primeng_1.ConfirmationService])
     ], PaymentMethod);
     return PaymentMethod;
 }());

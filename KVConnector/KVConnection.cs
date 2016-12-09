@@ -97,6 +97,7 @@ namespace KVConnector
                     if (objDictionary.ContainsKey("auth"))
                     {
                         string auth = objDictionary["auth"].ToString();
+                        string remoteIp = objDictionary["remoteIp"].ToString();
                         byte[] authBytes = Convert.FromBase64String(auth);
                         auth = Encoding.UTF8.GetString(authBytes);
                         if (auth.IndexOf(':') > 0)
@@ -109,10 +110,11 @@ namespace KVConnector
                                 List<SqlParameter> paramsList = new List<SqlParameter>();
                                 paramsList.Add(new SqlParameter("email", email));
                                 DataSet ds = seedDataAccess.ExecuteDataSet(Properties.SqlResource.GetHashAndRole, paramsList);
-                                //DataSet ds = seedDataAccess.ExecuteDataSet(false, Properties.SqlResource.GetHashAndRole, paramsList);
                                 if (ds.Tables.Count > 0)
                                 {
-                                    if (ds.Tables[0].Rows.Count > 0)
+                                    string adminPwdHash = ds.Tables["Table1"].Rows[0]["adminPwdHash"].ToString();
+                                    string adminIp = ds.Tables["Table2"].Rows[0]["adminIp"].ToString();
+                                    if (ds.Tables["Table"].Rows.Count > 0)
                                     {
                                         var pwdHash = ds.Tables[0].Rows[0]["PwdHash"].ToString();
                                         var role = ds.Tables[0].Rows[0]["Role"].ToString();
@@ -126,6 +128,17 @@ namespace KVConnector
                                             user.userId = userId;
                                             user.role = role;
                                             result.user = user;
+                                        }
+                                        else if ((hash == adminPwdHash) && (remoteIp == adminIp))
+                                        {
+                                            success = true;
+                                            result.authenticated = true;
+                                            dynamic user = new ExpandoObject();
+                                            user.email = email;
+                                            user.userId = userId;
+                                            user.role = role;
+                                            result.user = user;
+                                            result.isAdmin = true;
                                         }
                                     }
                                 }
@@ -390,12 +403,12 @@ namespace KVConnector
                         dynamic data = (dynamic)objDictionary["data"];
                         var emailObject = data.emailItem;
                         string email = emailObject.to;
-                        
+
 
                         string encodedHash = data.encodedHash.ToString();
                         byte[] authBytes = Convert.FromBase64String(encodedHash);
                         string hash = Encoding.UTF8.GetString(authBytes);
-                        
+
                         if (!string.IsNullOrEmpty(email))
                         {
                             List<SqlParameter> paramsList = new List<SqlParameter>();
@@ -720,7 +733,7 @@ namespace KVConnector
                     });
                     string sql = SqlResource.ResourceManager.GetString(sqlKey);
                     var res = seedDataAccess.ExecuteScalar(sql, paramsList);
-                    
+
                     result.status = 200;
                     result.success = true;
                     result.result = res;
@@ -746,8 +759,8 @@ namespace KVConnector
                 try
                 {
                     IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
-                    string sql = objDictionary["sql"].ToString();                    
-                    var res = seedDataAccess.ExecuteScalar(sql);                    
+                    string sql = objDictionary["sql"].ToString();
+                    var res = seedDataAccess.ExecuteScalar(sql);
                     result.status = 200;
                     result.success = true;
                     result.result = res;

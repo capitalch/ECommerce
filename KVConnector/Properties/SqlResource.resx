@@ -124,7 +124,15 @@
     <value>select id, item,tastingNotes,descr,imageUrl, price, packing, availableQty from OfferMaster;</value>
   </data>
   <data name="GetHashAndRole" xml:space="preserve">
-    <value>select id, Role,PwdHash from UserMaster where Email = @email;</value>
+    <value>select id, Role,PwdHash 
+	from UserMaster 
+		where Email = @email;
+select adminPwdHash = stringValue
+	from Setup
+		where MKey = 'adminPwdHash';
+select adminIp = stringValue
+	from Setup
+		where MKey = 'adminIp';</value>
   </data>
   <data name="GetMaxOrderNumber" xml:space="preserve">
     <value>select max(IntValue) from Setup where MKey = 'MaxOrderNumber'</value>
