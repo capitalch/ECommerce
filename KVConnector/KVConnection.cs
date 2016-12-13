@@ -616,6 +616,7 @@ namespace KVConnector
                             parms.Add(new SqlParameter("mailingCity", profile.mailingCity));
                             parms.Add(new SqlParameter("mailingState", profile.mailingState));
                             parms.Add(new SqlParameter("mailingZip", profile.mailingZip));
+                            parms.Add(new SqlParameter("mailingCountry", profile.mailingCountry));
                             parms.Add(new SqlParameter("id", profile.id));
                             var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateProfile, parms);
                             if (i == 0)

@@ -5,9 +5,9 @@ import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms'
 import { CustomValidators } from '../../services/customValidators';
 import { Modal, ModalModule } from "ng2-modal"
 import { AlertModule } from 'ng2-bootstrap/components/alert';
-import {ConfirmDialogModule,ConfirmationService,InputMaskModule} from 'primeng/primeng';
+import { ConfirmDialogModule, ConfirmationService, InputMaskModule, GrowlModule, Message } from 'primeng/primeng';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
-// import {SpinnerModule} from 'primeng/primeng';
+
 @Component({
     templateUrl: 'app/components/paymentMethod/paymentMethod.component.html'
 })
@@ -15,7 +15,7 @@ export class PaymentMethod {
     getAllPaymentMethodsSub: Subscription;
     postPayMethodSub: Subscription;
     deletePayMethodSub: Subscription;
-    setDefaultPayMethodSub:Subscription;
+    setDefaultPayMethodSub: Subscription;
     dataReadySubs: Subscription;
     payMethodForm: FormGroup;
     alert: any = {};
@@ -23,10 +23,10 @@ export class PaymentMethod {
     month: number;
     countries: [any];
     selectedISOCode: string = '';
-    @ViewChild('payMethodModal') payMethodModal: Modal;    
+    @ViewChild('payMethodModal') payMethodModal: Modal;
     payMethods: [any];
     isDataReady: boolean = false;
-
+    messages: Message[] = [];
     display: boolean = false;
 
     constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService
@@ -54,6 +54,12 @@ export class PaymentMethod {
                     this.initPayMethodForm();
                     this.appService.showAlert(this.alert, false);
                     this.getPaymentMethod();
+                    this.messages = [];
+                    this.messages.push({
+                        severity: 'success'
+                        , summary: 'Saved'
+                        , detail: 'Data saved successfully'
+                    });
                     this.payMethodModal.close();
                 }
             });
@@ -62,24 +68,23 @@ export class PaymentMethod {
                 if (d.data.error) {
                     console.log("Error occured");
                 } else {
-                    //this.payMethods.splice(d.body.index, 1);
                     this.getPaymentMethod();
                 }
             });
         this.setDefaultPayMethodSub = appService.filterOn("post:set:default:payment:method")
-        .subscribe(d=>{
-            if(d.data.error){
-                console.log('Error occured');
-            } else{
-                console.log('Successfully set as default')
-            }
-        });
+            .subscribe(d => {
+                if (d.data.error) {
+                    console.log('Error occured');
+                } else {
+                    console.log('Successfully set as default')
+                }
+            });
     };
     confirm(card) {
         this.confirmationService.confirm({
             message: 'Are you sure that you want to perform this action?',
             accept: () => {
-                this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
+                this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id } });
             }
         });
     };
@@ -92,7 +97,7 @@ export class PaymentMethod {
             , ccFirstName: ['', Validators.required]
             , ccLastName: ['', Validators.required]
             , ccType: ['', Validators.required]
-            , ccNumber: ['', Validators.required]
+            , ccNumber: ['', [Validators.required, CustomValidators.creditCardValidator]]
             , ccExpiryMonth: [this.month, Validators.required]
             , ccExpiryYear: [this.year, Validators.required]
             , ccSecurityCode: ['', Validators.required]
@@ -116,12 +121,8 @@ export class PaymentMethod {
     cancel() {
         this.appService.showAlert(this.alert, false);
         this.payMethodModal.close(true);
-            
     }
-    
-    // remove(card) {        
-    //     this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
-    // };
+
     submit() {
         let payMethod = {
             cardName: this.payMethodForm.controls['cardName'].value
@@ -149,10 +150,9 @@ export class PaymentMethod {
         this.appService.httpPost('post:payment:method', { sqlKey: 'InsertPaymentMethod', sqlParms: payMethod });
     };
     setDefault(card) {
-        this.appService.httpPost('post:set:default:payment:method', {sqlKey:'SetDefaultPaymentMethod',sqlParms:{id:card.id}});
+        this.appService.httpPost('post:set:default:payment:method', { sqlKey: 'SetDefaultPaymentMethod', sqlParms: { id: card.id } });
     }
     ngOnInit() {
-        // this.appService.httpGet('get:credit:card', { token: token });
         this.getPaymentMethod();
     };
     getPaymentMethod() {
@@ -165,6 +165,5 @@ export class PaymentMethod {
         this.dataReadySubs.unsubscribe();
         this.postPayMethodSub.unsubscribe();
         this.deletePayMethodSub.unsubscribe();
-        // this.setDefaultCardSubscription.unsubscribe();
     };
 }

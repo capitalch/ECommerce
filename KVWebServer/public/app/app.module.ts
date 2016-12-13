@@ -26,8 +26,6 @@ import {
   CalendarModule, ConfirmDialogModule,
   ConfirmationService, InputMaskModule, GrowlModule, Message
 } from 'primeng/primeng';
-// import { SpinnerModule } from 'primeng/primeng';
-//import { jquery } from 'jquery';
 
 @NgModule({
   imports: [BrowserModule, HttpModule, Routing, FormsModule

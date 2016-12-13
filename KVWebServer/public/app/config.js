@@ -32,7 +32,9 @@ exports.urlHash = {
     'get:payment:method': '/api/generic/query',
     'post:payment:method': '/api/generic/scalar',
     'post:delete:payment:method': '/api/generic/non/query',
-    'post:set:default:payment:method': '/api/generic/non/query'
+    'post:set:default:payment:method': '/api/generic/non/query',
+    'get:smartyStreet': 'https://us-street.api.smartystreets.com/street-address?auth-id=:authId&auth-token=:authToken&street=:street&street2=:street2&city=:city&state=:state&zipcode=:zipcode&',
+    'smartyStreetAutoCom': 'https://us-autocomplete.api.smartystreets.com/suggest?auth-id=63395b2b-4df2-c8c7-a487-21ecc25979c8&auth-token=ikDR4hndQSAScpWSPdj8&prefix=Wyomi'
 };
 exports.messages = {
     'mess:order:intro:text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a tortor imperdiet, porttitor purus ut, pretium diam. Nulla convallis vel ipsum quis mattis. Nam in erat massa. Praesent bibendum dapibus lectus, nec imperdiet eros pharetra et. Vestibulum euismod velit sit amet nulla ornare iaculis viverra eget augue. Etiam dolor lacus, rhoncus in rhoncus eget, faucibus at nisi. Nulla nec mollis orci. Pellentesque pharetra facilisis dolor vel tincidunt. Suspendisse ullamcorper fermentum nunc, a dapibus tellus imperdiet vitae.',
@@ -61,7 +63,10 @@ exports.validationErrorMessages = {
     'dataNotSaved': 'Data could not be saved',
     'createPasswordFailed': 'Creation of new password failed',
     'changePasswordSuccess': 'Password successfully changed',
-    'payMethodInsertFailed': 'Payment method insert failed'
+    'payMethodInsertFailed': 'Payment method insert failed',
+    'addressValidationUnauthorized': 'Authorization error while validating address.',
+    'invalidAddress': 'This address is invalid',
+    'invalidZipCode': 'This zip code is not a US legal zip code'
 };
 exports.viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },

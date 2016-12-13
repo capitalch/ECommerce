@@ -209,10 +209,24 @@ input.ng-valid{
         }
 .name-shipping-address{ color: #a75b02; font-size: 1.1em; font-weight: 700; }
 
+.paymentPageFixGap{ padding-top: 10px;}
+.formGap{ margin-bottom: 10px;}
+.paymentSubmit{ padding-top: 10px;}
 
+.ui-growl-message-info{
+	background: deepskyblue;
+}
+.ui-growl-message-success{
+	background: lawngreen;
+}
 
+.ui-growl-message-warn{
+	background: darkorange;
+}
 
-
+.ui-growl-message-error{
+	background: red;
+}
 
 	/*==========  Mobile First Method  ==========*/
 

@@ -14,7 +14,6 @@ var forms_1 = require('@angular/forms');
 var customValidators_1 = require('../../services/customValidators');
 var ng2_modal_1 = require("ng2-modal");
 var primeng_1 = require('primeng/primeng');
-// import {SpinnerModule} from 'primeng/primeng';
 var PaymentMethod = (function () {
     function PaymentMethod(appService, fb, confirmationService) {
         var _this = this;
@@ -24,6 +23,7 @@ var PaymentMethod = (function () {
         this.alert = {};
         this.selectedISOCode = '';
         this.isDataReady = false;
+        this.messages = [];
         this.display = false;
         this.initPayMethodForm();
         this.getAllPaymentMethodsSub = appService.filterOn("get:payment:method")
@@ -49,6 +49,12 @@ var PaymentMethod = (function () {
                 _this.initPayMethodForm();
                 _this.appService.showAlert(_this.alert, false);
                 _this.getPaymentMethod();
+                _this.messages = [];
+                _this.messages.push({
+                    severity: 'success',
+                    summary: 'Saved',
+                    detail: 'Data saved successfully'
+                });
                 _this.payMethodModal.close();
             }
         });
@@ -58,7 +64,6 @@ var PaymentMethod = (function () {
                 console.log("Error occured");
             }
             else {
-                //this.payMethods.splice(d.body.index, 1);
                 _this.getPaymentMethod();
             }
         });
@@ -92,7 +97,7 @@ var PaymentMethod = (function () {
             ccFirstName: ['', forms_1.Validators.required],
             ccLastName: ['', forms_1.Validators.required],
             ccType: ['', forms_1.Validators.required],
-            ccNumber: ['', forms_1.Validators.required],
+            ccNumber: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.creditCardValidator]],
             ccExpiryMonth: [this.month, forms_1.Validators.required],
             ccExpiryYear: [this.year, forms_1.Validators.required],
             ccSecurityCode: ['', forms_1.Validators.required],
@@ -118,9 +123,6 @@ var PaymentMethod = (function () {
         this.appService.showAlert(this.alert, false);
         this.payMethodModal.close(true);
     };
-    // remove(card) {        
-    //     this.appService.httpPost('post:delete:payment:method', { sqlKey: 'DeletePaymentMethod', sqlParms: { id: card.id }});
-    // };
     PaymentMethod.prototype.submit = function () {
         var _this = this;
         var payMethod = {
@@ -152,7 +154,6 @@ var PaymentMethod = (function () {
         this.appService.httpPost('post:set:default:payment:method', { sqlKey: 'SetDefaultPaymentMethod', sqlParms: { id: card.id } });
     };
     PaymentMethod.prototype.ngOnInit = function () {
-        // this.appService.httpGet('get:credit:card', { token: token });
         this.getPaymentMethod();
     };
     ;
@@ -166,7 +167,6 @@ var PaymentMethod = (function () {
         this.dataReadySubs.unsubscribe();
         this.postPayMethodSub.unsubscribe();
         this.deletePayMethodSub.unsubscribe();
-        // this.setDefaultCardSubscription.unsubscribe();
     };
     ;
     __decorate([

@@ -20,16 +20,25 @@ export class AppService {
     channel: any;
     globalHash: {} = {};
     countries: [{ any }];
+    smartyStreetApiKey: string;
+    smartyStreetAuthId:string;
+    smartyStreetAuthToken:string;
     constructor(private http: Http) {
         this.subject = new Subject();
         this.behSubject = new BehaviorSubject({ id: '1', data: {} });
         this.channel = {};
-        this.masterSubscription = this.filterOn('get:all:masters').subscribe(
+        this.masterSubscription = this.filterOn('get:all:masters').take(1).subscribe(
             d => {
                 if (d.data.error) {
                     console.log(d.data.error);
                 } else {
-                    this.countries = JSON.parse(d.data).Table;
+                    let data = JSON.parse(d.data);
+                    this.countries = data.Table;
+                    if (data.Table1) {
+                        this.smartyStreetApiKey = data.Table1[0].smartyStreetApiKey;
+                        this.smartyStreetAuthId = data.Table1[0].smartyStreetAuthId;
+                        this.smartyStreetAuthToken = data.Table1[0].smartyStreetAuthToken;
+                    }
                     this.behEmit('masters:download:success');
                 }
             }
@@ -38,10 +47,12 @@ export class AppService {
             this.httpGet('get:all:masters')
         }, 2000);
     };
-
+    // getSmartyStreetApiKey() {
+    //     return(this.smartyStreetApiKey);
+    // };
     getCountries() {
         return (this.countries);
-    }
+    };
     // getTestAsync(){
     //     setTimeout(function(){ 
     //         return('testError'); 
@@ -101,7 +112,7 @@ export class AppService {
         headers.append('x-access-token', this.getToken());
         body.token = this.getToken();
         this.http.post(url, body, { headers: headers })
-            .map(response => response.json())            
+            .map(response => response.json())
             .subscribe(d =>
                 this.subject.next({
                     id: id, data: d, body: body
@@ -118,11 +129,21 @@ export class AppService {
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
         if (body) {
-            if (body.id) {
+            if (body.id) {                
                 url = url.replace(':id', body.id);
             }
-            if (body.data) {
+            if (body.data) {                
                 headers.append('data', body.data);
+            }
+            if (body.usAddress) {
+                headers.delete('x-access-token');
+                url = url.replace(':authId', this.smartyStreetAuthId)
+                .replace(':authToken',this.smartyStreetAuthToken)
+                    .replace(':street', encodeURIComponent(body.usAddress.street))
+                    .replace(':street2', encodeURIComponent(body.usAddress.street2))
+                    .replace(':city', encodeURIComponent(body.usAddress.city))
+                    .replace(':state', encodeURIComponent(body.usAddress.state))
+                    .replace(':zipcode', encodeURIComponent(body.usAddress.zipcode))
             }
         }
         this.http.get(url, { headers: headers })

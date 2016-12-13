@@ -13,13 +13,22 @@ import { Util } from '../../services/util'
 export class Profile {
     getProfileSubscription: Subscription;
     saveProfileSubscription: Subscription;
+    smartyStreetSubscription: Subscription;
+    dataReadySubs: Subscription;
     profileForm: FormGroup;
     alert: any = {};
     profile: any = {};
     primeDate: any;
+    countries: [any];
+    selectedCountryName: string = '';
     messages: Message[] = [];
+    isDataReady: boolean = false;
     constructor(private appService: AppService, private fb: FormBuilder) {
         this.initProfileForm();
+        this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
+            this.countries = this.appService.getCountries();
+            this.isDataReady = true;
+        });
         this.getProfileSubscription = appService.filterOn('get:user:profile')
             .subscribe(d => {
                 if (d.data.error) {
@@ -27,12 +36,33 @@ export class Profile {
                 } else {
                     let profileArray = JSON.parse(d.data).Table;
                     if (profileArray.length > 0) {
-                        this.profile = profileArray[0];
+                        this.profile = profileArray[0];                        
+                        //this.selectedCountryName = profileArray[0].mailingCountry
                     }
                     this.initProfileForm();
                 }
             });
-
+        this.smartyStreetSubscription = appService.filterOn('get:smartyStreet')
+            .subscribe(d => {
+                if (d.data.error) {
+                    console.log(d.data.error);
+                } else {
+                    let data = d.data;
+                    if (d.data.length > 0) {
+                        data = d.data[0].components;
+                        let street = (data.street_predirection || '').concat(' ', data.primary_number, ' ', data.street_name, ' ', data.street_suffix, ' ', data.street_postdirection)
+                        console.log({
+                            street: street.trim()
+                            //, street2: 
+                            , city: data.city_name
+                            , state: data.state_abbreviation
+                            , zipcode: data.zipcode
+                        })
+                    } else {
+                        console.log('Invalid Address');
+                    }
+                }
+            });
         this.saveProfileSubscription = appService.filterOn('post:save:profile')
             .subscribe(d => {
                 if (d.data.error) {
@@ -49,13 +79,22 @@ export class Profile {
                 }
             });
     };
-    ngOnInit() {
-        // let token = this.appService.getToken();        
+    ngOnInit() {               
         this.appService.httpGet('get:user:profile');
     };
     onDateChanged(event) {
 
     };
+    // verify() {
+    //     let usAddress = {
+    //         street: 'SE 525 Wyoming Blvd NE'
+    //         , street2: 'ABCD'
+    //         , city: 'Albuqueserque'
+    //         , state: 'NM'
+    //         , zipcode: '87123'
+    //     };
+    //     this.appService.httpGet('get:smartyStreet', { usAddress: usAddress });
+    // }
     initProfileForm() {
         let mDate = Util.convertToUSDate(this.profile.birthDay);
         this.profileForm = this.fb.group({
@@ -68,6 +107,7 @@ export class Profile {
             , mailingCity: [this.profile.mailingCity, Validators.required]
             , mailingState: [this.profile.mailingState, Validators.required]
             , mailingZip: [this.profile.mailingZip, Validators.required]
+            , mailingCountry: [this.profile.mailingCountry, Validators.required]
         });
     };
     getUpdatedProfile() {
@@ -83,6 +123,7 @@ export class Profile {
         pr.mailingCity = this.profileForm.controls['mailingCity'].value;
         pr.mailingState = this.profileForm.controls['mailingState'].value;
         pr.mailingZip = this.profileForm.controls['mailingZip'].value;
+        pr.mailingCountry = this.profileForm.controls['mailingCountry'].value;// this.profileForm.controls['mailingCountry'].value;
         return (pr);
     };
     submit() {
@@ -94,5 +135,7 @@ export class Profile {
     ngOnDestroy() {
         this.getProfileSubscription.unsubscribe();
         this.saveProfileSubscription.unsubscribe();
+        this.smartyStreetSubscription.unsubscribe();
+        this.dataReadySubs.unsubscribe();
     };
 }

@@ -145,7 +145,7 @@ select adminIp = stringValue
   </data>
   <data name="GetProfile" xml:space="preserve">
     <value>select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
-	, mailingAddress2, mailingCity, mailingState, mailingZip
+	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry
 	from UserProfiles where userId = @userId;</value>
   </data>
   <data name="IsEmailAndHashExist" xml:space="preserve">
@@ -170,7 +170,7 @@ select adminIp = stringValue
 	MailingAddress2 = @mailingAddress2,
 	MailingCity = @mailingCity,
 	MailingState = @mailingState,
-	MailingZip = @mailingZip
+	MailingZip = @mailingZip, MailingCountry=@mailingCountry
 	where Id = @id;</value>
   </data>
   <data name="GetOrderHeaders" xml:space="preserve">
@@ -300,7 +300,9 @@ select a.id, cardName,cardNumber
 	where orderId = @orderId</value>
   </data>
   <data name="GetAllMasters" xml:space="preserve">
-    <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName;</value>
+    <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName; select smartyStreetApiKey = (select stringValue from setup where MKey = 'SmartyStreetApiKey')
+	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthId')
+	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthToken');</value>
   </data>
   <data name="GetAllPaymentMethods" xml:space="preserve">
     <value>select id, cardName,ccFirstName,ccLastName,ccType,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4),

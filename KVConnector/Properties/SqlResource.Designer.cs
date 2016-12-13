@@ -103,7 +103,9 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select countryId, countryName, isoCode,requiresZip from Countries order by countryName;.
+        ///   Looks up a localized string similar to select countryId, countryName, isoCode,requiresZip from Countries order by countryName; select smartyStreetApiKey = (select stringValue from setup where MKey = &apos;SmartyStreetApiKey&apos;)
+        ///	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthId&apos;)
+        ///	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthToken&apos;);.
         /// </summary>
         internal static string GetAllMasters {
             get {
@@ -249,7 +251,7 @@ namespace KVConnector.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
-        ///	, mailingAddress2, mailingCity, mailingState, mailingZip
+        ///	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry
         ///	from UserProfiles where userId = @userId;.
         /// </summary>
         internal static string GetProfile {
@@ -414,7 +416,7 @@ namespace KVConnector.Properties {
         ///	MailingAddress2 = @mailingAddress2,
         ///	MailingCity = @mailingCity,
         ///	MailingState = @mailingState,
-        ///	MailingZip = @mailingZip
+        ///	MailingZip = @mailingZip, MailingCountry=@mailingCountry
         ///	where Id = @id;.
         /// </summary>
         internal static string UpdateProfile {

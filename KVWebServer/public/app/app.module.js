@@ -33,8 +33,6 @@ var ng2_bootstrap_1 = require('ng2-bootstrap');
 var ng2_bootstrap_2 = require('ng2-bootstrap');
 // import { MyDatePickerModule } from 'mydatepicker/dist/my-date-picker.module';
 var primeng_1 = require('primeng/primeng');
-// import { SpinnerModule } from 'primeng/primeng';
-//import { jquery } from 'jquery';
 var AppModule = (function () {
     function AppModule() {
     }
