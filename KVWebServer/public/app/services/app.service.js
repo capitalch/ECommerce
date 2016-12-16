@@ -35,6 +35,10 @@ var AppService = (function () {
                     _this.smartyStreetApiKey = data.Table1[0].smartyStreetApiKey;
                     _this.smartyStreetAuthId = data.Table1[0].smartyStreetAuthId;
                     _this.smartyStreetAuthToken = data.Table1[0].smartyStreetAuthToken;
+                    _this.creditCardTypes = data.Table1[0].creditCardTypes.split(",").map(function (item) {
+                        return item.trim();
+                    });
+                    _this.needHelpText = data.Table1[0].needHelpText;
                 }
                 _this.behEmit('masters:download:success');
             }
@@ -47,10 +51,15 @@ var AppService = (function () {
     // getSmartyStreetApiKey() {
     //     return(this.smartyStreetApiKey);
     // };
+    AppService.prototype.getCreditCardTypes = function () {
+        return (this.creditCardTypes);
+    };
+    ;
     AppService.prototype.getCountries = function () {
         return (this.countries);
     };
     ;
+    AppService.prototype.getNeedHelpText = function () { return (this.needHelpText); };
     // getTestAsync(){
     //     setTimeout(function(){ 
     //         return('testError'); 

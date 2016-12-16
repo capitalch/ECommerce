@@ -11,7 +11,9 @@
                 <span>, {{address.zip}}</span>
                 <span>, {{address.country}}</span>
                 <span>, {{address.phone}}</span>
-                <span>, Default:<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault"></span>
+                <span *ngIf="address.isDefault">, <i>Default</i>
+                    <!--<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault">-->
+                </span>
                 <button *ngIf="isDataReady" type="button" class="btn btn-link" (click)="edit(address)">Edit</button></li>
         </ul>
         <div class="row panelAddSubmit">
@@ -100,7 +102,7 @@
                     <div class="row">
                         <alert *ngIf="alert.show" [type]="alert.type" dismissable="true">{{alert.message}}</alert>
                         <div class=" col-sm-offset-3 col-xs-9">
-                            <button *ngIf="isDataReady" type="submit" class="btn btn-md btn-kistler" [disabled]="!shippingForm.valid || !shippingForm.valueChanges">Submit</button>
+                            <button *ngIf="isDataReady" type="submit" class="btn btn-md btn-kistler" [disabled]="!shippingForm.valid || !shippingForm.valueChanges || isSaving">Submit</button>
                             <!--<button type="button" (click)="verify()">Verify</button>-->
                             <button type="button" class="btn btn-md btn-kistler" (click)="cancel()">Cancel</button>
                         </div>

@@ -40,18 +40,22 @@ export class Login {
                 } else {
                     console.log('token:' + d.data.token);
                     this.alert.show = false;
-                    this.appService.setCredential(this.loginForm.controls["email"].value, d.data.token);
-                    this.router.navigate(['order']);
+                    appService.setCredential(this.loginForm.controls["email"].value, d.data.token);
+                    //start inactivity timeout using request / reply mecanism
+                    let ret = appService.request('login:success', d.data.inactivityTimeoutSecs || 300);
+                    router.navigate(['order']);
                 }
             });
 
     };
+
     authenticate(pwd) {
         if (this.loginForm.valid) {
             let base64Encoded = this.appService.encodeBase64(this.loginForm.controls["email"].value + ':' + md5(pwd));
             console.log('md5:' + md5(pwd));
             console.log(base64Encoded);
             this.appService.httpPost('post:authenticate', { auth: base64Encoded });
+            // this.appService.httpPost('post:authenticate:code:email', { auth: base64Encoded });
         }
         else {
             this.alert.show = true;

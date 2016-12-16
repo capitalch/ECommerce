@@ -25,6 +25,7 @@ var PaymentMethod = (function () {
         this.isDataReady = false;
         this.messages = [];
         this.display = false;
+        this.creditCardTypes = [];
         this.initPayMethodForm();
         this.getAllPaymentMethodsSub = appService.filterOn("get:payment:method")
             .subscribe(function (d) {
@@ -38,6 +39,7 @@ var PaymentMethod = (function () {
         });
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(function (d) {
             _this.countries = _this.appService.getCountries();
+            _this.creditCardTypes = _this.appService.getCreditCardTypes();
             _this.isDataReady = true;
         });
         this.postPayMethodSub = appService.filterOn("post:payment:method")

@@ -58,7 +58,11 @@
                     <div class="row">
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="ccType">Card type:</label>
-                            <input type="text" class="form-control" id="ccType" placeholder="Enter card type" formControlName="ccType">
+                            <!--<input type="text" class="form-control" id="ccType" placeholder="Enter card type" formControlName="ccType">                            -->
+                            <select formControlName='ccType' [(ngModel)]='selectedCreditCardType' class="form-control" id="ccType">
+                                <option *ngFor="let cardType of creditCardTypes" [value]="cardType">{{cardType}}</option>
+                            </select>
+                            
                             <control-messages [control]="payMethodForm.controls.ccType"></control-messages>
                         </div>
                         <div class="col-sm-6 formGap">
@@ -68,8 +72,7 @@
                         </div>
                     </div>
                   
-                    <div class="row">
-                        
+                    <div class="row">                        
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="ccExpiryMonth">Expiry month:</label>
                             <!--<p-spinner size="12" [(ngModel)]="month" [min]="01" [max]="12" id="ccExpiryMonth" placeholder="Enter expiry month" formControlName="ccExpiryMonth"></p-spinner>-->
@@ -132,7 +135,6 @@
                             <input type="text" class="form-control" id="bZip" placeholder="Enter billing zip" formControlName="zip">
                             <control-messages [control]="payMethodForm.controls.zip"></control-messages>
                         </div>
-
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="bCountry">Billing Country:</label>
                             <select formControlName='countryName' [(ngModel)]='selectedISOCode' class="form-control" id="bCountry">

@@ -28,14 +28,17 @@ var ShippingAddress = (function () {
         this.selectedCountryObj = {};
         this.isDataReady = false;
         this.messages = [];
+        this.isSaving = false;
         this.initShippingForm({});
         this.validateAddressSub = this.appService.filterOn('get:smartyStreet').subscribe(function (d) {
             if (d.data.error) {
                 appService.showAlert(_this.alert, true, 'addressValidationUnauthorized');
+                _this.isSaving = false;
             }
             else {
                 if (d.data.length == 0) {
                     appService.showAlert(_this.alert, true, 'invalidAddress');
+                    _this.isSaving = false;
                 }
                 else {
                     var data = d.data[0].components;
@@ -55,11 +58,13 @@ var ShippingAddress = (function () {
         });
         this.getSubscription = appService.filterOn("get:shipping:address")
             .subscribe(function (d) {
+            _this.isSaving = false;
             _this.addresses = JSON.parse(d.data).Table;
             console.log(d);
         });
         this.postSubscription = appService.filterOn("post:shipping:address")
             .subscribe(function (d) {
+            _this.isSaving = false;
             if (d.data.error) {
                 _this.appService.showAlert(_this.alert, true, 'addressSaveFailed');
             }
@@ -77,6 +82,7 @@ var ShippingAddress = (function () {
         });
         this.putSubscription = appService.filterOn("put:shipping:address")
             .subscribe(function (d) {
+            _this.isSaving = false;
             if (d.data.error) {
                 _this.appService.showAlert(_this.alert, true, 'addressSaveFailed');
             }
@@ -176,6 +182,7 @@ var ShippingAddress = (function () {
             state: this.shippingForm.controls["state"].value,
             zipcode: this.shippingForm.controls["zip"].value
         };
+        this.isSaving = true;
         this.appService.httpGet('get:smartyStreet', { usAddress: usAddress });
     };
     ;

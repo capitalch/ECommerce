@@ -20,9 +20,11 @@ export class AppService {
     channel: any;
     globalHash: {} = {};
     countries: [{ any }];
+    creditCardTypes: [string];
     smartyStreetApiKey: string;
-    smartyStreetAuthId:string;
-    smartyStreetAuthToken:string;
+    smartyStreetAuthId: string;
+    smartyStreetAuthToken: string;
+    needHelpText: string;
     constructor(private http: Http) {
         this.subject = new Subject();
         this.behSubject = new BehaviorSubject({ id: '1', data: {} });
@@ -38,6 +40,10 @@ export class AppService {
                         this.smartyStreetApiKey = data.Table1[0].smartyStreetApiKey;
                         this.smartyStreetAuthId = data.Table1[0].smartyStreetAuthId;
                         this.smartyStreetAuthToken = data.Table1[0].smartyStreetAuthToken;
+                        this.creditCardTypes = data.Table1[0].creditCardTypes.split(",").map(function (item) {
+                            return item.trim();
+                        });
+                        this.needHelpText = data.Table1[0].needHelpText;
                     }
                     this.behEmit('masters:download:success');
                 }
@@ -50,9 +56,13 @@ export class AppService {
     // getSmartyStreetApiKey() {
     //     return(this.smartyStreetApiKey);
     // };
+    getCreditCardTypes() {
+        return (this.creditCardTypes);
+    };
     getCountries() {
         return (this.countries);
     };
+    getNeedHelpText() { return (this.needHelpText); }
     // getTestAsync(){
     //     setTimeout(function(){ 
     //         return('testError'); 
@@ -129,16 +139,16 @@ export class AppService {
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
         if (body) {
-            if (body.id) {                
+            if (body.id) {
                 url = url.replace(':id', body.id);
             }
-            if (body.data) {                
+            if (body.data) {
                 headers.append('data', body.data);
             }
             if (body.usAddress) {
                 headers.delete('x-access-token');
                 url = url.replace(':authId', this.smartyStreetAuthId)
-                .replace(':authToken',this.smartyStreetAuthToken)
+                    .replace(':authToken', this.smartyStreetAuthToken)
                     .replace(':street', encodeURIComponent(body.usAddress.street))
                     .replace(':street2', encodeURIComponent(body.usAddress.street2))
                     .replace(':city', encodeURIComponent(body.usAddress.city))

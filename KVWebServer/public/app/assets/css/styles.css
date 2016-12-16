@@ -70,18 +70,20 @@ border-radius: 5px 5px 5px 5px;
 .ProductPanel .productTitle{font-size:1.2em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-top: 5px; }
 .ProductPanel .productTitle a{ cursor: pointer; color: #a0090a;}
 .ProductPanel .notesOrderAvailPanel .testingNotes{ width: 40%; float: left; padding-top: 7px;}
-.ProductPanel .notesOrderAvailPanel .orderPack{ width: 30%; float: left; padding-top: 7px; }
+.ProductPanel .notesOrderAvailPanel .orderPack{ width: 50%; float: left; padding-top: 7px; }
 .productPrice{color: #a75b02; }
 
-.ProductPanel .notesOrderAvailPanel .availPack{ width: 30%; float: left; padding-top: 7px;}
+.ProductPanel .notesOrderAvailPanel .availPack{ width: 50%; float: left; padding-top: 7px;}
 .ProductPanel .notesOrderAvailPanel .availPack .availableQtyColor{ color: #858585;}
 
 
 .ProductPanel .showproductDetails{padding: 15px; background-color: #fff; margin: 10px 1px 1px 1px; -webkit-border-radius: 3px 3px 3px 3px;
 border-radius: 3px 3px 3px 3px; -webkit-box-shadow: 0 0 2px 2px #dddddd;
 box-shadow: 0 0 2px 2px #dddddd;}
-.ProductPanel .showproductDetails .orderDescPanel{ padding-bottom: 15px; font-size:1.2em; }
+
 .ProductPanel .showproductDetails .tastingNotesPanel{ border-top:solid 1px #dddddd; padding-top:15px;}
+.ProductPanel .showproductDetails .orderDescPanel .review1{ font-family: serif; font-weight: 700;}
+.orderDescPanel ul{list-style-type: none; margin-left: -29px;}
 
 
 .ProductPanel .requestPanel{padding:15px 0px;}
@@ -272,13 +274,19 @@ input.ng-valid{
 	/* Small Devices, Tablets */
 	@media only screen and (max-width : 767px){
 		.ProductPanel .showproductDetails .orderDescPanel {
-    padding-bottom: 15px;
-    font-size: 1em;
+     padding-bottom: 0px; 
+    font-size: .9em;
 }
+.ProductPanel .showproductDetails{padding: 10px; background-color: #fff; margin: 10px 1px 1px 1px; -webkit-border-radius: 3px 3px 3px 3px;
+border-radius: 3px 3px 3px 3px; -webkit-box-shadow: 0 0 2px 2px #dddddd;
+box-shadow: 0 0 2px 2px #dddddd; margin-left: -10px; margin-right: -10px;}
+
 
 .ProductPanel .productTitle{ text-align: center; margin-bottom: 10px;}
 .orderDescPanel .col-sm-2{ padding-bottom: 10px; text-align: center;}
- .notesOrderAvailPanel{margin-bottom: 10px; border-bottom: solid 1px #ddd;  padding-bottom: 10px; border-top: solid 1px #ddd;}
+ .notesOrderAvailPanel{margin-bottom: 10px; text-align: center; border-bottom: solid 1px #ddd;  padding-bottom: 10px; border-top: solid 1px #ddd;}
+.ProductPanel .col-xs-6{ text-align: center;}
+
 
  .KistlerSubMenu .navbar-toggle {
      background-color: transparent;
@@ -346,7 +354,8 @@ input.ng-valid{
 			width: 45%; 
 			padding-right: 10px; 
 			white-space: nowrap;
-            font-weight: 700;
+            font-family: serif;
+			font-weight: 600;
 		}
 		
 		/*
@@ -377,7 +386,7 @@ input.ng-valid{
 		.orderDetailsPaneltbl td { 
 			/* Behave  like a "row" */
 			border: none;
-			border-bottom: 1px solid #fcfcfc; 
+		/*	border-bottom: 1px solid #fcfcfc; */
 			position: relative;
 			padding-left: 50%!important; 
             width: 100%;
@@ -392,6 +401,8 @@ input.ng-valid{
 			width: 45%; 
 			padding-right: 10px; 
 			white-space: nowrap;
+			font-family: serif;
+			font-weight: 600;
 		}
 		
 		/*
@@ -438,6 +449,8 @@ input.ng-valid{
 			width: 45%; 
 			padding-right: 10px; 
 			white-space: nowrap;
+			font-family: serif;
+			font-weight: 600;
 		}
 		
 		/*
