@@ -37,10 +37,11 @@ var AppComponent = (function () {
             //set current user to be displayed to nav bar
             var secs;
             var credential = _this.appService.getCredential();
-            if (credential) {
-                _this.currentEmail = credential.user.email;
-                secs = credential.inactivityTimeoutSecs || 300;
+            if (!credential) {
+                return;
             }
+            _this.currentEmail = credential.user.email;
+            secs = credential.inactivityTimeoutSecs || 300;
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
                 _this.idle.stop();
             }

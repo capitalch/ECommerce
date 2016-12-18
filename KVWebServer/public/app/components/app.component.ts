@@ -70,10 +70,13 @@ export class AppComponent {
     //set current user to be displayed to nav bar
     let secs;
     let credential = this.appService.getCredential();
-    if (credential) {
-      this.currentEmail = credential.user.email;
-      secs = credential.inactivityTimeoutSecs || 300;
+    if (!credential) {
+      return;
     }
+
+    this.currentEmail = credential.user.email;
+    secs = credential.inactivityTimeoutSecs || 300;
+
     if (this.idle.isIdling() || this.idle.isRunning()) {
       this.idle.stop();
     }
