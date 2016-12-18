@@ -65,6 +65,7 @@ filterOn('authenticate').subscribe(d => {
                 res.status(200).json({
                     authenticated: true,
                     token: token,
+                    user:result.user,
                     inactivityTimeoutSecs:inactivityTimeoutSecs
                 });
             } else {

@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var app_service_1 = require('../../services/app.service');
+var core_1 = require("@angular/core");
+var app_service_1 = require("../../services/app.service");
 var OrderHistory = (function () {
     function OrderHistory(appService) {
         var _this = this;
@@ -25,9 +25,10 @@ var OrderHistory = (function () {
                 console.log(d.data.error);
             }
             else {
-                _this.orderDetails.details = JSON.parse(d.data).Table;
-                _this.orderDetails.address = JSON.parse(d.data).Table1[0];
-                _this.orderDetails.card = JSON.parse(d.data).Table2[0];
+                var tables = JSON.parse(d.data);
+                _this.orderDetails.details = tables.Table;
+                _this.orderDetails.address = tables.Table1[0];
+                _this.orderDetails.card = tables.Table2[0];
                 //to escape from null values
                 _this.orderDetails.details = _this.orderDetails.details ? _this.orderDetails.details : [{}];
                 _this.orderDetails.address = _this.orderDetails.address ? _this.orderDetails.address : {};
@@ -78,13 +79,13 @@ var OrderHistory = (function () {
         this.orderDetailsSub.unsubscribe();
     };
     ;
-    OrderHistory = __decorate([
-        core_1.Component({
-            templateUrl: 'app/components/orderHistory/orderHistory.component.html'
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService])
-    ], OrderHistory);
     return OrderHistory;
 }());
+OrderHistory = __decorate([
+    core_1.Component({
+        templateUrl: 'app/components/orderHistory/orderHistory.component.html'
+    }),
+    __metadata("design:paramtypes", [app_service_1.AppService])
+], OrderHistory);
 exports.OrderHistory = OrderHistory;
 //# sourceMappingURL=orderHistory.component.js.map

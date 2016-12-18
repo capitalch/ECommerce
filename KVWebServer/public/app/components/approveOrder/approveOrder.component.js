@@ -8,17 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
-var app_service_1 = require('../../services/app.service');
-var router_1 = require('@angular/router');
-var config_1 = require('../../config');
+var core_1 = require("@angular/core");
+//import { Location } from '@angular/common';
+var app_service_1 = require("../../services/app.service");
+var router_1 = require("@angular/router");
+var config_1 = require("../../config");
 var ng2_modal_1 = require("ng2-modal");
 var ApproveOrder = (function () {
-    function ApproveOrder(appService, location, router) {
+    function ApproveOrder(appService, router) {
         var _this = this;
         this.appService = appService;
-        this.location = location;
         this.router = router;
         this.selectedAddress = {};
         this.selectedCard = {};
@@ -36,7 +35,8 @@ var ApproveOrder = (function () {
         };
         this.approveHeading = config_1.messages['mess:approve:heading'];
         this.allAddresses = [{}];
-        this.allCards = [{}];
+        // allCards: [any] = [{}];
+        this.payMethods = [{}];
         this.alert = { type: "success" };
         var ords = appService.request('orders');
         if (!ords) {
@@ -96,12 +96,14 @@ var ApproveOrder = (function () {
                 _this.allAddresses = JSON.parse(d.data).Table;
             }
         });
-        this.allCardSubscription = appService.filterOn('get:all:credit:cards').subscribe(function (d) {
+        this.allCardSubscription = appService.filterOn('get:payment:method').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
-                _this.allCards = JSON.parse(d.data).Table;
+                _this.payMethods = JSON.parse(d.data).Table;
+                console.log(_this.payMethods);
+                _this.payMethods = JSON.parse(d.data).Table;
             }
         });
     }
@@ -118,7 +120,9 @@ var ApproveOrder = (function () {
     };
     ;
     ApproveOrder.prototype.changeSelectedCard = function () {
-        this.appService.httpGet('get:all:credit:cards');
+        var body = {};
+        body.data = JSON.stringify({ sqlKey: 'GetAllPaymentMethods' });
+        this.appService.httpGet('get:payment:method', body);
         this.cardModal.open();
     };
     ;
@@ -129,7 +133,6 @@ var ApproveOrder = (function () {
     ;
     ApproveOrder.prototype.editWineRequest = function () {
         this.router.navigate(['order']);
-        //this.location.back();
     };
     ;
     ApproveOrder.prototype.approve = function () {
@@ -161,14 +164,12 @@ var ApproveOrder = (function () {
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
     ;
+    ApproveOrder.prototype.removePayMethod = function () {
+        this.selectedCard = {};
+    };
+    ;
     ApproveOrder.prototype.computeTotals = function () {
         this.orders = this.appService.request('orders');
-        // this.orders = [{ availableQty: 3, id: 1, item: 'test item1', orderQty: 2, packing: 'p', price: 120, wishList: 2 },
-        // { availableQty: 3, id: 1, item: 'test item1', orderQty: 22, packing: 'p', price: 125, wishList: 1 },
-        // { availableQty: 3, id: 1, item: 'test item2', orderQty: 11, packing: 'p', price: 130, wishList: 2 },
-        // { availableQty: 3, id: 1, item: 'test item3', orderQty: 5, packing: 'p', price: 150, wishList: 3 },
-        // { availableQty: 3, id: 1, item: 'test item4', orderQty: 2, packing: 'p', price: 130, wishList: 5 },
-        // ];        
         //totals
         if (!this.orders) {
             console.log('Order request is not available.');
@@ -242,21 +243,21 @@ var ApproveOrder = (function () {
         this.allCardSubscription.unsubscribe();
     };
     ;
-    __decorate([
-        core_1.ViewChild('addrModal'), 
-        __metadata('design:type', ng2_modal_1.Modal)
-    ], ApproveOrder.prototype, "addrModal", void 0);
-    __decorate([
-        core_1.ViewChild('cardModal'), 
-        __metadata('design:type', ng2_modal_1.Modal)
-    ], ApproveOrder.prototype, "cardModal", void 0);
-    ApproveOrder = __decorate([
-        core_1.Component({
-            templateUrl: 'app/components/approveOrder/approveOrder.component.html'
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService, common_1.Location, router_1.Router])
-    ], ApproveOrder);
     return ApproveOrder;
 }());
+__decorate([
+    core_1.ViewChild('addrModal'),
+    __metadata("design:type", ng2_modal_1.Modal)
+], ApproveOrder.prototype, "addrModal", void 0);
+__decorate([
+    core_1.ViewChild('cardModal'),
+    __metadata("design:type", ng2_modal_1.Modal)
+], ApproveOrder.prototype, "cardModal", void 0);
+ApproveOrder = __decorate([
+    core_1.Component({
+        templateUrl: 'app/components/approveOrder/approveOrder.component.html'
+    }),
+    __metadata("design:paramtypes", [app_service_1.AppService, router_1.Router])
+], ApproveOrder);
 exports.ApproveOrder = ApproveOrder;
 //# sourceMappingURL=approveOrder.component.js.map

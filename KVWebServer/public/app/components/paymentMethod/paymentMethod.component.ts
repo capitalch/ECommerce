@@ -5,7 +5,10 @@ import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms'
 import { CustomValidators } from '../../services/customValidators';
 import { Modal, ModalModule } from "ng2-modal"
 import { AlertModule } from 'ng2-bootstrap/components/alert';
-import { ConfirmDialogModule, ConfirmationService, InputMaskModule, GrowlModule, Message } from 'primeng/primeng';
+import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
+import { GrowlModule } from 'primeng/components/growl/growl';
+import { Message, ConfirmationService } from 'primeng/components/common/api';
+import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 
 @Component({
@@ -38,7 +41,7 @@ export class PaymentMethod {
                     console.log(d);
                 } else {
                     this.payMethods = JSON.parse(d.data).Table;
-                    console.log(this.payMethods);
+                    //console.log(this.payMethods);
                 }
             });
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
@@ -117,6 +120,7 @@ export class PaymentMethod {
     }
     addPayMethod() {
         this.initPayMethodForm();
+        this.payMethodForm.controls["countryName"].setValue("US");
         this.payMethodModal.open();
     };
     cancel() {
@@ -151,11 +155,13 @@ export class PaymentMethod {
         this.appService.httpPost('post:payment:method', { sqlKey: 'InsertPaymentMethod', sqlParms: payMethod });
     };
     setDefault(card) {
+        this.payMethods.forEach((value, i) => value.isDefault = false);
+        card.isDefault = true;
         this.appService.httpPost('post:set:default:payment:method', { sqlKey: 'SetDefaultPaymentMethod', sqlParms: { id: card.id } });
     }
     ngOnInit() {
         this.getPaymentMethod();
-        
+
     };
     getPaymentMethod() {
         let body: any = {};

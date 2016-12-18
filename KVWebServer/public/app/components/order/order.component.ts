@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 //import { CustomValidators } from '../../services/customValidators';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { AppService } from '../../services/app.service';
-import { AlertModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap/components/alert';
 
 @Component({
   templateUrl: 'app/components/order/order.component.html'

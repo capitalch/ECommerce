@@ -8,11 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var forms_1 = require('@angular/forms');
-var customValidators_1 = require('../../services/customValidators');
-var app_service_1 = require('../../services/app.service');
-var util_1 = require('../../services/util');
+var core_1 = require("@angular/core");
+var forms_1 = require("@angular/forms");
+var customValidators_1 = require("../../services/customValidators");
+var app_service_1 = require("../../services/app.service");
+var util_1 = require("../../services/util");
 var Profile = (function () {
     function Profile(appService, fb) {
         var _this = this;
@@ -20,9 +20,11 @@ var Profile = (function () {
         this.fb = fb;
         this.alert = {};
         this.profile = {};
-        this.selectedCountryName = '';
+        this.selectedCountryName = 'United States';
         this.messages = [];
         this.isDataReady = false;
+        this.user = {};
+        this.user = appService.getCredential().user;
         this.initProfileForm();
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(function (d) {
             _this.countries = _this.appService.getCountries();
@@ -101,6 +103,7 @@ var Profile = (function () {
     Profile.prototype.initProfileForm = function () {
         var mDate = util_1.Util.convertToUSDate(this.profile.birthDay);
         this.profileForm = this.fb.group({
+            code: [this.user.code],
             firstName: [this.profile.firstName, forms_1.Validators.required],
             lastName: [this.profile.lastName, forms_1.Validators.required],
             phone: [this.profile.phone, [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
@@ -144,13 +147,13 @@ var Profile = (function () {
         this.dataReadySubs.unsubscribe();
     };
     ;
-    Profile = __decorate([
-        core_1.Component({
-            templateUrl: 'app/components/profile/profile.component.html'
-        }), 
-        __metadata('design:paramtypes', [app_service_1.AppService, forms_1.FormBuilder])
-    ], Profile);
     return Profile;
 }());
+Profile = __decorate([
+    core_1.Component({
+        templateUrl: 'app/components/profile/profile.component.html'
+    }),
+    __metadata("design:paramtypes", [app_service_1.AppService, forms_1.FormBuilder])
+], Profile);
 exports.Profile = Profile;
 //# sourceMappingURL=profile.component.js.map

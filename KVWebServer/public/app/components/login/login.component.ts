@@ -27,7 +27,7 @@ export class Login {
     loginForm: FormGroup;
     constructor(private appService: AppService, private router: Router, private fb: FormBuilder, private activatedRoute: ActivatedRoute) {
         this.loginForm = fb.group({
-            email: ['', [Validators.required, CustomValidators.emailValidator]]
+            email: ['', [Validators.required]]
             , password: ['', Validators.required]
         });
         this.subscription = appService.filterOn('post:authenticate')
@@ -38,15 +38,15 @@ export class Login {
                     appService.resetCredential();
                     this.alert.show = true;
                 } else {
-                    console.log('token:' + d.data.token);
+                    //console.log('token:' + d.data.token);
                     this.alert.show = false;
-                    appService.setCredential(this.loginForm.controls["email"].value, d.data.token);
+                    // appService.setCredential(this.loginForm.controls["email"].value, d.data.token);
+                    appService.setCredential(d.data.user, d.data.token, d.data.inactivityTimeoutSecs);
                     //start inactivity timeout using request / reply mecanism
-                    let ret = appService.request('login:success', d.data.inactivityTimeoutSecs || 300);
+                    let ret = appService.request('login:success');
                     router.navigate(['order']);
                 }
             });
-
     };
 
     authenticate(pwd) {

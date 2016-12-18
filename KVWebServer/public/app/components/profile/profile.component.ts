@@ -3,9 +3,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { FormBuilder, Validators, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomValidators } from '../../services/customValidators';
 import { AppService } from '../../services/app.service';
-import { AlertModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
-import { CalendarModule, InputMaskModule, GrowlModule, Message } from 'primeng/primeng';
+import { CalendarModule } from 'primeng/components/calendar/calendar';
+import { Message } from 'primeng/components/common/api';
+import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
+import { GrowlModule } from 'primeng/components/growl/growl';
 import { Util } from '../../services/util'
 @Component({
     templateUrl: 'app/components/profile/profile.component.html'
@@ -20,10 +23,12 @@ export class Profile {
     profile: any = {};
     primeDate: any;
     countries: [any];
-    selectedCountryName: string = '';
+    selectedCountryName: string = 'United States';
     messages: Message[] = [];
     isDataReady: boolean = false;
+    user: any = {};
     constructor(private appService: AppService, private fb: FormBuilder) {
+        this.user = appService.getCredential().user;
         this.initProfileForm();
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
             this.countries = this.appService.getCountries();
@@ -36,7 +41,7 @@ export class Profile {
                 } else {
                     let profileArray = JSON.parse(d.data).Table;
                     if (profileArray.length > 0) {
-                        this.profile = profileArray[0];                        
+                        this.profile = profileArray[0];
                         //this.selectedCountryName = profileArray[0].mailingCountry
                     }
                     this.initProfileForm();
@@ -79,7 +84,7 @@ export class Profile {
                 }
             });
     };
-    ngOnInit() {               
+    ngOnInit() {
         this.appService.httpGet('get:user:profile');
     };
     onDateChanged(event) {
@@ -98,7 +103,8 @@ export class Profile {
     initProfileForm() {
         let mDate = Util.convertToUSDate(this.profile.birthDay);
         this.profileForm = this.fb.group({
-            firstName: [this.profile.firstName, Validators.required]
+            code: [this.user.code]
+            , firstName: [this.profile.firstName, Validators.required]
             , lastName: [this.profile.lastName, Validators.required]
             , phone: [this.profile.phone, [Validators.required, CustomValidators.phoneValidator]]
             , birthDay: [mDate, Validators.required]

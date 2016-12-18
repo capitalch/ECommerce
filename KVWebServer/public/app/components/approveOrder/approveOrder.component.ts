@@ -1,11 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { Location } from '@angular/common';
+//import { Location } from '@angular/common';
 import { AppService } from '../../services/app.service';
 import { Router } from '@angular/router';
 import { messages } from '../../config';
 import { ModalModule, Modal } from "ng2-modal";
-import { AlertModule } from 'ng2-bootstrap';
+import { AlertModule } from 'ng2-bootstrap/components/alert';
 @Component({
     templateUrl: 'app/components/approveOrder/approveOrder.component.html'
 })
@@ -33,14 +33,15 @@ export class ApproveOrder {
     approveHeading: string = messages['mess:approve:heading'];
 
     allAddresses: [any] = [{}];
-    allCards: [any] = [{}];
+    // allCards: [any] = [{}];
+    payMethods:[any]=[{}];
     orders: any[];
     //orderBundle: any = {};
     isAlert: boolean;
     alert: any = { type: "success" };
 
 
-    constructor(private appService: AppService, private location: Location, private router: Router) {
+    constructor(private appService: AppService, private router: Router) {
         let ords = appService.request('orders');
         if (!ords) {
             router.navigate(['order']);
@@ -85,6 +86,7 @@ export class ApproveOrder {
             }
             this.computeTotals();
         });
+
         this.allAddrSubscription = appService.filterOn('get:shipping:address').subscribe(d => {
             if (d.data.error) {
                 console.log(d.data.error);
@@ -92,11 +94,14 @@ export class ApproveOrder {
                 this.allAddresses = JSON.parse(d.data).Table;
             }
         });
-        this.allCardSubscription = appService.filterOn('get:all:credit:cards').subscribe(d => {
+
+        this.allCardSubscription = appService.filterOn('get:payment:method').subscribe(d => {
             if (d.data.error) {
                 console.log(d.data.error);
             } else {
-                this.allCards = JSON.parse(d.data).Table;
+                this.payMethods = JSON.parse(d.data).Table;
+                console.log(this.payMethods);
+                this.payMethods = JSON.parse(d.data).Table;
             }
         });
 
@@ -114,7 +119,9 @@ export class ApproveOrder {
 
     @ViewChild('cardModal') cardModal: Modal;
     changeSelectedCard() {
-        this.appService.httpGet('get:all:credit:cards');
+        let body: any = {};
+        body.data = JSON.stringify({ sqlKey: 'GetAllPaymentMethods' });
+        this.appService.httpGet('get:payment:method', body);
         this.cardModal.open();
     };
     selectCard(card) {
@@ -124,8 +131,8 @@ export class ApproveOrder {
 
     editWineRequest() {
         this.router.navigate(['order']);
-        //this.location.back();
     };
+
     approve() {
         let orderBundle: any = {};
         orderBundle.orderMaster = {
@@ -157,14 +164,12 @@ export class ApproveOrder {
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
 
+    removePayMethod(){
+        this.selectedCard={};
+    };
+
     computeTotals() {
         this.orders = this.appService.request('orders');
-        // this.orders = [{ availableQty: 3, id: 1, item: 'test item1', orderQty: 2, packing: 'p', price: 120, wishList: 2 },
-        // { availableQty: 3, id: 1, item: 'test item1', orderQty: 22, packing: 'p', price: 125, wishList: 1 },
-        // { availableQty: 3, id: 1, item: 'test item2', orderQty: 11, packing: 'p', price: 130, wishList: 2 },
-        // { availableQty: 3, id: 1, item: 'test item3', orderQty: 5, packing: 'p', price: 150, wishList: 3 },
-        // { availableQty: 3, id: 1, item: 'test item4', orderQty: 2, packing: 'p', price: 130, wishList: 5 },
-        // ];        
         //totals
         if (!this.orders) {
             console.log('Order request is not available.');
@@ -224,32 +229,13 @@ export class ApproveOrder {
     ngOnInit() {
         this.appService.httpGet('get:approve:artifacts');
         //Place this call appropriately.
-        let body:any={};
-        body.data = JSON.stringify({sqlKey:'GetShippingSalesTaxPerc', sqlParms:{zip:'1111',bottles:100}});
-        this.appService.httpGet('get:shipping:sales:tax:perc',body);
+        let body: any = {};
+        body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
+        this.appService.httpGet('get:shipping:sales:tax:perc', body);
     };
     ngOnDestroy() {
         this.approveArtifactsSub.unsubscribe();
         this.allAddrSubscription.unsubscribe();
         this.allCardSubscription.unsubscribe();
     };
-
-    // public alerts: Array<Object> = [
-    //     {
-    //         type: 'danger',
-    //         msg: 'Oh snap! Change a few things up and try submitting again.'
-    //     },
-    //     {
-    //         type: 'success',
-    //         msg: 'Well done! You successfully read this important alert message.',
-    //         closable: true
-    //     }
-    // ];
-    // public closeAlert(i: number): void {
-    //     this.alerts.splice(i, 1);
-    // };
-
-    // public addAlert(): void {
-    //     this.alerts.push({ msg: 'Another alert!', type: 'warning', closable: true });
-    // };
 }

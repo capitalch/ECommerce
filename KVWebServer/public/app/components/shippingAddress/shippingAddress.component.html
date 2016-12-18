@@ -1,19 +1,22 @@
 <div class="container mainContainer">
+    <p-confirmDialog header="Confirmation" style="z-index:10000;position:relative;" icon="fa fa-question-circle" width="300"></p-confirmDialog>
     <h2>Shipping Addresses</h2>
     <div class="panel panel-default kistlarShippingAddress">
         <ul class="list-group">
-            <li class="list-group-item" *ngFor="let address of addresses; let i=index"> <span><input type="radio" name = "selected"></span>
+            <li class="list-group-item" *ngFor="let address of addresses; let i=index" (click)="click(radioButton,i)"> 
+                <span><input type="radio" name = "selected" #radioButton [checked]=address.isSelected ></span>
                 <span class="name-shipping-address">{{address.name}}</span>
                 <span>, {{address.street1}}</span>
-                <span>, {{address.street2}}</span>
+                <span *ngIf="address.street2">, {{address.street2}}</span>
                 <span>, {{address.city}}</span>
                 <span>, {{address.state}}</span>
                 <span>, {{address.zip}}</span>
                 <span>, {{address.country}}</span>
                 <span>, {{address.phone}}</span>
-                <span *ngIf="address.isDefault">, <i>Default</i>
-                    <!--<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault">-->
-                </span>
+                <span *ngIf="address.isDefault" class="DefaultColor">Default</span>
+                <!--<span *ngIf="address.isDefault">, <i>Default</i>-->
+                <!--<input type="checkbox" [checked]="address.isDefault" [disabled]="true" name="isDefault">-->
+                <!--</span>-->
                 <button *ngIf="isDataReady" type="button" class="btn btn-link" (click)="edit(address)">Edit</button></li>
         </ul>
         <div class="row panelAddSubmit">
@@ -28,7 +31,7 @@
                 <h2>Shipping Address</h2>
             </modal-header>
             <modal-content>
-                <form [formGroup]="shippingForm" novalidate (ngSubmit)="submitting()" class="form-horizontal">                   
+                <form [formGroup]="shippingForm" novalidate (ngSubmit)="verifyOrSubmit()" class="form-horizontal">
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="kvName">Full name:</label>
                         <div class="col-sm-9">
@@ -116,7 +119,7 @@
                             <button class="btn btn-md btn-kistler" (click)="shippingForm.reset(); shippingModal.close()">Cancel</button>
                         </div>
                     </div>-->
-            </modal-footer>            
+            </modal-footer>
         </modal>
     </div>
     <p-growl [value]="messages"></p-growl>
