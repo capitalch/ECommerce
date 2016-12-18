@@ -43,7 +43,7 @@ export class Login {
                     // appService.setCredential(this.loginForm.controls["email"].value, d.data.token);
                     appService.setCredential(d.data.user, d.data.token, d.data.inactivityTimeoutSecs);
                     //start inactivity timeout using request / reply mecanism
-                    let ret = appService.request('login:success');
+                    appService.request('login:success')();
                     router.navigate(['order']);
                 }
             });
