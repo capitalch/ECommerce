@@ -96,6 +96,7 @@ var ChangePassword = (function () {
         this.router = router;
         this.fb = fb;
         this.alert = {};
+        this.messages = [];
         this.subscription = appService.filterOn('post:change:password')
             .subscribe(function (d) {
             if (d.data.error) {
@@ -105,7 +106,14 @@ var ChangePassword = (function () {
             }
             else {
                 _this.appService.resetCredential();
-                _this.appService.showAlert(_this.alert, true, '', 'success');
+                _this.appService.showAlert(_this.alert, false);
+                _this.messages = [];
+                _this.messages.push({
+                    severity: 'success',
+                    summary: 'Saved',
+                    detail: 'Data saved successfully'
+                });
+                _this.router.navigate(['/login']);
             }
         });
     }
@@ -119,19 +127,6 @@ var ChangePassword = (function () {
         }, { validator: this.checkFormGroup });
     };
     ;
-    // testAsync(control) {
-    //   let pr = new Promise((resolve, reject) => {
-    //     this.appService.filterOn('get:default:credit:card').subscribe(d => {
-    //       if (d.data.error) {
-    //         console.log('Error in default credit card');
-    //       } else {
-    //         resolve({ testError: true });
-    //       }
-    //     });
-    //     this.appService.httpGet('get:default:credit:card');
-    //   });
-    //   return (pr);
-    // }
     ChangePassword.prototype.checkFormGroup = function (group) {
         var ret = null;
         if (group.dirty) {
@@ -148,7 +143,7 @@ var ChangePassword = (function () {
     ChangePassword.prototype.changePassword = function (oldPwd, newPwd1, newPwd2) {
         var credential = this.appService.getCredential();
         if (credential) {
-            var email = credential.email;
+            var email = credential.user.email;
             if (email) {
                 if (newPwd1 === newPwd2) {
                     var base64Encoded = this.appService.encodeBase64(email + ':' + md5_1.md5(oldPwd) + ':' + md5_1.md5(newPwd1));

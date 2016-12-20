@@ -20,6 +20,7 @@ export class ShippingAddress {
     putSubscription: Subscription;
     dataReadySubs: Subscription;
     verifyAddressSub: Subscription;
+    postDeleteSubscription: Subscription;
     shippingForm: FormGroup;
     alert: any = {
         show: false,
@@ -33,15 +34,12 @@ export class ShippingAddress {
     isDataReady: boolean = false;
     messages: Message[] = [];
     isVerifying = false;
-    radioIndex:number;
-    // selectedRadio:any;
-    // myRadio:any;
-    //@ViewChild('selectedRadio') selectedRadio:any
+    radioIndex: number;
     @ViewChild('shippingModal') shippingModal: Modal;
     addresses: [any];
     constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService) {
         this.initShippingForm({});
-        this.verifyAddressSub = this.appService.filterOn('get:smartyStreet').subscribe(d => {            
+        this.verifyAddressSub = this.appService.filterOn('get:smartyStreet').subscribe(d => {
             if (d.data.error) {
                 //Authorization of vendor at smartyStreet failed. Maybe purchase of new slot required
                 appService.showAlert(this.alert, true, 'addressValidationUnauthorized');
@@ -66,13 +64,12 @@ export class ShippingAddress {
             .subscribe(d => {
                 this.isVerifying = false;
                 this.addresses = JSON.parse(d.data).Table;
-                this.addresses[this.radioIndex || 0].isSelected = true;
-                // if(this.myRadio){
-                //     setTimeout(()=>{ 
-                //         this.myRadio.checked = true; 
-                //     }, 10000);                    
-                // }
-                console.log(d);
+                if (this.addresses.length > 0) {
+                    if (this.radioIndex > (this.addresses.length-1)) {
+                        this.radioIndex = this.addresses.length-1;
+                    }
+                    this.addresses[this.radioIndex || 0].isSelected = true;
+                }
             });
         this.postSubscription = appService.filterOn("post:shipping:address")
             .subscribe(d => {
@@ -82,6 +79,41 @@ export class ShippingAddress {
             .subscribe(d => {
                 this.showMessage(d);
             });
+        this.postDeleteSubscription = appService.filterOn("post:delete:shipping:address")
+            .subscribe(d => {
+                if (d.data.error) {
+                    console.log(d.data.error);
+                    // this.appService.doGrowl(this.messages, 'error', 'Error', 'Deletion of address failed at server')
+                    this.messages = [];
+                    this.messages.push({
+                        severity: 'error'
+                        , summary: 'Error'
+                        , detail: 'Address could not be deleted'
+                    });
+                    // this.appService.showAlert(this.alert, true, 'addressDeleteFailed');
+                } else {
+                    //this.addresses.splice(this.radioIndex);
+                    // this.appService.showAlert(this.alert, false);
+                    // this.appService.doGrowl(this.messages, 'success', 'Success', 'Data saved successfully');
+                    this.appService.httpGet('get:shipping:address');
+                    this.messages = [];
+                    this.messages.push({
+                        severity: 'success'
+                        , summary: 'Success'
+                        , detail: 'Data saved successfully'
+                    });
+
+                }
+            });
+    };
+
+    confirmRemove(address) {
+        this.confirmationService.confirm({
+            message: 'Are you sure to delete this address?',
+            accept: () => {
+                this.appService.httpPost('post:delete:shipping:address', { sqlKey: 'DeleteShippingAddress', sqlParms: { id: address.id } });
+            }
+        });
     };
 
     showMessage(d) {
@@ -89,6 +121,7 @@ export class ShippingAddress {
         if (d.data.error) {
             this.appService.showAlert(this.alert, true, 'addressSaveFailed');
         } else {
+            this.appService.showAlert(this.alert, false);
             this.appService.httpGet('get:shipping:address');
             this.initShippingForm({});
             this.messages = [];
@@ -97,9 +130,10 @@ export class ShippingAddress {
                 , summary: 'Saved'
                 , detail: 'Data saved successfully'
             });
+            // this.appService.doGrowl(this.messages, 'success', 'Saved', 'Data saved successfully');            
             this.shippingModal.close();
         }
-    }
+    };
 
     initShippingForm(address) {
         this.shippingForm = this.fb.group({
@@ -117,6 +151,10 @@ export class ShippingAddress {
             isDefault: [address.isDefault || false]
         });
         this.selectedCountryName = address.country;
+        if(!address.phone){
+            //separate reset is required to clear the input mask control
+            this.shippingForm.controls['phone'].reset();
+        }
     };
 
     ngOnInit() {
@@ -129,13 +167,13 @@ export class ShippingAddress {
         this.shippingModal.open();
     };
 
-    delete(address) {
-        if (confirm('Are you sure to delete this address')) {
-            console.log('true');
-        } else {
-            console.log(false);
-        }
-    };
+    // delete(address) {
+    //     if (confirm('Are you sure to delete this address')) {
+    //         console.log('true');
+    //     } else {
+    //         console.log(false);
+    //     }
+    // };
 
     verifyOrSubmit() {
         if (this.selectedCountryName == 'United States') {
@@ -189,9 +227,9 @@ export class ShippingAddress {
         this.appService.showAlert(this.alert, false);
         this.shippingModal.close();
     };
-    
-    click(radioButton,index){
-        radioButton.checked=true;
+
+    click(radioButton, index) {
+        radioButton.checked = true;
         this.radioIndex = index;
     };
 
@@ -216,7 +254,7 @@ export class ShippingAddress {
                 this.shippingForm.controls["state"].setValue(data.state_abbreviation);
                 this.shippingForm.controls["zip"].setValue(data.zipcode);
                 this.appService.showAlert(this.alert, false);
-                this.submit(true);                
+                this.submit(true);
             }
         });
     };

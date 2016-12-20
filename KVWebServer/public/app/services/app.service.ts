@@ -10,6 +10,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
+import { Message } from 'primeng/components/common/api';
+// import { GrowlModule } from 'primeng/components/growl/growl';
 //import * as _ from 'lodash';
 import { urlHash, messages, validationErrorMessages } from '../config';
 
@@ -116,6 +118,15 @@ export class AppService {
             alert.type = type;
         }
     };
+
+    // doGrowl(messages:Message[], severity, summary,detail){
+    //     messages=[];
+    //     messages.push({
+    //         severity:severity,
+    //         summary:summary,
+    //         detail:detail
+    //     });
+    // }
 
     httpPost(id: string, body?: any) {
         let url = urlHash[id];

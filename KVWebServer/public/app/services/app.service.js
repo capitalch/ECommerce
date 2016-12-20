@@ -17,6 +17,7 @@ var router_1 = require("@angular/router");
 require("rxjs/add/operator/map");
 require("rxjs/add/observable/of");
 require("rxjs/add/operator/filter");
+// import { GrowlModule } from 'primeng/components/growl/growl';
 //import * as _ from 'lodash';
 var config_1 = require("../config");
 var AppService = (function () {
@@ -113,6 +114,14 @@ var AppService = (function () {
         }
     };
     ;
+    // doGrowl(messages:Message[], severity, summary,detail){
+    //     messages=[];
+    //     messages.push({
+    //         severity:severity,
+    //         summary:summary,
+    //         detail:detail
+    //     });
+    // }
     AppService.prototype.httpPost = function (id, body) {
         var _this = this;
         var url = config_1.urlHash[id];

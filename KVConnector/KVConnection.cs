@@ -937,6 +937,7 @@ namespace KVConnector
         #endregion
     }
 }
+
 #region Deprecated
 //#region AuthenticateAsync
 //public async Task<object> AuthenticateAsync(dynamic obj)

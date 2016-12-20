@@ -366,4 +366,7 @@ if not exists(select 0 from ShippingAddresses where UserId = @userId)
 insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId)
 	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userID);</value>
   </data>
+  <data name="DeleteShippingAddress" xml:space="preserve">
+    <value>delete from ShippingAddresses where id = @id;</value>
+  </data>
 </root>

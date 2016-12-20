@@ -41,7 +41,6 @@ export class PaymentMethod {
                     console.log(d);
                 } else {
                     this.payMethods = JSON.parse(d.data).Table;
-                    //console.log(this.payMethods);
                 }
             });
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
@@ -94,7 +93,7 @@ export class PaymentMethod {
     };
     initPayMethodForm() {
         this.year = (new Date()).getFullYear();
-        this.month = (new Date()).getMonth() + 1;
+        this.month = (new Date()).getMonth() + 1;        
         this.payMethodForm = this.fb.group({
             id: ['']
             , cardName: ['', Validators.required]
@@ -106,7 +105,7 @@ export class PaymentMethod {
             , ccExpiryYear: [this.year, Validators.required]
             , ccSecurityCode: ['', Validators.required]
             , co: ['']
-            , name: ['', Validators.required]
+            //, name: ['', Validators.required]
             , street1: ['', Validators.required]
             , street2: ['', Validators.required]
             , city: ['', Validators.required]
@@ -117,10 +116,13 @@ export class PaymentMethod {
             , phone: ['', [Validators.required, CustomValidators.phoneValidator]]
             , isDefault: [false]
         });
+        //input mask requires separate initialization
+        this.payMethodForm.controls['phone'].reset();
     }
     addPayMethod() {
         this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
+        this.selectedISOCode = "US";
         this.payMethodModal.open();
     };
     cancel() {
@@ -129,6 +131,8 @@ export class PaymentMethod {
     }
 
     submit() {
+        let firstName = this.payMethodForm.controls['ccFirstName'].value || '';
+        let lastName = this.payMethodForm.controls['ccLastName'].value || '';
         let payMethod = {
             cardName: this.payMethodForm.controls['cardName'].value
             , ccFirstName: this.payMethodForm.controls['ccFirstName'].value
@@ -139,7 +143,8 @@ export class PaymentMethod {
             , ccExpiryYear: this.payMethodForm.controls['ccExpiryYear'].value
             , ccSecurityCode: this.payMethodForm.controls['ccSecurityCode'].value
             //, co: ['']
-            , name: this.payMethodForm.controls['name'].value
+            //, name: this.payMethodForm.controls['name'].value
+            , name: firstName.concat(' ',lastName)
             , street1: this.payMethodForm.controls['street1'].value
             , street2: this.payMethodForm.controls['street2'].value
             , city: this.payMethodForm.controls['city'].value

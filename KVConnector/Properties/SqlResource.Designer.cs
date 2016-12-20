@@ -92,6 +92,15 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to delete from ShippingAddresses where id = @id;.
+        /// </summary>
+        internal static string DeleteShippingAddress {
+            get {
+                return ResourceManager.GetString("DeleteShippingAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select id, cardName,cardNumber, expiryDate, isDefault
         ///	from CreditCards 
         ///		where UserId = @userId;.

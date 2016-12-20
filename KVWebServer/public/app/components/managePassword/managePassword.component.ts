@@ -5,6 +5,8 @@ import { CustomValidators } from '../../services/customValidators';
 import { Subscription } from 'rxjs/Subscription';
 import { AppService } from '../../services/app.service';
 import { AlertModule } from 'ng2-bootstrap/components/alert';
+import { Message } from 'primeng/components/common/api';
+import { GrowlModule } from 'primeng/components/growl/growl';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { md5 } from '../../vendor/md5';
 
@@ -77,6 +79,7 @@ export class ChangePassword {
   changePwdForm: FormGroup;
   subscription: Subscription;
   alert: any = {};
+  messages: Message[] = [];
   constructor(private appService: AppService, private router: Router, private fb: FormBuilder) {
     this.subscription = appService.filterOn('post:change:password')
       .subscribe(d => {
@@ -87,7 +90,14 @@ export class ChangePassword {
 
         } else {
           this.appService.resetCredential();
-          this.appService.showAlert(this.alert,true,'','success');
+          this.appService.showAlert(this.alert, false)
+          this.messages = [];
+          this.messages.push({
+            severity: 'success'
+            , summary: 'Saved'
+            , detail: 'Data saved successfully'
+          });
+          this.router.navigate(['/login']);
         }
       });
   };
@@ -98,22 +108,10 @@ export class ChangePassword {
       , newPassword1: ['', Validators.required]
       , newPassword2: ['', Validators.required
         //, this.testAsync.bind(this)
-        ]
+      ]
     }, { validator: this.checkFormGroup });
   };
-  // testAsync(control) {
-  //   let pr = new Promise((resolve, reject) => {
-  //     this.appService.filterOn('get:default:credit:card').subscribe(d => {
-  //       if (d.data.error) {
-  //         console.log('Error in default credit card');
-  //       } else {
-  //         resolve({ testError: true });
-  //       }
-  //     });
-  //     this.appService.httpGet('get:default:credit:card');
-  //   });
-  //   return (pr);
-  // }
+
   checkFormGroup(group) {
     let ret = null;
     if (group.dirty) {
@@ -128,7 +126,7 @@ export class ChangePassword {
   changePassword(oldPwd, newPwd1, newPwd2) {
     let credential = this.appService.getCredential();
     if (credential) {
-      let email = credential.email;
+      let email = credential.user.email;
       if (email) {
         if (newPwd1 === newPwd2) {
           let base64Encoded = this.appService.encodeBase64(email + ':' + md5(oldPwd) + ':' + md5(newPwd1));

@@ -8,7 +8,7 @@
                     <span><input type="radio" [checked]="card.isDefault" #default
                         name="isDefault" (click)="setDefault(card)">                        
                     </span>
-                    <span class="name-shipping-address">{{card.cardName}}</span>                    
+                    <span class="name-shipping-address">{{card.cardName}}</span>
                     <!--<span>, {{card.ccFirstName}}</span>
                     <span>, {{card.ccLastName}}</span>
                     <span>, {{card.ccType}}</span>-->
@@ -98,11 +98,11 @@
                             <input type="text" class="form-control" id="ccSecurityCode" formControlName="ccSecurityCode" placeholder="Enter security code">
                             <control-messages [control]="payMethodForm.controls.ccSecurityCode"></control-messages>
                         </div>
-                        <!--  <div class="col-sm-6 formGap">
+                        <!--<div class="col-sm-6 formGap">
                             <label class="control-label" for="bName">Billing name:</label>
                             <input type="text" id="bName" class="form-control" formControlName="name" placeholder="Enter billing name">
                             <control-messages [control]="payMethodForm.controls.name"></control-messages>
-                        </div> -->
+                        </div>-->
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="bStreet1">Billing address 1:</label>
                             <input type="text" id="bStreet1" class="form-control" formControlName="street1" placeholder="Enter billing address 1">

@@ -38,6 +38,14 @@ var ApproveOrder = (function () {
         // allCards: [any] = [{}];
         this.payMethods = [{}];
         this.alert = { type: "success" };
+        this.payLater = function () {
+            if (!_this.selectedCard || _this.selectedCard == '') {
+                return ('Pay later');
+            }
+            else {
+                return ('');
+            }
+        };
         var ords = appService.request('orders');
         if (!ords) {
             router.navigate(['order']);
@@ -76,7 +84,7 @@ var ApproveOrder = (function () {
                     _this.selectedAddress = artifacts.Table1[0];
                 }
                 else {
-                    _this.selectedAddress = null;
+                    _this.selectedAddress = {};
                 }
                 if (artifacts.Table2.length > 0) {
                     _this.footer.prevBalance = artifacts.Table2[0] / 1;

@@ -33,6 +33,7 @@ export var urlHash = {
     
     'post:payment:method':'/api/generic/scalar',
     'post:delete:payment:method':'/api/generic/non/query',
+    'post:delete:shipping:address':'/api/generic/non/query',
     'post:set:default:payment:method':'/api/generic/non/query',
     'get:smartyStreet':'https://us-street.api.smartystreets.com/street-address?auth-id=:authId&auth-token=:authToken&street=:street&street2=:street2&city=:city&state=:state&zipcode=:zipcode&'
     , 'smartyStreetAutoCom':'https://us-autocomplete.api.smartystreets.com/suggest?auth-id=63395b2b-4df2-c8c7-a487-21ecc25979c8&auth-token=ikDR4hndQSAScpWSPdj8&prefix=Wyomi'
@@ -60,7 +61,7 @@ export var validationErrorMessages = {
     'oldAndNewPasswordsSame':'Old and new passwords cannot be same',
     'confirmPasswordMismatch':'New Password and Confirm New Password mismatch',
     'invalidCreditCard':'Credit card is invalid',
-    'addressSaveFailed':'Saving of shipping address at server failed',
+    'addressSaveFailed':'Saving of of address at server failed',
     'dataSaved':'Data successfully saved',
     'invalidDate':'Date is invalid',
     'dataNotSaved':'Data could not be saved',
@@ -69,7 +70,8 @@ export var validationErrorMessages = {
     'payMethodInsertFailed':'Payment method insert failed',
     'addressValidationUnauthorized':'Authorization error while validating address.',
     'invalidAddress':'This address is invalid',
-    'invalidZipCode':'This zip code is not a US legal zip code'
+    'invalidZipCode':'This zip code is not a US legal zip code',
+    'addressDeleteFailed':'Address could not be removed due to server side error'
     // , 'testSyncValidation':'test sync validation'
     // , 'testAsyncError':'Test async error'
 };

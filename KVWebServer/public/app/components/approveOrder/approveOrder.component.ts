@@ -39,7 +39,13 @@ export class ApproveOrder {
     //orderBundle: any = {};
     isAlert: boolean;
     alert: any = { type: "success" };
-
+    payLater:any=()=>{
+        if(!this.selectedCard || this.selectedCard==''){
+            return('Pay later');
+        } else{
+            return('');
+        }
+    };
 
     constructor(private appService: AppService, private router: Router) {
         let ords = appService.request('orders');
@@ -62,6 +68,7 @@ export class ApproveOrder {
                 console.log(d.data);
             }
         });
+
         this.approveArtifactsSub = appService.filterOn('get:approve:artifacts').subscribe(d => {
             if (d.data.error) {
                 console.log(d.data.error);
@@ -75,7 +82,7 @@ export class ApproveOrder {
                 if (artifacts.Table1.length > 0) {
                     this.selectedAddress = artifacts.Table1[0];
                 } else {
-                    this.selectedAddress = null;
+                    this.selectedAddress = {};
                 }
                 if (artifacts.Table2.length > 0) {
                     this.footer.prevBalance = artifacts.Table2[0] / 1;
@@ -106,12 +113,14 @@ export class ApproveOrder {
         });
 
     };
+
     @ViewChild('addrModal') addrModal: Modal;
     changeSelectedAddress() {
         this.isAlert = false;
         this.appService.httpGet('get:shipping:address');
         this.addrModal.open();
     };
+
     selectAddress(address) {
         this.selectedAddress = address;
         this.addrModal.close();

@@ -103,7 +103,6 @@ var PaymentMethod = (function () {
             ccExpiryYear: [this.year, forms_1.Validators.required],
             ccSecurityCode: ['', forms_1.Validators.required],
             co: [''],
-            name: ['', forms_1.Validators.required],
             street1: ['', forms_1.Validators.required],
             street2: ['', forms_1.Validators.required],
             city: ['', forms_1.Validators.required],
@@ -114,10 +113,13 @@ var PaymentMethod = (function () {
             phone: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
             isDefault: [false]
         });
+        //input mask requires separate initialization
+        this.payMethodForm.controls['phone'].reset();
     };
     PaymentMethod.prototype.addPayMethod = function () {
         this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
+        this.selectedISOCode = "US";
         this.payMethodModal.open();
     };
     ;
@@ -127,6 +129,8 @@ var PaymentMethod = (function () {
     };
     PaymentMethod.prototype.submit = function () {
         var _this = this;
+        var firstName = this.payMethodForm.controls['ccFirstName'].value || '';
+        var lastName = this.payMethodForm.controls['ccLastName'].value || '';
         var payMethod = {
             cardName: this.payMethodForm.controls['cardName'].value,
             ccFirstName: this.payMethodForm.controls['ccFirstName'].value,
@@ -136,7 +140,7 @@ var PaymentMethod = (function () {
             ccExpiryMonth: this.payMethodForm.controls['ccExpiryMonth'].value,
             ccExpiryYear: this.payMethodForm.controls['ccExpiryYear'].value,
             ccSecurityCode: this.payMethodForm.controls['ccSecurityCode'].value,
-            name: this.payMethodForm.controls['name'].value,
+            name: firstName.concat(' ', lastName),
             street1: this.payMethodForm.controls['street1'].value,
             street2: this.payMethodForm.controls['street2'].value,
             city: this.payMethodForm.controls['city'].value,
