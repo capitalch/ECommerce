@@ -15,6 +15,7 @@ export class ApproveOrder {
     getShippingSalesTaxPercSub: Subscription;
     selectedAddress: any = {};
     selectedCard: any = {};
+    defaultCard: any = {};
     allTotals: {} = {};
     footer: any = {
         wineTotals: {
@@ -33,17 +34,16 @@ export class ApproveOrder {
     approveHeading: string = messages['mess:approve:heading'];
 
     allAddresses: [any] = [{}];
-    // allCards: [any] = [{}];
-    payMethods:[any]=[{}];
+    payMethods: [any] = [{}];
     orders: any[];
     //orderBundle: any = {};
     isAlert: boolean;
     alert: any = { type: "success" };
-    payLater:any=()=>{
-        if(!this.selectedCard || this.selectedCard==''){
-            return('Pay later');
-        } else{
-            return('');
+    payLater: any = () => {
+        if (!this.selectedCard || this.selectedCard == '') {
+            return ('Pay later');
+        } else {
+            return ('');
         }
     };
 
@@ -75,7 +75,7 @@ export class ApproveOrder {
             } else {
                 let artifacts = JSON.parse(d.data);
                 if (artifacts.Table.length > 0) {
-                    this.selectedCard = artifacts.Table[0];
+                    this.selectedCard = this.defaultCard = artifacts.Table[0];
                 } else {
                     this.selectedCard = null;
                 }
@@ -173,8 +173,12 @@ export class ApproveOrder {
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
 
-    removePayMethod(){
-        this.selectedCard={};
+    removePayMethod() {
+        if (Object.keys(this.selectedCard).length == 0) {
+            this.selectedCard = this.defaultCard;
+        } else {
+            this.selectedCard = {};
+        }
     };
 
     computeTotals() {

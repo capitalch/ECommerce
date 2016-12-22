@@ -37,6 +37,7 @@ var confirmdialog_1 = require("primeng/components/confirmdialog/confirmdialog");
 var growl_1 = require("primeng/components/growl/growl");
 var api_1 = require("primeng/components/common/api");
 var inputMask_1 = require("primeng/components/inputMask/inputMask");
+// import {BusyModule} from 'angular2-busy';
 var AppModule = (function () {
     function AppModule() {
     }

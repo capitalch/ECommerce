@@ -27,6 +27,7 @@ import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdia
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { Message, ConfirmationService } from 'primeng/components/common/api';
 import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
+// import {BusyModule} from 'angular2-busy';
 
 @NgModule({
   imports: [BrowserModule, HttpModule, Routing, FormsModule
@@ -40,6 +41,7 @@ import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
     , InputMaskModule
     , GrowlModule
     , NgIdleModule.forRoot()
+    //, BusyModule
   ]
   , declarations: [AppComponent, Login, Order, ForgotPassword
     , SendPassword, ChangePassword, CreateAccount,

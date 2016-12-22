@@ -21,6 +21,7 @@ var ApproveOrder = (function () {
         this.router = router;
         this.selectedAddress = {};
         this.selectedCard = {};
+        this.defaultCard = {};
         this.allTotals = {};
         this.footer = {
             wineTotals: {
@@ -35,7 +36,6 @@ var ApproveOrder = (function () {
         };
         this.approveHeading = config_1.messages['mess:approve:heading'];
         this.allAddresses = [{}];
-        // allCards: [any] = [{}];
         this.payMethods = [{}];
         this.alert = { type: "success" };
         this.payLater = function () {
@@ -75,7 +75,7 @@ var ApproveOrder = (function () {
             else {
                 var artifacts = JSON.parse(d.data);
                 if (artifacts.Table.length > 0) {
-                    _this.selectedCard = artifacts.Table[0];
+                    _this.selectedCard = _this.defaultCard = artifacts.Table[0];
                 }
                 else {
                     _this.selectedCard = null;
@@ -173,7 +173,12 @@ var ApproveOrder = (function () {
     };
     ;
     ApproveOrder.prototype.removePayMethod = function () {
-        this.selectedCard = {};
+        if (Object.keys(this.selectedCard).length == 0) {
+            this.selectedCard = this.defaultCard;
+        }
+        else {
+            this.selectedCard = {};
+        }
     };
     ;
     ApproveOrder.prototype.computeTotals = function () {

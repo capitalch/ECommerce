@@ -5,14 +5,14 @@
     <div class="panel-heading">Address</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-8">
           <span *ngIf="!selectedAddress.name" class="noRecord">You must provide a shipping address</span>
           <span *ngIf="selectedAddress.name">
           <span class="name-shipping-address">{{selectedAddress.name}}</span> , {{selectedAddress.street1}} , {{selectedAddress.city}}
           , {{selectedAddress.state}} , {{selectedAddress.zip}} , {{selectedAddress.country}}
           </span>
         </div>
-        <div class="col-sm-2 btnApprovedOrder"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
+        <div class="col-sm-4 btnApprovedOrder"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
       </div>
     </div>
   </div>
@@ -21,11 +21,11 @@
     <div class="panel-heading">Payment method</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-6">
           <span *ngIf="!selectedCard.cardName" class="noRecord">Pay later</span>
           <span *ngIf="selectedCard.cardName"><span class="name-shipping-address">{{selectedCard.cardName}}</span>, {{selectedCard.ccNumber}}</span>
         </div>
-        <div class="col-sm-2 btnApprovedpayment">
+        <div class="col-sm-6 btnApprovedpayment">
           <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Change</button>
           <button class="btn btn-md btn-kistler" (click)="removePayMethod()">Pay later</button>
         </div>
@@ -42,8 +42,8 @@
           <th>Wine Request</th>
           <th class="text-center">Request</th>
           <th class="priceFldAlign">Total</th>
-          <th class="text-center">Wish List</th>
-          <th class="priceFldAlign">Additional</th>
+          <th class="text-center additionalRequestCont">Additional Requested</th>
+          <th class="priceFldAlign">Totals with Additional</th>
 
         </tr>
       </thead>
@@ -57,7 +57,7 @@
         </tr>
 
         <tr class="totalaWineCosts">
-          <td class="subTotalTtitle">Total wine costs</td>
+          <td class="subTotalTtitle">Total Wine Cost</td>
           <td>&nbsp;</td>
           <td class="productPrice priceFldAlign">${{footer.wineTotals.wine | number : '1.2-2'}}</td>
           <td>&nbsp;</td>
