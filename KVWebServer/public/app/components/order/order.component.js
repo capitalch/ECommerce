@@ -28,6 +28,7 @@ var Order = (function () {
             minimumRequest: this.appService.getMessage('mess:order:minimum:request'),
             bottomNotes: this.appService.getMessage('mess:order:bottom:notes')
         };
+        this.onlineOrder = appService.getSetting('onlineOrder');
         this.currentOfferSubscription = appService.filterOn('get:current:offer')
             .subscribe(function (d) {
             if (d.data.error) {

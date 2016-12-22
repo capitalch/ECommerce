@@ -29,17 +29,18 @@ var AppComponent = (function () {
         this.needHelpText = "";
         this.logout = function () {
             _this.appService.resetCredential();
+            _this.appService.clearSettings();
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
                 _this.idle.stop();
             }
         };
         this.setInactivityTimeout = function () {
-            //set current user to be displayed to nav bar
             var secs;
             var credential = _this.appService.getCredential();
-            if (!credential) {
-                return;
-            }
+            // if (!credential) {
+            //   return;
+            // }
+            //set current user to be displayed to nav bar
             _this.currentEmail = credential.user.email;
             secs = credential.inactivityTimeoutSecs || 300;
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
@@ -72,8 +73,8 @@ var AppComponent = (function () {
             _this.idle.watch();
         };
         this.initMenu(window.innerWidth);
-        this.needHelpSub = appService.behFilterOn('masters:download:success').subscribe(function (d) {
-            _this.needHelpText = _this.appService.getNeedHelpText();
+        this.needHelpSub = appService.behFilterOn('settings:download:success').subscribe(function (d) {
+            _this.needHelpText = _this.appService.getSetting('needHelpText');
             //this.isDataReady = true;
         });
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
@@ -93,15 +94,15 @@ var AppComponent = (function () {
         });
     }
     ;
-    // needHelp() {
-    //   this.needHelpDisplay=true;
-    // };
     AppComponent.prototype.ngOnInit = function () {
         var credential = this.appService.getCredential();
+        if (credential) {
+            this.appService.loadSettings();
+            this.setInactivityTimeout();
+        }
         this.appService.httpGet('get:init:data');
         //request / reply mecanism to start inactivity timer at successful login
         this.appService.reply('login:success', this.setInactivityTimeout);
-        this.setInactivityTimeout();
     };
     ;
     AppComponent.prototype.ngOnDestroy = function () {
@@ -119,7 +120,7 @@ var AppComponent = (function () {
     };
     ;
     AppComponent.prototype.initMenu = function (windowSize) {
-        if (windowSize > 768) {
+        if (windowSize >= 768) {
             this.showMenu = true;
             this.myAccountshowMenu = true;
         }
@@ -128,6 +129,7 @@ var AppComponent = (function () {
             this.myAccountshowMenu = false;
         }
     };
+    ;
     AppComponent.prototype.onResize = function (event) {
         this.initMenu(event.target.innerWidth);
     };

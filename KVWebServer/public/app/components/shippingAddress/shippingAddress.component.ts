@@ -39,10 +39,14 @@ export class ShippingAddress {
     addresses: [any];
     constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService) {
         this.initShippingForm({});
+
+    };
+
+    initSubscriptions() {
         this.verifyAddressSub = this.appService.filterOn('get:smartyStreet').subscribe(d => {
             if (d.data.error) {
                 //Authorization of vendor at smartyStreet failed. Maybe purchase of new slot required
-                appService.showAlert(this.alert, true, 'addressValidationUnauthorized');
+                this.appService.showAlert(this.alert, true, 'addressValidationUnauthorized');
                 this.isVerifying = false;
             } else {
                 if (d.data.length == 0) {
@@ -56,30 +60,30 @@ export class ShippingAddress {
                 }
             }
         });
-        this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
+        this.dataReadySubs = this.appService.behFilterOn('masters:download:success').subscribe(d => {
             this.countries = this.appService.getCountries();
             this.isDataReady = true;
         });
-        this.getSubscription = appService.filterOn("get:shipping:address")
+        this.getSubscription = this.appService.filterOn("get:shipping:address")
             .subscribe(d => {
                 this.isVerifying = false;
                 this.addresses = JSON.parse(d.data).Table;
                 if (this.addresses.length > 0) {
-                    if (this.radioIndex > (this.addresses.length-1)) {
-                        this.radioIndex = this.addresses.length-1;
+                    if (this.radioIndex > (this.addresses.length - 1)) {
+                        this.radioIndex = this.addresses.length - 1;
                     }
                     this.addresses[this.radioIndex || 0].isSelected = true;
                 }
             });
-        this.postSubscription = appService.filterOn("post:shipping:address")
+        this.postSubscription = this.appService.filterOn("post:shipping:address")
             .subscribe(d => {
                 this.showMessage(d);
             });
-        this.putSubscription = appService.filterOn("put:shipping:address")
+        this.putSubscription = this.appService.filterOn("put:shipping:address")
             .subscribe(d => {
                 this.showMessage(d);
             });
-        this.postDeleteSubscription = appService.filterOn("post:delete:shipping:address")
+        this.postDeleteSubscription = this.appService.filterOn("post:delete:shipping:address")
             .subscribe(d => {
                 if (d.data.error) {
                     console.log(d.data.error);
@@ -89,12 +93,8 @@ export class ShippingAddress {
                         severity: 'error'
                         , summary: 'Error'
                         , detail: 'Address could not be deleted'
-                    });
-                    // this.appService.showAlert(this.alert, true, 'addressDeleteFailed');
-                } else {
-                    //this.addresses.splice(this.radioIndex);
-                    // this.appService.showAlert(this.alert, false);
-                    // this.appService.doGrowl(this.messages, 'success', 'Success', 'Data saved successfully');
+                    });                    
+            } else {
                     this.appService.httpGet('get:shipping:address');
                     this.messages = [];
                     this.messages.push({
@@ -102,7 +102,6 @@ export class ShippingAddress {
                         , summary: 'Success'
                         , detail: 'Data saved successfully'
                     });
-
                 }
             });
     };
@@ -151,13 +150,14 @@ export class ShippingAddress {
             isDefault: [address.isDefault || false]
         });
         this.selectedCountryName = address.country;
-        if(!address.phone){
+        if (!address.phone) {
             //separate reset is required to clear the input mask control
             this.shippingForm.controls['phone'].reset();
         }
     };
 
     ngOnInit() {
+        this.initSubscriptions();
         this.appService.httpGet('get:shipping:address');
     };
 

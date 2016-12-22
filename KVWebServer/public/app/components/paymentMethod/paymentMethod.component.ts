@@ -45,7 +45,7 @@ export class PaymentMethod {
             });
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
             this.countries = this.appService.getCountries();
-            this.creditCardTypes = this.appService.getCreditCardTypes();
+            this.creditCardTypes = this.appService.getSetting('creditCardTypes');
             this.isDataReady = true;
         });
         this.postPayMethodSub = appService.filterOn("post:payment:method")

@@ -112,11 +112,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select countryId, countryName, isoCode,requiresZip from Countries order by countryName; 
-        ///select smartyStreetApiKey = (select stringValue from setup where MKey = &apos;SmartyStreetApiKey&apos;)
-        ///	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthId&apos;)
-        ///	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthToken&apos;)
-        ///	, creditCardTypes = (select creditCardTypes = stringValue from setup where MKey = &apos;CreditCardTyp [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to select countryId, countryName, isoCode,requiresZip from Countries order by countryName;.
         /// </summary>
         internal static string GetAllMasters {
             get {
@@ -299,6 +295,19 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select smartyStreetApiKey = (select stringValue from setup where MKey = &apos;SmartyStreetApiKey&apos;)
+        ///	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthId&apos;)
+        ///	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = &apos;SmartyStreetAuthToken&apos;)
+        ///	, creditCardTypes = (select creditCardTypes = stringValue from setup where MKey = &apos;CreditCardTypes&apos;)
+        ///	, needHelpText = (select needHelpText = stringValue from setup where mKey = &apos;NeedHe [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetSettings {
+            get {
+                return ResourceManager.GetString("GetSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to --declare @zip varchar(100);
         ///--declare @bottles int;
         ///--select @zip = &apos;a&apos;;
@@ -382,6 +391,15 @@ namespace KVConnector.Properties {
         internal static string InsertShippingAddress {
             get {
                 return ResourceManager.GetString("InsertShippingAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insert into UsrLog(Code,mType) values(@userCode, @mType);.
+        /// </summary>
+        internal static string InsertUserLog {
+            get {
+                return ResourceManager.GetString("InsertUserLog", resourceCulture);
             }
         }
         

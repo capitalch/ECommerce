@@ -4,7 +4,7 @@ export var urlHash = {
     'post:forgot:password': '/api/forgot/password',
     'post:send:password': '/api/send/password',
     'post:change:password': '/api/change/password',
-    'post:create:password':'/api/create/password',
+    'post:create:password': '/api/create/password',
     'post:create:account': '/api/create/account',
     'get:current:offer': '/api/current/offer',
     //'post:save:order': '/api/order',
@@ -26,17 +26,18 @@ export var urlHash = {
 
     'get:approve:artifacts': '/api/approve/artifact',
     'post:save:approve:request': '/api/approve/request',
-    'get:init:data':'/api/init/data',
-    'get:all:masters':'/api/all/master',
-    'get:shipping:sales:tax:perc':'/api/generic/query',
-    'get:payment:method':'/api/generic/query',
-    
-    'post:payment:method':'/api/generic/scalar',
-    'post:delete:payment:method':'/api/generic/non/query',
-    'post:delete:shipping:address':'/api/generic/non/query',
-    'post:set:default:payment:method':'/api/generic/non/query',
-    'get:smartyStreet':'https://us-street.api.smartystreets.com/street-address?auth-id=:authId&auth-token=:authToken&street=:street&street2=:street2&city=:city&state=:state&zipcode=:zipcode&'
-    , 'smartyStreetAutoCom':'https://us-autocomplete.api.smartystreets.com/suggest?auth-id=63395b2b-4df2-c8c7-a487-21ecc25979c8&auth-token=ikDR4hndQSAScpWSPdj8&prefix=Wyomi'
+    'get:init:data': '/api/init/data',
+    'get:all:masters': '/api/all/master',
+    'get:shipping:sales:tax:perc': '/api/generic/query',
+    'get:payment:method': '/api/generic/query',
+
+    'post:payment:method': '/api/generic/scalar',
+    'post:delete:payment:method': '/api/generic/non/query',
+    'post:delete:shipping:address': '/api/generic/non/query',
+    'post:set:default:payment:method': '/api/generic/non/query',
+    'get:smartyStreet': 'https://us-street.api.smartystreets.com/street-address?auth-id=:authId&auth-token=:authToken&street=:street&street2=:street2&city=:city&state=:state&zipcode=:zipcode&'
+    , 'smartyStreetAutoCom': 'https://us-autocomplete.api.smartystreets.com/suggest?auth-id=63395b2b-4df2-c8c7-a487-21ecc25979c8&auth-token=ikDR4hndQSAScpWSPdj8&prefix=Wyomi'
+    , 'get:all:settings': '/api/generic/query'
 };
 export var messages = {
     'mess:order:intro:text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a tortor imperdiet, porttitor purus ut, pretium diam. Nulla convallis vel ipsum quis mattis. Nam in erat massa. Praesent bibendum dapibus lectus, nec imperdiet eros pharetra et. Vestibulum euismod velit sit amet nulla ornare iaculis viverra eget augue. Etiam dolor lacus, rhoncus in rhoncus eget, faucibus at nisi. Nulla nec mollis orci. Pellentesque pharetra facilisis dolor vel tincidunt. Suspendisse ullamcorper fermentum nunc, a dapibus tellus imperdiet vitae.',
@@ -46,48 +47,48 @@ export var messages = {
     'mess:approve:heading': 'Please review your shipping address & payment method information for your order.',
     'mess:receipt:heading': 'Thank you for your Kistler Fall 2016 Request.',
     'mess:receipt:info': 'An acknowledgement email has been sent to @email. If you do not receive the email within 10 minutes, please check your Spam / Junk mail folder. Otherwise, contact us for assistance. ',
-    'mess:confirm:save:invalid:address':'This address could not be verified. Do you still want to proceed with this unverified address? ',
-    'mess:confirm:save:edited:address':'This address is verified and maybe some changes are done. Please confirm the edited address as follows: \n\n'
+    'mess:confirm:save:invalid:address': 'This address could not be verified. Do you still want to proceed with this unverified address? ',
+    'mess:confirm:save:edited:address': 'This address is verified and maybe some changes are done. Please confirm the edited address as follows: \n\n'
 };
 export var validationErrorMessages = {
     'required': 'Value is required',
     'invalidEmail': 'Email address is invalid',
-    'invalidPhone':'Phone number is invalid',
-    'loginFailed':'Login failed',
-    'emptyOrder':'Empty order is not allowed',
-    'excessOrder':'Request exceeds available quantity',
-    'someExcessOrder':'One or many of the requests exceeds available quantity',
-    'changePasswordFailed':'Change of password failed',
-    'oldAndNewPasswordsSame':'Old and new passwords cannot be same',
-    'confirmPasswordMismatch':'New Password and Confirm New Password mismatch',
-    'invalidCreditCard':'Credit card is invalid',
-    'addressSaveFailed':'Saving of of address at server failed',
-    'dataSaved':'Data successfully saved',
-    'invalidDate':'Date is invalid',
-    'dataNotSaved':'Data could not be saved',
-    'createPasswordFailed':'Creation of new password failed',
-    'changePasswordSuccess':'Password successfully changed',
-    'payMethodInsertFailed':'Payment method insert failed',
-    'addressValidationUnauthorized':'Authorization error while validating address.',
-    'invalidAddress':'This address is invalid',
-    'invalidZipCode':'This zip code is not a US legal zip code',
-    'addressDeleteFailed':'Address could not be removed due to server side error'
+    'invalidPhone': 'Phone number is invalid',
+    'loginFailed': 'Login failed',
+    'emptyOrder': 'Empty order is not allowed',
+    'excessOrder': 'Request exceeds available quantity',
+    'someExcessOrder': 'One or many of the requests exceeds available quantity',
+    'changePasswordFailed': 'Change of password failed',
+    'oldAndNewPasswordsSame': 'Old and new passwords cannot be same',
+    'confirmPasswordMismatch': 'New Password and Confirm New Password mismatch',
+    'invalidCreditCard': 'Credit card is invalid',
+    'addressSaveFailed': 'Saving of of address at server failed',
+    'dataSaved': 'Data successfully saved',
+    'invalidDate': 'Date is invalid',
+    'dataNotSaved': 'Data could not be saved',
+    'createPasswordFailed': 'Creation of new password failed',
+    'changePasswordSuccess': 'Password successfully changed',
+    'payMethodInsertFailed': 'Payment method insert failed',
+    'addressValidationUnauthorized': 'Authorization error while validating address.',
+    'invalidAddress': 'This address is invalid',
+    'invalidZipCode': 'This zip code is not a US legal zip code',
+    'addressDeleteFailed': 'Address could not be removed due to server side error'
     // , 'testSyncValidation':'test sync validation'
     // , 'testAsyncError':'Test async error'
 };
 export var viewBoxConfig = {
-    '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:false },
-    '/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false,logout:true },
-    '/approve': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false,logout:true },
-    '/receipt': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false,logout:true },
-    '/profile': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true,logout:true },
-    '/order/history': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true,logout:true },
-    '/shipping/address': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true,logout:true },
-    '/payment/method': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true,logout:true },
-    '/change/password': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true,logout:true },
-    '/create/account': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:true },
-    '/forgot/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:true },
-    '/send/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:true },
-    '/approve/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false,logout:true },
-    '/create/password':{ home: true, needHelp: false, order: false, myAccount: false, menuBar: false,logout:false }
+    '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },
+    '/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true },
+    '/approve': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true },
+    '/receipt': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true },
+    '/profile': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true, logout: true },
+    '/order/history': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true, logout: true },
+    '/shipping/address': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true, logout: true },
+    '/payment/method': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true, logout: true },
+    '/change/password': { home: true, needHelp: false, order: true, myAccount: false, menuBar: true, logout: true },
+    '/create/account': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
+    '/forgot/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
+    '/send/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: true },
+    '/approve/order': { home: true, needHelp: true, order: false, myAccount: true, menuBar: false, logout: true },
+    '/create/password': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false }
 };

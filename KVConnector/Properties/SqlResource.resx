@@ -301,12 +301,7 @@ select a.id, cardName,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRI
 	where orderId = @orderId;</value>
   </data>
   <data name="GetAllMasters" xml:space="preserve">
-    <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName; 
-select smartyStreetApiKey = (select stringValue from setup where MKey = 'SmartyStreetApiKey')
-	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthId')
-	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthToken')
-	, creditCardTypes = (select creditCardTypes = stringValue from setup where MKey = 'CreditCardTypes')
-	, needHelpText = (select needHelpText = stringValue from setup where mKey = 'NeedHelpText');</value>
+    <value>select countryId, countryName, isoCode,requiresZip from Countries order by countryName;</value>
   </data>
   <data name="GetAllPaymentMethods" xml:space="preserve">
     <value>select id, cardName,ccFirstName,ccLastName,ccType,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4),
@@ -368,5 +363,17 @@ insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,P
   </data>
   <data name="DeleteShippingAddress" xml:space="preserve">
     <value>delete from ShippingAddresses where id = @id;</value>
+  </data>
+  <data name="GetSettings" xml:space="preserve">
+    <value>select smartyStreetApiKey = (select stringValue from setup where MKey = 'SmartyStreetApiKey')
+	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthId')
+	, smartyStreetAuthToken = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthToken')
+	, creditCardTypes = (select creditCardTypes = stringValue from setup where MKey = 'CreditCardTypes')
+	, needHelpText = (select needHelpText = stringValue from setup where mKey = 'NeedHelpText')
+	, disableOnlineOrderForm = (select DisableOnlineOrderForm from SysParms)
+	, disableOnlineOrderText = (select disableOnlineOrderText = stringValue from setup where mKey ='DisableOnlineOrderText');</value>
+  </data>
+  <data name="InsertUserLog" xml:space="preserve">
+    <value>Insert into UsrLog(Code,mType) values(@userCode, @mType);</value>
   </data>
 </root>

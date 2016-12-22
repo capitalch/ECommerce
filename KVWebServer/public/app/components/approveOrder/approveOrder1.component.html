@@ -5,11 +5,15 @@
     <div class="panel-heading">Address</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-10">
-          <span *ngIf="!selectedAddress.name" class="noRecord">You must provide a shipping address</span>
+        <div class="col-sm-10">          
+          <span *ngIf = "!selectedAddress.name">You must provide a shipping address</span>
           <span *ngIf="selectedAddress.name">
-          <span class="name-shipping-address">{{selectedAddress.name}}</span> , {{selectedAddress.street1}} , {{selectedAddress.city}}
-          , {{selectedAddress.state}} , {{selectedAddress.zip}} , {{selectedAddress.country}}
+            {{selectedAddress.name}}
+            , {{selectedAddress.street1}}
+            , {{selectedAddress.city}}
+            , {{selectedAddress.state}}
+            , {{selectedAddress.zip}}
+            , {{selectedAddress.country}}
           </span>
         </div>
         <div class="col-sm-2 btnApprovedOrder"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
@@ -21,14 +25,12 @@
     <div class="panel-heading">Payment method</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-10">
-          <span *ngIf="!selectedCard.cardName" class="noRecord">Pay later</span>
-          <span *ngIf="selectedCard.cardName"><span class="name-shipping-address">{{selectedCard.cardName}}</span>, {{selectedCard.ccNumber}}</span>
-        </div>
-        <div class="col-sm-2 btnApprovedpayment">
-          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Change</button>
-          <button class="btn btn-md btn-kistler" (click)="removePayMethod()">Pay later</button>
-        </div>
+        <div class="col-sm-4">
+          <span *ngIf="!selectedCard.cardName">Pay later</span>
+          <span *ngIf="selectedCard.cardName">{{selectedCard.cardName}}, {{selectedCard.ccNumber}}</span>
+        </div>        
+        <div class="col-sm-6"><button class="btn btn-link" (click)="removePayMethod()">Remove</button></div>
+        <div class="col-sm-2 btnApprovedpayment"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Change</button></div>
       </div>
     </div>
 
@@ -107,16 +109,12 @@
       </modal-header>
       <modal-content>
         <div class="form-group" *ngFor="let address of allAddresses; let i=index">
-          <!--<input type="radio" [checked]="address.isDefault" (click)=selectAddress(address) name="isDefault"> -->
-          <button type="button" class="btn btn-link" (click)="selectAddress(address)">
-          {{address.name}},
+          <input type="radio" [checked]="address.isDefault" (click)=selectAddress(address) name="isDefault"> {{address.name}},
           {{address.street1}}, {{address.city}}, {{address.state}}, {{address.zip}}, {{address.country}}
-          <span *ngIf="address.isDefault" class="DefaultColor">Default</span>
-          </button>
         </div>
       </modal-content>
       <modal-footer>
-        <button class="btn btn-md btn-kistler" (click)="addrModal.close()">Cancel</button>
+        <button class="btn btn-md btn-kistler" (click)="addrModal.close()">close</button>
       </modal-footer>
     </modal>
   </div>
@@ -127,16 +125,12 @@
       </modal-header>
       <modal-content>
         <div class="form-group" *ngFor="let card of payMethods; let i=index">
-          <!--<input type="radio" [checked]="card.isDefault" (click)=selectCard(card) name="isDefaultCard"> -->
-          <button type="button" class="btn btn-link" (click)="selectCard(card)">
-          {{card.cardName}},
+          <input type="radio" [checked]="card.isDefault" (click)=selectCard(card) name="isDefaultCard"> {{card.cardName}},
           {{card.ccNumber}}
-          <span *ngIf="card.isDefault" class="DefaultColor">Default</span>
-          </button>
         </div>
       </modal-content>
       <modal-footer>
-        <button class="btn btn-md btn-kistler" (click)="cardModal.close()">Cancel</button>
+        <button class="btn btn-md btn-kistler" (click)="cardModal.close()">close</button>
       </modal-footer>
     </modal>
   </div>

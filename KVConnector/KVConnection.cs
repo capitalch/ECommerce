@@ -151,9 +151,14 @@ namespace KVConnector
                                             user.code = item;
                                             user.role = role;
                                             result.user = user;
+                                            //log user
+                                            paramsList.Clear();
+                                            paramsList.Add(new SqlParameter("userCode", item));
+                                            paramsList.Add(new SqlParameter("mType", "login"));
+                                            seedDataAccess.ExecuteScalar(SqlResource.InsertUserLog, paramsList);
                                         }
                                         if ((hash == adminPwdHash) && (remoteIp == adminIp))
-                                        {                                            
+                                        {                                                                                
                                             result.isAdmin = true;
                                         }
                                     }

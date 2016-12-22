@@ -15,6 +15,7 @@ export class Order {
     type: 'danger',
     message: ''
   };
+  onlineOrder:any;
   excessOrder: string = this.appService.getValidationErrorMessage('excessOrder');
   email: string;
   staticTexts: {
@@ -32,6 +33,7 @@ export class Order {
   saveOrderSubscription: Subscription;
   orders: any[];
   constructor(private appService: AppService, private router: Router) {
+    this.onlineOrder = appService.getSetting('onlineOrder');
     this.currentOfferSubscription = appService.filterOn('get:current:offer')
       .subscribe(d => {
         if (d.data.error) {
