@@ -1,12 +1,13 @@
 <div class="container mainContainer">
     <h2>Order</h2>
-    <div *ngIf="!onlineOrder.disableOnlineOrderForm">
+    
     <div class="introText boxPanel">
         <div class="welcomeTxt">
             Welcome <label class="username"> ipsum</label>
         </div>
         <summary>{{staticTexts.introText}}</summary>
-    </div>    
+    </div>
+    <div *ngIf="!onlineOrder.disableOnlineOrderForm">
     <!--<div  *ngIf="!onlineOrder.disableOnlineOrderForm">-->
         <div class="panel-group">
         <div class="panel panel-default ProductPanel" *ngFor="let order of orders">

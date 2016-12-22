@@ -8,8 +8,8 @@
         <div class="col-sm-8">
           <span *ngIf="!selectedAddress.name" class="noRecord">You must provide a shipping address</span>
           <span *ngIf="selectedAddress.name">
-          <span class="name-shipping-address">{{selectedAddress.name}}</span> , {{selectedAddress.street1}} , {{selectedAddress.city}}
-          , {{selectedAddress.state}} , {{selectedAddress.zip}} , {{selectedAddress.country}}
+          <span class="name-shipping-address">{{selectedAddress.name}}</span>, {{selectedAddress.street1}}, {{selectedAddress.city}}
+          , {{selectedAddress.state}}, {{selectedAddress.zip}}, {{selectedAddress.country}}
           </span>
         </div>
         <div class="col-sm-4 btnApprovedOrder"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
@@ -26,7 +26,7 @@
           <span *ngIf="selectedCard.cardName"><span class="name-shipping-address">{{selectedCard.cardName}}</span>, {{selectedCard.ccNumber}}</span>
         </div>
         <div class="col-sm-6 btnApprovedpayment">
-          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Change</button>
+          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Use existing</button>
           <button class="btn btn-md btn-kistler" (click)="removePayMethod()">Pay later</button>
         </div>
       </div>
