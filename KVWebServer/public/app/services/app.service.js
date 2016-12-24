@@ -11,13 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var http_1 = require("@angular/http");
 var core_1 = require("@angular/core");
 var subject_1 = require("rxjs/subject");
-var observable_1 = require("rxjs/observable");
+//import { Observable } from 'rxjs/observable';
+require("rxjs/add/operator/share");
+//import 'rxjs/add/operator/share'
 var behaviorsubject_1 = require("rxjs/behaviorsubject");
 var router_1 = require("@angular/router");
 require("rxjs/add/operator/map");
 require("rxjs/add/observable/of");
 require("rxjs/add/operator/filter");
-// import { GrowlModule } from 'primeng/components/growl/growl';
+var Rx_1 = require("rxjs/Rx");
 //import * as _ from 'lodash';
 var config_1 = require("../config");
 var AppService = (function () {
@@ -25,6 +27,9 @@ var AppService = (function () {
         var _this = this;
         this.http = http;
         this.globalSettings = {};
+        this.spinnerObservable = new Rx_1.Observable(function (observer) {
+            _this.spinnerObserver = observer;
+        }).share();
         this.subject = new subject_1.Subject();
         this.behaviorSubjects = {
             'masters:download:success': new behaviorsubject_1.BehaviorSubject({ id: '1', data: {} }),
@@ -151,17 +156,26 @@ var AppService = (function () {
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
         body.token = this.getToken();
+        if (this.spinnerObserver) {
+            this.spinnerObserver.next(true);
+        }
         this.http.post(url, body, { headers: headers })
             .map(function (response) { return response.json(); })
             .subscribe(function (d) {
-            return _this.subject.next({
+            _this.subject.next({
                 id: id, data: d, body: body
             });
+            if (_this.spinnerObserver) {
+                _this.spinnerObserver.next(false);
+            }
         }, function (err) {
-            return _this.subject.next({
+            _this.subject.next({
                 id: id,
                 data: { error: err }
             });
+            if (_this.spinnerObserver) {
+                _this.spinnerObserver.next(false);
+            }
         });
     };
     ;
@@ -189,17 +203,26 @@ var AppService = (function () {
                     .replace(':zipcode', encodeURIComponent(body.usAddress.zipcode));
             }
         }
+        if (this.spinnerObserver) {
+            this.spinnerObserver.next(true);
+        }
         this.http.get(url, { headers: headers })
             .map(function (response) { return response.json(); })
             .subscribe(function (d) {
-            return _this.subject.next({
+            _this.subject.next({
                 id: id, data: d
             });
+            if (_this.spinnerObserver) {
+                _this.spinnerObserver.next(false);
+            }
         }, function (err) {
-            return _this.subject.next({
+            _this.subject.next({
                 id: id,
                 data: { error: err }
             });
+            if (_this.spinnerObserver) {
+                _this.spinnerObserver.next(false);
+            }
         });
     };
     ;
@@ -274,6 +297,12 @@ var AppService = (function () {
         delete this.channel[key];
     };
     ;
+    AppService.prototype.resetAllReplies = function () {
+        var _this = this;
+        Object.keys(this.channel).map(function (key, index) {
+            delete _this.channel[key];
+        });
+    };
     AppService.prototype.encodeBase64 = function (inputString) {
         var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) {
                 n = e.charCodeAt(f++);
@@ -387,7 +416,7 @@ var LoginGuard = (function () {
                 .map(function (result) { return result.json(); });
         }
         catch (err) {
-            obs = observable_1.Observable.of(false);
+            obs = Rx_1.Observable.of(false);
         }
         return obs
             .map(function (success) {

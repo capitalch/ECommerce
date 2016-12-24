@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/subscription';
 import { AppService } from '../services/app.service';
 import { viewBoxConfig } from '../config';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core'
+import { SpinnerComponent } from './app.spinner';
 
 @Component({
   selector: 'my-app',
@@ -22,13 +23,11 @@ export class AppComponent {
   myAccountshowMenu: boolean = false;
   currentEmail: string = "";
   needHelpText: string = "";
-  //needHelpDisplay:boolean=false;
 
   constructor(private appService: AppService, private router: Router, private idle: Idle) {
     this.initMenu(window.innerWidth);
     this.needHelpSub = appService.behFilterOn('settings:download:success').subscribe(d => {
-      this.needHelpText = this.appService.getSetting('needHelpText')
-      //this.isDataReady = true;
+      this.needHelpText = this.appService.getSetting('needHelpText')      
     });
     this.initDataSub = appService.filterOn('get:init:data').subscribe(d => {
       if (d.data.error) {
@@ -48,7 +47,11 @@ export class AppComponent {
 
   logout = () => {
     this.appService.resetCredential();
-    this.appService.clearSettings();
+    //to reset the orders placed through request page
+    this.appService.reset('orders');
+    //this.appService.clearSettings();
+    //this.appService.resetAllReplies();
+    //this.appService.reply('login:success', this.setInactivityTimeout);
     if (this.idle.isIdling() || this.idle.isRunning()) {
       this.idle.stop();
     }
@@ -64,16 +67,13 @@ export class AppComponent {
     this.appService.httpGet('get:init:data');
     //request / reply mecanism to start inactivity timer at successful login
     this.appService.reply('login:success', this.setInactivityTimeout);
-
   };
 
   setInactivityTimeout = () => {
 
     let secs;
     let credential = this.appService.getCredential();
-    // if (!credential) {
-    //   return;
-    // }
+    
     //set current user to be displayed to nav bar
     this.currentEmail = credential.user.email;
     secs = credential.inactivityTimeoutSecs || 300;

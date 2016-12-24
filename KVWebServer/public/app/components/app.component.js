@@ -14,7 +14,6 @@ var app_service_1 = require("../services/app.service");
 var config_1 = require("../config");
 var core_2 = require("@ng-idle/core");
 var AppComponent = (function () {
-    //needHelpDisplay:boolean=false;
     function AppComponent(appService, router, idle) {
         var _this = this;
         this.appService = appService;
@@ -29,7 +28,11 @@ var AppComponent = (function () {
         this.needHelpText = "";
         this.logout = function () {
             _this.appService.resetCredential();
-            _this.appService.clearSettings();
+            //to reset the orders placed through request page
+            _this.appService.reset('orders');
+            //this.appService.clearSettings();
+            //this.appService.resetAllReplies();
+            //this.appService.reply('login:success', this.setInactivityTimeout);
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
                 _this.idle.stop();
             }
@@ -37,9 +40,6 @@ var AppComponent = (function () {
         this.setInactivityTimeout = function () {
             var secs;
             var credential = _this.appService.getCredential();
-            // if (!credential) {
-            //   return;
-            // }
             //set current user to be displayed to nav bar
             _this.currentEmail = credential.user.email;
             secs = credential.inactivityTimeoutSecs || 300;
@@ -75,7 +75,6 @@ var AppComponent = (function () {
         this.initMenu(window.innerWidth);
         this.needHelpSub = appService.behFilterOn('settings:download:success').subscribe(function (d) {
             _this.needHelpText = _this.appService.getSetting('needHelpText');
-            //this.isDataReady = true;
         });
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
             if (d.data.error) {
