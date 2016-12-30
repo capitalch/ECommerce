@@ -15,7 +15,6 @@ import { md5 } from '../../vendor/md5';
 })
 export class ForgotPassword {
   subscription: Subscription;
-  //email: string;
   forgotForm: FormGroup;
   constructor(private appService: AppService, private router: Router, private fb: FormBuilder) {
     this.subscription = appService.filterOn('post:forgot:password')
@@ -30,13 +29,16 @@ export class ForgotPassword {
   };
   ngOnInit() {
     this.forgotForm = this.fb.group({
-      email: ['', [Validators.required, CustomValidators.emailValidator]]
+      codeOrMail: ['', Validators.required]
     });
-  }
-  sendMail(email) {
-    let base64Encoded = this.appService.encodeBase64(email);
+  };
+  sendMail(codeOrMail) {
+    let base64Encoded = this.appService.encodeBase64(codeOrMail);
     this.appService.httpPost('post:forgot:password', { auth: base64Encoded });
-  }
+  };
+  cancel() {
+    this.router.navigate(['/login']);
+  };
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
@@ -85,7 +87,6 @@ export class ChangePassword {
       .subscribe(d => {
         if (d.data.error) {
           console.log(d.data.error.status);
-          //this.alert.show=true;
           this.appService.showAlert(this.alert, true, 'changePasswordFailed')
 
         } else {
@@ -105,10 +106,8 @@ export class ChangePassword {
   ngOnInit() {
     this.changePwdForm = this.fb.group({
       oldPassword: ['', Validators.required]
-      , newPassword1: ['', Validators.required]
-      , newPassword2: ['', Validators.required
-        //, this.testAsync.bind(this)
-      ]
+      , newPassword1: ['', [Validators.required, CustomValidators.pwdComplexityValidator]]
+      , newPassword2: ['', [Validators.required, CustomValidators.pwdComplexityValidator]]
     }, { validator: this.checkFormGroup });
   };
 

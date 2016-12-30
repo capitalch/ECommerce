@@ -115,11 +115,14 @@ var PaymentMethod = (function () {
         });
         //input mask requires separate initialization
         this.payMethodForm.controls['phone'].reset();
+        this.payMethodForm.controls['phone'].markAsDirty();
+        this.payMethodForm.controls['ccType'].markAsDirty();
     };
     PaymentMethod.prototype.addPayMethod = function () {
         this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
         this.selectedISOCode = "US";
+        this.payMethodForm.controls['ccType'].setValue('Visa');
         this.payMethodModal.open();
     };
     ;

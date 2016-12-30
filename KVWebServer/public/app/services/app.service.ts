@@ -1,21 +1,21 @@
 import { Http, Response, Headers, RequestOptionsArgs, ResponseContentType } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/subject';
-
-//import { Observable } from 'rxjs/observable';
-import 'rxjs/add/operator/share';
-//import 'rxjs/add/operator/share'
-import { BehaviorSubject } from 'rxjs/behaviorsubject';
-import { Observer } from 'rxjs/observer';
 import {
     CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot
 } from '@angular/router';
+
+import { Subject } from 'rxjs/subject';
+import { Observable } from 'rxjs/observable';
+import { BehaviorSubject } from 'rxjs/behaviorsubject';
+import { Observer } from 'rxjs/observer';
+import { Subscription } from 'rxjs/Subscription';
+// import { Observable, Subject, BehaviorSubject, Observer, Subscription } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
-
-import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
-import { Observable } from 'rxjs/Rx';
+
+//import 'rxjs/add/operator/share'
+//import { Observable } from 'rxjs/Rx';
 import { Message } from 'primeng/components/common/api';
 //import * as _ from 'lodash';
 import { urlHash, messages, validationErrorMessages } from '../config';
@@ -34,14 +34,16 @@ export class AppService {
     countries: [{ any }];
 
     constructor(private http: Http) {
-        this.spinnerObservable = new Observable(observer => {
-            this.spinnerObserver = observer;
-        }).share();
+        // this.spinnerObservable = new Observable(observer => {
+        //     this.spinnerObserver = observer;
+        // }).share();
 
         this.subject = new Subject();
         this.behaviorSubjects = {
             'masters:download:success': new BehaviorSubject({ id: '1', data: {} }),
-            'settings:download:success': new BehaviorSubject({ id: '1', data: {} })
+            'settings:download:success': new BehaviorSubject({ id: '1', data: {} }),
+            'login:page:text': new BehaviorSubject({id:1,data:{}}),
+            'spinner:hide:show': new BehaviorSubject(false)
         };
         this.channel = {};
         this.mastersSubscription = this.filterOn('get:all:masters').subscribe(
@@ -76,6 +78,7 @@ export class AppService {
                         this.globalSettings.onlineOrder = {};
                         this.globalSettings.onlineOrder.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
                         this.globalSettings.onlineOrder.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
+                        this.globalSettings.loginPage = data.Table[0].loginPage;
                     }
                     this.behEmit('settings:download:success');
                 }
@@ -165,20 +168,23 @@ export class AppService {
         headers.append('Content-Type', 'application/json');
         headers.append('x-access-token', this.getToken());
         body.token = this.getToken();
-        if (this.spinnerObserver) { this.spinnerObserver.next(true); }
+        // if (this.spinnerObserver) { this.spinnerObserver.next(true); }
+        this.behEmit('spinner:hide:show',true);
         this.http.post(url, body, { headers: headers })
             .map(response => response.json())
             .subscribe(d => {
                 this.subject.next({
                     id: id, data: d, body: body
                 });
-                if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                this.behEmit('spinner:hide:show',false);
             }, err => {
                 this.subject.next({
                     id: id,
                     data: { error: err }
                 });
-                if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                this.behEmit('spinner:hide:show',false);
             });
     };
 
@@ -205,20 +211,23 @@ export class AppService {
                     .replace(':zipcode', encodeURIComponent(body.usAddress.zipcode))
             }
         }
-        if (this.spinnerObserver) { this.spinnerObserver.next(true); }
+        // if (this.spinnerObserver) { this.spinnerObserver.next(true); }
+        this.behEmit('spinner:hide:show',true);
         this.http.get(url, { headers: headers })
             .map(response => response.json())
             .subscribe(d => {
                 this.subject.next({
                     id: id, data: d
                 });
-                if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                this.behEmit('spinner:hide:show',false);
             }, err => {
                 this.subject.next({
                     id: id,
                     data: { error: err }
                 });
-                if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
+                this.behEmit('spinner:hide:show',false);
             });
     };
 

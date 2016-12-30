@@ -163,7 +163,7 @@ namespace KVConnector.Properties {
         /// <summary>
         ///   Looks up a localized string similar to select top 1 code from UserMaster
         ///	where Email=@email
-        ///		order by code;.
+        ///		order by code desc;.
         /// </summary>
         internal static string GetCodeFromEmail {
             get {
@@ -230,6 +230,15 @@ namespace KVConnector.Properties {
         internal static string GetHashAndRole {
             get {
                 return ResourceManager.GetString("GetHashAndRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select loginPage = Login_Page from SysParms;.
+        /// </summary>
+        internal static string GetLoginPageText {
+            get {
+                return ResourceManager.GetString("GetLoginPageText", resourceCulture);
             }
         }
         
@@ -422,7 +431,7 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to update UserMaster set PwdHash = @newPwdHash where email = @email;.
+        ///   Looks up a localized string similar to update UserMaster set PwdHash = @newPwdHash where code = @code;.
         /// </summary>
         internal static string NewPasswordHash {
             get {

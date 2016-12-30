@@ -34,7 +34,8 @@ export class AppComponent {
         console.log(d.data.error);
       } else {
         //this.home = d.data.host;
-        this.kistler = d.data.kistler;
+        this.kistler = d.data.data.kistler;
+        this.appService.behEmit('login:page:text',JSON.parse(d.data.result).Table[0].loginPage);
       }
     });
     router.events.filter((e: Event, t: number) => {
@@ -49,15 +50,13 @@ export class AppComponent {
     this.appService.resetCredential();
     //to reset the orders placed through request page
     this.appService.reset('orders');
-    //this.appService.clearSettings();
-    //this.appService.resetAllReplies();
-    //this.appService.reply('login:success', this.setInactivityTimeout);
     if (this.idle.isIdling() || this.idle.isRunning()) {
       this.idle.stop();
     }
   };
 
   ngOnInit() {
+    //this.appService.loadSettings();
     let credential = this.appService.getCredential();
     if (credential) {
       this.appService.loadSettings();

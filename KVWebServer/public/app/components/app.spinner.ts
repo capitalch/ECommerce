@@ -3,6 +3,7 @@ import { AppService } from '../services/app.service';
 import Spinner = require("spin.js");
 import { ModalModule, Modal } from "ng2-modal";
 import { BlockUIModule } from 'primeng/primeng';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'ng2-spinner',
@@ -14,6 +15,7 @@ import { BlockUIModule } from 'primeng/primeng';
 })
 export class SpinnerComponent {
     blocked: boolean = false;
+    behSubscription:Subscription;
     @ViewChild('spinnerModal') spinnerModal: Modal;
     @ViewChild('ng2Spinner') mySpinner: any;
     @Input() lines: number = 12; // The number of lines to draw
@@ -65,10 +67,17 @@ export class SpinnerComponent {
             position: this.position
         }
         this.spinner = new Spinner();
-        this.appService.spinnerObservable.subscribe(d => {
-            if (d) {
+        // this.appService.spinnerObservable.subscribe(d => {
+        //     if (d) {
+        //         this.show();
+        //     } else {
+        //         this.hide();
+        //     }
+        // });
+       this.behSubscription = this.appService.behFilterOn('spinner:hide:show').subscribe(d=>{
+            if(d.data){
                 this.show();
-            } else {
+            } else{
                 this.hide();
             }
         });
@@ -85,5 +94,9 @@ export class SpinnerComponent {
         if (this.backDrop) {
             this.blocked = false;
         }
+    };
+
+    ngOnDestroy() {
+        this.behSubscription.unsubscribe();        
     };
 }

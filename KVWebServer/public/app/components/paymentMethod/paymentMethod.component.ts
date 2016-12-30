@@ -118,11 +118,15 @@ export class PaymentMethod {
         });
         //input mask requires separate initialization
         this.payMethodForm.controls['phone'].reset();
+
+        this.payMethodForm.controls['phone'].markAsDirty();
+        this.payMethodForm.controls['ccType'].markAsDirty();
     }
     addPayMethod() {
         this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
         this.selectedISOCode = "US";
+        this.payMethodForm.controls['ccType'].setValue('Visa');
         this.payMethodModal.open();
     };
     cancel() {

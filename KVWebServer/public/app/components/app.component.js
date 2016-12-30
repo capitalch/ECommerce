@@ -30,9 +30,6 @@ var AppComponent = (function () {
             _this.appService.resetCredential();
             //to reset the orders placed through request page
             _this.appService.reset('orders');
-            //this.appService.clearSettings();
-            //this.appService.resetAllReplies();
-            //this.appService.reply('login:success', this.setInactivityTimeout);
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
                 _this.idle.stop();
             }
@@ -82,7 +79,8 @@ var AppComponent = (function () {
             }
             else {
                 //this.home = d.data.host;
-                _this.kistler = d.data.kistler;
+                _this.kistler = d.data.data.kistler;
+                _this.appService.behEmit('login:page:text', JSON.parse(d.data.result).Table[0].loginPage);
             }
         });
         router.events.filter(function (e, t) {
@@ -94,6 +92,7 @@ var AppComponent = (function () {
     }
     ;
     AppComponent.prototype.ngOnInit = function () {
+        //this.appService.loadSettings();
         var credential = this.appService.getCredential();
         if (credential) {
             this.appService.loadSettings();

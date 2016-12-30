@@ -21,6 +21,7 @@ var Order = (function () {
             type: 'danger',
             message: ''
         };
+        this.onlineOrder = {};
         this.excessOrder = this.appService.getValidationErrorMessage('excessOrder');
         this.staticTexts = {
             introText: this.appService.getMessage('mess:order:intro:text'),
@@ -66,32 +67,34 @@ var Order = (function () {
         }
     };
     ;
-    // save() {
-    //   let finalOrder = this.orders.map(function (value, i) {
-    //     return ({ offerId: value.id, orderQty: value.orderQty, wishList: value.wishList })
-    //   });
-    //   let token = this.appService.getToken();
-    //   this.appService.httpPost('post:save:order', { token: token, order: finalOrder });
-    // };
     Order.prototype.request = function () {
         var ords = this.orders.filter(function (a) {
             return ((a.orderQty && a.orderQty > 0) || (a.wishList && a.wishList > 0));
         });
+        var negativeValue = this.orders.find(function (order, index) {
+            return ((order.orderQty < 0) || (order.wishList < 0));
+        });
         var index = this.orders.findIndex(function (a) { return a.orderQty > a.availableQty; });
-        if (index != -1) {
+        if (negativeValue) {
             this.alert.show = true;
-            this.alert.message = this.appService.getValidationErrorMessage('someExcessOrder');
+            this.alert.message = this.appService.getValidationErrorMessage('someNegativeValues');
         }
         else {
-            if (ords.length > 0) {
-                this.alert.show = false;
-                this.alert.message = '';
-                this.appService.reply('orders', this.orders);
-                this.router.navigate(['approve/order']);
+            if (index != -1) {
+                this.alert.show = true;
+                this.alert.message = this.appService.getValidationErrorMessage('someExcessOrder');
             }
             else {
-                this.alert.show = true;
-                this.alert.message = this.appService.getValidationErrorMessage('emptyOrder');
+                if (ords.length > 0) {
+                    this.alert.show = false;
+                    this.alert.message = '';
+                    this.appService.reply('orders', this.orders);
+                    this.router.navigate(['approve/order']);
+                }
+                else {
+                    this.alert.show = true;
+                    this.alert.message = this.appService.getValidationErrorMessage('emptyOrder');
+                }
             }
         }
     };

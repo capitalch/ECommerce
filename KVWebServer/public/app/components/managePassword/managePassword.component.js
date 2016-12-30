@@ -34,13 +34,19 @@ var ForgotPassword = (function () {
     ;
     ForgotPassword.prototype.ngOnInit = function () {
         this.forgotForm = this.fb.group({
-            email: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.emailValidator]]
+            codeOrMail: ['', forms_1.Validators.required]
         });
     };
-    ForgotPassword.prototype.sendMail = function (email) {
-        var base64Encoded = this.appService.encodeBase64(email);
+    ;
+    ForgotPassword.prototype.sendMail = function (codeOrMail) {
+        var base64Encoded = this.appService.encodeBase64(codeOrMail);
         this.appService.httpPost('post:forgot:password', { auth: base64Encoded });
     };
+    ;
+    ForgotPassword.prototype.cancel = function () {
+        this.router.navigate(['/login']);
+    };
+    ;
     ForgotPassword.prototype.ngOnDestroy = function () {
         this.subscription.unsubscribe();
     };
@@ -101,7 +107,6 @@ var ChangePassword = (function () {
             .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error.status);
-                //this.alert.show=true;
                 _this.appService.showAlert(_this.alert, true, 'changePasswordFailed');
             }
             else {
@@ -121,9 +126,8 @@ var ChangePassword = (function () {
     ChangePassword.prototype.ngOnInit = function () {
         this.changePwdForm = this.fb.group({
             oldPassword: ['', forms_1.Validators.required],
-            newPassword1: ['', forms_1.Validators.required],
-            newPassword2: ['', forms_1.Validators.required
-            ]
+            newPassword1: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.pwdComplexityValidator]],
+            newPassword2: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.pwdComplexityValidator]]
         }, { validator: this.checkFormGroup });
     };
     ;

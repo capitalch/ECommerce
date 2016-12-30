@@ -15,7 +15,7 @@ export class Order {
     type: 'danger',
     message: ''
   };
-  onlineOrder:any;
+  onlineOrder: any = {};
   excessOrder: string = this.appService.getValidationErrorMessage('excessOrder');
   email: string;
   staticTexts: {
@@ -33,7 +33,7 @@ export class Order {
   saveOrderSubscription: Subscription;
   orders: any[];
   constructor(private appService: AppService, private router: Router) {
-    this.onlineOrder = appService.getSetting('onlineOrder');
+    this.onlineOrder = appService.getSetting('onlineOrder') ;
     this.currentOfferSubscription = appService.filterOn('get:current:offer')
       .subscribe(d => {
         if (d.data.error) {
@@ -66,32 +66,34 @@ export class Order {
       order.isShowDetails = true;
     }
   };
-  // save() {
-  //   let finalOrder = this.orders.map(function (value, i) {
-  //     return ({ offerId: value.id, orderQty: value.orderQty, wishList: value.wishList })
-  //   });
-  //   let token = this.appService.getToken();
-  //   this.appService.httpPost('post:save:order', { token: token, order: finalOrder });
-  // };
   request() {
     let ords = this.orders.filter((a) => {
       return ((a.orderQty && a.orderQty > 0) || (a.wishList && a.wishList > 0));
     });
+    let negativeValue = this.orders.find((order, index) => {
+      return ((order.orderQty < 0) || (order.wishList < 0));
+    });
     let index = this.orders.findIndex(a => a.orderQty > a.availableQty);
-    if (index != -1) {
+    if (negativeValue) {
       this.alert.show = true;
-      this.alert.message = this.appService.getValidationErrorMessage('someExcessOrder');
+      this.alert.message = this.appService.getValidationErrorMessage('someNegativeValues');
     } else {
-      if (ords.length > 0) {
-        this.alert.show = false;
-        this.alert.message = '';
-        this.appService.reply('orders', this.orders);
-        this.router.navigate(['approve/order']);
-      } else {
+      if (index != -1) {
         this.alert.show = true;
-        this.alert.message = this.appService.getValidationErrorMessage('emptyOrder');
+        this.alert.message = this.appService.getValidationErrorMessage('someExcessOrder');
+      } else {
+        if (ords.length > 0) {
+          this.alert.show = false;
+          this.alert.message = '';
+          this.appService.reply('orders', this.orders);
+          this.router.navigate(['approve/order']);
+        } else {
+          this.alert.show = true;
+          this.alert.message = this.appService.getValidationErrorMessage('emptyOrder');
+        }
       }
     }
+
   }
   ngOnInit() {
     let ords = this.appService.request('orders');

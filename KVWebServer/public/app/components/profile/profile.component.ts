@@ -90,16 +90,7 @@ export class Profile {
     onDateChanged(event) {
 
     };
-    // verify() {
-    //     let usAddress = {
-    //         street: 'SE 525 Wyoming Blvd NE'
-    //         , street2: 'ABCD'
-    //         , city: 'Albuqueserque'
-    //         , state: 'NM'
-    //         , zipcode: '87123'
-    //     };
-    //     this.appService.httpGet('get:smartyStreet', { usAddress: usAddress });
-    // }
+   
     initProfileForm() {
         let mDate = Util.convertToUSDate(this.profile.birthDay);
         this.profileForm = this.fb.group({
@@ -115,6 +106,7 @@ export class Profile {
             , mailingZip: [this.profile.mailingZip, Validators.required]
             , mailingCountry: [this.profile.mailingCountry, Validators.required]
         });
+        this.profileForm.controls['phone'].markAsDirty();
     };
     getUpdatedProfile() {
         let mDate = Util.getISODate(this.profileForm.controls['birthDay'].value);

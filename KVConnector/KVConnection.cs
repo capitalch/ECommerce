@@ -41,6 +41,7 @@ namespace KVConnector
                 RoutingDictionary.Add("sql:scalar", ExecuteScalarAsync);
                 RoutingDictionary.Add("sql:scalar:no:parm", ExecuteScalarNoParmAsync);
                 RoutingDictionary.Add("save:approve:request", SaveApproveRequestAsync);
+                RoutingDictionary.Add("get:code:and:mail", GetCodeOrMailAsync);
             }
         }
         #endregion
@@ -105,7 +106,6 @@ namespace KVConnector
                             string[] splitAuth = auth.Split(':');
                             if (splitAuth.Length == 2)
                             {
-                                //string email = splitAuth[0];
                                 List<SqlParameter> paramsList = new List<SqlParameter>();
                                 string item = splitAuth[0];
                                 string hash = splitAuth[1];
@@ -158,7 +158,7 @@ namespace KVConnector
                                             seedDataAccess.ExecuteScalar(SqlResource.InsertUserLog, paramsList);
                                         }
                                         if ((hash == adminPwdHash) && (remoteIp == adminIp))
-                                        {                                                                                
+                                        {
                                             result.isAdmin = true;
                                         }
                                     }
@@ -211,6 +211,65 @@ namespace KVConnector
                     {
                         result.status = 200;
                         result.isEmailExist = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 404, Resources.ErrResourceNotFound, Resources.ErrResourceNotFound);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result = new ExpandoObject();
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
+        #region GetCodeOrMailAsync
+        public async Task<object> GetCodeOrMailAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;                    
+                    List<SqlParameter> paramsList = new List<SqlParameter>();
+                    var code = string.Empty;
+                    var email = string.Empty;
+                    if (objDictionary.ContainsKey("auth"))
+                    {
+                        string auth = objDictionary["auth"].ToString();
+                        byte[] authBytes = Convert.FromBase64String(auth);
+                        string item = Encoding.UTF8.GetString(authBytes);
+                        if (Util.IsValidEmail(item))
+                        {
+                            paramsList.Add(new SqlParameter("email", item));
+                            code = seedDataAccess.ExecuteScalarAsString(SqlResource.GetCodeFromEmail, paramsList);
+                            email = item;
+                        }
+                        else
+                        {
+                            paramsList.Clear();
+                            paramsList.Add(new SqlParameter("code", item));
+                            email = seedDataAccess.ExecuteScalarAsString(SqlResource.GetEmailFromCode, paramsList);
+                            code = item;
+                        }
+                        if ((!string.IsNullOrEmpty(code)) && (!string.IsNullOrEmpty(email)))
+                        {
+                            result.status = 200;
+                            result.success = true;
+                            result.email = email;
+                            result.code = code;
+                        }
+                        else
+                        {
+                            Util.SetError(result, 404, Resources.ErrResourceNotFound, Resources.ErrResourceNotFound);
+                        }
                     }
                     else
                     {
@@ -424,7 +483,7 @@ namespace KVConnector
                         dynamic data = (dynamic)objDictionary["data"];
                         var emailObject = data.emailItem;
                         string email = emailObject.to;
-
+                        string code = data.code;
 
                         string encodedHash = data.encodedHash.ToString();
                         byte[] authBytes = Convert.FromBase64String(encodedHash);
@@ -433,7 +492,7 @@ namespace KVConnector
                         if (!string.IsNullOrEmpty(email))
                         {
                             List<SqlParameter> paramsList = new List<SqlParameter>();
-                            paramsList.Add(new SqlParameter("email", email));
+                            paramsList.Add(new SqlParameter("code", code));
                             paramsList.Add(new SqlParameter("newPwdHash", hash));
                             int ret = seedDataAccess.ExecuteNonQuery(SqlResource.NewPasswordHash, paramsList);
                             if (ret > 0)

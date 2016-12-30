@@ -48,7 +48,7 @@ export var messages = {
     'mess:receipt:heading': 'Thank you for your Kistler Fall 2016 Request.',
     'mess:receipt:info': 'An acknowledgement email has been sent to @email. If you do not receive the email within 10 minutes, please check your Spam / Junk mail folder. Otherwise, contact us for assistance. ',
     'mess:confirm:save:invalid:address': 'This address could not be verified. Do you still want to proceed with this unverified address? ',
-    'mess:confirm:save:edited:address': 'This address is verified and maybe some changes are done. Please confirm the edited address as follows: \n\n'
+    'mess:confirm:save:edited:address': 'This address has been verified by US Postal Service but some minor changes are required. \nPlease confirm you accept the revised address below: \n\n'
 };
 export var validationErrorMessages = {
     'required': 'Value is required',
@@ -72,9 +72,10 @@ export var validationErrorMessages = {
     'addressValidationUnauthorized': 'Authorization error while validating address.',
     'invalidAddress': 'This address is invalid',
     'invalidZipCode': 'This zip code is not a US legal zip code',
-    'addressDeleteFailed': 'Address could not be removed due to server side error'
-    // , 'testSyncValidation':'test sync validation'
-    // , 'testAsyncError':'Test async error'
+    'addressDeleteFailed': 'Address could not be removed due to server side error',
+    'someNegativeValues': 'Some values in your request or wish list are negative which is not allowed',
+    'pwdLengthLt8':'Password must have at least 8 characters',
+    'invalidPwd': 'Password must satisfy at least three out of following four criterias: 1) Lower case, 2) Upper case, 3) Number, 4)  Special character like “!@#$%^&*()' 
 };
 export var viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },

@@ -63,8 +63,15 @@ var SpinnerComponent = (function () {
             position: this.position
         };
         this.spinner = new Spinner();
-        this.appService.spinnerObservable.subscribe(function (d) {
-            if (d) {
+        // this.appService.spinnerObservable.subscribe(d => {
+        //     if (d) {
+        //         this.show();
+        //     } else {
+        //         this.hide();
+        //     }
+        // });
+        this.behSubscription = this.appService.behFilterOn('spinner:hide:show').subscribe(function (d) {
+            if (d.data) {
                 _this.show();
             }
             else {
@@ -85,6 +92,10 @@ var SpinnerComponent = (function () {
         if (this.backDrop) {
             this.blocked = false;
         }
+    };
+    ;
+    SpinnerComponent.prototype.ngOnDestroy = function () {
+        this.behSubscription.unsubscribe();
     };
     ;
     return SpinnerComponent;

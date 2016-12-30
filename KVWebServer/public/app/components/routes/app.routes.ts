@@ -65,7 +65,7 @@ const routes: Routes = [
     },
     {
         path: 'order/history',
-        component: OrderHistory 
+        component: OrderHistory
         , canActivate: [LoginGuard]
     },
     {

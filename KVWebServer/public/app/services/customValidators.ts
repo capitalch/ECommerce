@@ -6,10 +6,33 @@ export class CustomValidators {
         }
     };
 
-    static usZipCodeValidator(control:FormControl){
-        if(!control.value.match(/(^\d{5}$)|(^\d{5}-\d{4}$)/)){
-            return({'invalidZipCode':true});
+    static usZipCodeValidator(control: FormControl) {
+        if (!control.value.match(/(^\d{5}$)|(^\d{5}-\d{4}$)/)) {
+            return ({ 'invalidZipCode': true });
         }
+    };
+
+    static pwdComplexityValidator(control: FormControl) {
+        /*At least 8 characters in length,
+        at least 1 character from 3 out of the 4 following types:
+            Lower case
+            Upper case
+            Number
+            Special Character like “!@#$%^&*()”*/
+        let ret = null;
+        let pwd = control.value;
+        if (pwd.length < 8) {
+            ret = { 'pwdLengthLt8': true };
+        } else {
+            let hasUpperCase = + /[A-Z]/.test(pwd);
+            let hasLowerCase = + /[a-z]/.test(pwd);
+            let hasNumbers = + /\d/.test(pwd);
+            let hasNonalphas = + /\W/.test(pwd);
+            if (hasUpperCase + hasLowerCase + hasNumbers + hasNonalphas < 3) {
+                ret = { 'invalidPwd': true };
+            }
+        }
+        return (ret);
     };
 
     static phoneValidator(control: FormControl) {
@@ -18,17 +41,17 @@ export class CustomValidators {
         let domestic = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
         let local = /^\(?(\d{3})\)?[- ]?(\d{4})$/;
         let general = /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i;
-        if(control.value == null){
+        if (control.value == null) {
             ret = null;
-        } else 
-        if (!(control.value.match(international))
-            && (!control.value.match(domestic)
-                && (!control.value.match(local))
-                // && (!control.value.match(general))
-            )) {
-            ret = { 'invalidPhone': true };
-        }
-        return(ret);
+        } else
+            if (!(control.value.match(international))
+                && (!control.value.match(domestic)
+                    && (!control.value.match(local))
+                    // && (!control.value.match(general))
+                )) {
+                ret = { 'invalidPhone': true };
+            }
+        return (ret);
     };
 
     // static usDateValidator(control:FormControl){

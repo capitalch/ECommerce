@@ -90,16 +90,6 @@ var Profile = (function () {
     Profile.prototype.onDateChanged = function (event) {
     };
     ;
-    // verify() {
-    //     let usAddress = {
-    //         street: 'SE 525 Wyoming Blvd NE'
-    //         , street2: 'ABCD'
-    //         , city: 'Albuqueserque'
-    //         , state: 'NM'
-    //         , zipcode: '87123'
-    //     };
-    //     this.appService.httpGet('get:smartyStreet', { usAddress: usAddress });
-    // }
     Profile.prototype.initProfileForm = function () {
         var mDate = util_1.Util.convertToUSDate(this.profile.birthDay);
         this.profileForm = this.fb.group({
@@ -115,6 +105,7 @@ var Profile = (function () {
             mailingZip: [this.profile.mailingZip, forms_1.Validators.required],
             mailingCountry: [this.profile.mailingCountry, forms_1.Validators.required]
         });
+        this.profileForm.controls['phone'].markAsDirty();
     };
     ;
     Profile.prototype.getUpdatedProfile = function () {

@@ -155,7 +155,7 @@ select adminIp = stringValue
     <value>select 0 from UserMaster where Email = @email;</value>
   </data>
   <data name="NewPasswordHash" xml:space="preserve">
-    <value>update UserMaster set PwdHash = @newPwdHash where email = @email;</value>
+    <value>update UserMaster set PwdHash = @newPwdHash where code = @code;</value>
   </data>
   <data name="SetMaxOrderNumber" xml:space="preserve">
     <value>update Setup set IntValue = @value where MKey = 'MaxOrderNumber'</value>
@@ -312,7 +312,7 @@ select a.id, cardName,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRI
   <data name="GetCodeFromEmail" xml:space="preserve">
     <value>select top 1 code from UserMaster
 	where Email=@email
-		order by code;</value>
+		order by code desc;</value>
   </data>
   <data name="GetEmailFromCode" xml:space="preserve">
     <value>select email from UserMaster where code=@code;</value>
@@ -363,6 +363,9 @@ insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,P
   </data>
   <data name="DeleteShippingAddress" xml:space="preserve">
     <value>delete from ShippingAddresses where id = @id;</value>
+  </data>
+  <data name="GetLoginPageText" xml:space="preserve">
+    <value>select loginPage = Login_Page from SysParms;</value>
   </data>
   <data name="GetSettings" xml:space="preserve">
     <value>select smartyStreetApiKey = (select stringValue from setup where MKey = 'SmartyStreetApiKey')

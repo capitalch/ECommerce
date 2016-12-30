@@ -149,11 +149,13 @@ export class ShippingAddress {
             phone: [address.phone || '', [Validators.required, CustomValidators.phoneValidator]],
             isDefault: [address.isDefault || false]
         });
+        this.shippingForm.controls['phone'].markAsDirty();
         this.selectedCountryName = address.country;
         if (!address.phone) {
             //separate reset is required to clear the input mask control
             this.shippingForm.controls['phone'].reset();
         }
+        this.shippingForm.controls['phone'].markAsDirty();
     };
 
     ngOnInit() {

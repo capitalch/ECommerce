@@ -146,11 +146,13 @@ var ShippingAddress = (function () {
             phone: [address.phone || '', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
             isDefault: [address.isDefault || false]
         });
+        this.shippingForm.controls['phone'].markAsDirty();
         this.selectedCountryName = address.country;
         if (!address.phone) {
             //separate reset is required to clear the input mask control
             this.shippingForm.controls['phone'].reset();
         }
+        this.shippingForm.controls['phone'].markAsDirty();
     };
     ;
     ShippingAddress.prototype.ngOnInit = function () {
