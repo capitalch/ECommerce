@@ -24,5 +24,10 @@ export class Util {
             ret = date.format('YYYY-MM-DD');
         }
         return (ret);
-    };    
+    };
+
+    static getMaskedCCNumber(ccNumber){
+        ccNumber = ccNumber.substring(0,4) + ' XXXX XXXX ' + ccNumber.substr(ccNumber.length - 4, 4 )
+        return(ccNumber);
+    }
 }

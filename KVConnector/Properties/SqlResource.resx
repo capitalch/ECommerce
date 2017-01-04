@@ -291,11 +291,11 @@ select prevBalanceWine,prevBalanceAddl from UserProfiles where UserId = @userId;
 	from OrderDetails a join OfferMaster b
 		on a.offerId = b.id
 			where orderId = @orderId;
-select a.id, street1,zip,state,city
+select a.id, a.street1,a.zip,a.state,a.city
 	from OrderImpDetails a join ShippingAddresses b
 		on a.addressId = b.id		
 	where orderId = @orderId;
-select a.id, cardName,ccNumber=SUBSTRING(ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4)
+select a.id, a.cardName,ccNumber=SUBSTRING(a.ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(a.ccNumber,(LEN(a.ccNumber) - 3), 4)
 	from OrderImpDetails a join PaymentMethods b
 		on a.CreditCardId = b.id
 	where orderId = @orderId;</value>
@@ -363,6 +363,11 @@ insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,P
   </data>
   <data name="DeleteShippingAddress" xml:space="preserve">
     <value>delete from ShippingAddresses where id = @id;</value>
+  </data>
+  <data name="GetDefaultBillingAddressForCard" xml:space="preserve">
+    <value>select id, street1, street2, city, state, zip, country, isoCode,phone
+	from ShippingAddresses
+		where code = @code and isDefault = 1;</value>
   </data>
   <data name="GetLoginPageText" xml:space="preserve">
     <value>select loginPage = Login_Page from SysParms;</value>

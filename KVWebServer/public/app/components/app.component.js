@@ -14,6 +14,7 @@ var app_service_1 = require("../services/app.service");
 var config_1 = require("../config");
 var core_2 = require("@ng-idle/core");
 var AppComponent = (function () {
+    //needHelpDisplay:boolean=false;
     function AppComponent(appService, router, idle) {
         var _this = this;
         this.appService = appService;
@@ -30,6 +31,7 @@ var AppComponent = (function () {
             _this.appService.resetCredential();
             //to reset the orders placed through request page
             _this.appService.reset('orders');
+            _this.appService.reset('holidaygift');
             if (_this.idle.isIdling() || _this.idle.isRunning()) {
                 _this.idle.stop();
             }
@@ -72,6 +74,8 @@ var AppComponent = (function () {
         this.initMenu(window.innerWidth);
         this.needHelpSub = appService.behFilterOn('settings:download:success').subscribe(function (d) {
             _this.needHelpText = _this.appService.getSetting('needHelpText');
+            //this.needHelpText = this.appService.getNeedHelpText();
+            //this.isDataReady = true;
         });
         this.initDataSub = appService.filterOn('get:init:data').subscribe(function (d) {
             if (d.data.error) {
@@ -119,6 +123,17 @@ var AppComponent = (function () {
     ;
     AppComponent.prototype.initMenu = function (windowSize) {
         if (windowSize >= 768) {
+            this.showMenu = true;
+            this.myAccountshowMenu = true;
+        }
+        else {
+            this.showMenu = false;
+            this.myAccountshowMenu = false;
+        }
+    };
+    ;
+    AppComponent.prototype.hideMenu = function () {
+        if (window.innerWidth >= 768) {
             this.showMenu = true;
             this.myAccountshowMenu = true;
         }

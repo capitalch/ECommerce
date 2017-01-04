@@ -9,7 +9,8 @@ import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { Message } from 'primeng/components/common/api';
 import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { GrowlModule } from 'primeng/components/growl/growl';
-import { Util } from '../../services/util'
+import { Util } from '../../services/util';
+import { TextMaskModule } from 'angular2-text-mask';
 @Component({
     templateUrl: 'app/components/profile/profile.component.html'
 })
@@ -27,6 +28,7 @@ export class Profile {
     messages: Message[] = [];
     isDataReady: boolean = false;
     user: any = {};
+    public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
     constructor(private appService: AppService, private fb: FormBuilder) {
         this.user = appService.getCredential().user;
         this.initProfileForm();
@@ -124,8 +126,7 @@ export class Profile {
         pr.mailingCountry = this.profileForm.controls['mailingCountry'].value;// this.profileForm.controls['mailingCountry'].value;
         return (pr);
     };
-    submit() {
-        // this.profile.birthDay = Util.convertToISODate(this.profileForm.controls['birthDay'].value);
+    submit() {        
         if (this.profileForm.dirty && this.profileForm.valid) {
             this.appService.httpPost('post:save:profile', { profile: this.getUpdatedProfile() });
         }

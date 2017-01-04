@@ -15,21 +15,26 @@ import { SpinnerComponent } from './app.spinner';
 export class AppComponent {
   subscription: Subscription;
   initDataSub: Subscription;
-  needHelpSub: Subscription;
+  needHelpSub:Subscription;
   home: string = '#';
   kistler: string = '#';
   viewBox: {} = viewBoxConfig['/login'];
-  showMenu: boolean = false;
+
+ showMenu: boolean = false;
   myAccountshowMenu: boolean = false;
   currentEmail: string = "";
   needHelpText: string = "";
+  //needHelpDisplay:boolean=false;
 
   constructor(private appService: AppService, private router: Router, private idle: Idle) {
     this.initMenu(window.innerWidth);
     this.needHelpSub = appService.behFilterOn('settings:download:success').subscribe(d => {
-      this.needHelpText = this.appService.getSetting('needHelpText')      
+      this.needHelpText = this.appService.getSetting('needHelpText');
+      //this.needHelpText = this.appService.getNeedHelpText();
+      //this.isDataReady = true;
     });
     this.initDataSub = appService.filterOn('get:init:data').subscribe(d => {
+      
       if (d.data.error) {
         console.log(d.data.error);
       } else {
@@ -37,7 +42,7 @@ export class AppComponent {
         this.kistler = d.data.data.kistler;
         this.appService.behEmit('login:page:text',JSON.parse(d.data.result).Table[0].loginPage);
       }
-    });
+    });    
     router.events.filter((e: Event, t: number) => {
       return (e.constructor.name === 'NavigationEnd');
     }).subscribe((event: any) => {
@@ -50,11 +55,11 @@ export class AppComponent {
     this.appService.resetCredential();
     //to reset the orders placed through request page
     this.appService.reset('orders');
+    this.appService.reset('holidaygift');
     if (this.idle.isIdling() || this.idle.isRunning()) {
       this.idle.stop();
     }
   };
-
   ngOnInit() {
     //this.appService.loadSettings();
     let credential = this.appService.getCredential();
@@ -66,6 +71,7 @@ export class AppComponent {
     this.appService.httpGet('get:init:data');
     //request / reply mecanism to start inactivity timer at successful login
     this.appService.reply('login:success', this.setInactivityTimeout);
+
   };
 
   setInactivityTimeout = () => {
@@ -108,21 +114,17 @@ export class AppComponent {
 
     this.idle.watch();
   };
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
     this.initDataSub.unsubscribe();
     this.needHelpSub.unsubscribe();
   };
-
-  menuToggle() {
-    this.showMenu = !this.showMenu;
+  menuToggle(){
+  this.showMenu = !this.showMenu;
   };
-
-  myAccountToggle() {
-    this.myAccountshowMenu = !this.myAccountshowMenu;
+  myAccountToggle(){
+  this.myAccountshowMenu = !this.myAccountshowMenu;
   };
-
   initMenu(windowSize) {
     if (windowSize >= 768) {
       this.showMenu = true;
@@ -132,9 +134,17 @@ export class AppComponent {
       this.myAccountshowMenu = false;
     }
   };
-
-  onResize(event) {
-    this.initMenu(event.target.innerWidth);
+    hideMenu() {
+    if(window.innerWidth >= 768){
+    this.showMenu=true;
+    this.myAccountshowMenu=true;
+    }else{
+       this.showMenu=false;
+    this.myAccountshowMenu=false;
+    }
   };
+ onResize(event) {
+  this.initMenu(event.target.innerWidth);
+};
 
 }

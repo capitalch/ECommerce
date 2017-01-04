@@ -14,7 +14,7 @@
             <span>, {{address.country}}</span>
             <span>, {{address.phone}}</span>
             <span *ngIf="address.isDefault" class="DefaultColor">Default</span>
-            <button *ngIf="isDataReady" type="button" style="" class="btn btn-link pull-right" (click)="confirmRemove(address)" title="Remove Address"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></button>
+            <button *ngIf="isDataReady" type="button" class="btn btn-link pull-right" (click)="confirmRemove(address)" title="Remove Address"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></button>
             <button *ngIf="isDataReady" type="button" class="btn btn-link" (click)="edit(address)">Edit</button></li>
     </ul>
     <div class="row panelAddSubmit">
@@ -77,10 +77,7 @@
                     <div class="col-sm-9">
                         <select formControlName='countryName' [(ngModel)]='selectedCountryName' class="form-control" id="kvCountry">
                                 <option *ngFor="let countryObj of countries" [value]="countryObj.countryName">{{countryObj.countryName}}</option>
-                            </select>
-                        <!--<select formControlName='countryName' [(ngModel)]='selectedCountryName' class="form-control" id="kvCountry">
-                                <option *ngFor="let country of countries" [value]="country.countryName">{{country.countryName}}</option>
-                            </select>-->
+                            </select>                        
                         <control-messages [control]="shippingForm.controls.countryName"></control-messages>
                     </div>
                 </div>
@@ -88,7 +85,8 @@
                     <label class="control-label col-sm-3" for="kvPhone">Phone number:</label>
                     <div class="col-sm-9">
                         <!--<input type="text" class="form-control" id="kvPhone" placeholder="Enter shipping phone number" formControlName="phone">-->
-                        <p-inputMask mask="(999) 999-9999" id="kvPhone" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>
+                        <!--<p-inputMask mask="(999) 999-9999" id="kvPhone" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>-->
+                                                    <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
                         <control-messages [control]="shippingForm.controls.phone"></control-messages>
                     </div>
                 </div>

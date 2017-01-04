@@ -29,7 +29,7 @@ var Order = (function () {
             minimumRequest: this.appService.getMessage('mess:order:minimum:request'),
             bottomNotes: this.appService.getMessage('mess:order:bottom:notes')
         };
-        this.onlineOrder = appService.getSetting('onlineOrder');
+        // this.onlineOrder = appService.getSetting('onlineOrder');
         this.currentOfferSubscription = appService.filterOn('get:current:offer')
             .subscribe(function (d) {
             if (d.data.error) {
@@ -53,7 +53,30 @@ var Order = (function () {
                 console.log(d);
             }
         });
+        this.onlineOrderSubscription = appService.behFilterOn('settings:download:success').subscribe(function (d) {
+            _this.onlineOrder = appService.getSetting('onlineOrder');
+        });
     }
+    Order.prototype.isValidOnlineOrder = function () {
+        var isValid = false;
+        if (this.onlineOrder) {
+            if (Object.keys(this.onlineOrder).length != 0) {
+                if (!this.onlineOrder.disableOnlineOrderForm) {
+                    isValid = true;
+                }
+            }
+        }
+        return (isValid);
+    };
+    ;
+    Order.prototype.disableOnlineOrderText = function () {
+        var disableInlineOrderText = '';
+        if (this.onlineOrder) {
+            disableInlineOrderText = this.onlineOrder.disableOnlineOrderText;
+        }
+        return (disableInlineOrderText);
+    };
+    ;
     ;
     Order.prototype.toggleDetails = function (order) {
         if (order.isShowDetails) {
@@ -111,6 +134,7 @@ var Order = (function () {
     Order.prototype.ngOnDestroy = function () {
         this.currentOfferSubscription.unsubscribe();
         this.saveOrderSubscription.unsubscribe();
+        this.onlineOrderSubscription.unsubscribe();
     };
     return Order;
 }());

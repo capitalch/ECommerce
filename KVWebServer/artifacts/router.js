@@ -484,6 +484,7 @@ router.get('/api/generic/query', function (req, res, next) {
             sqlParms = {};
         }
         sqlParms.userId = req.user.userId;
+        sqlParms.code=req.user.code;
         let data = { action: 'sql:query', sqlKey: sqlKey, sqlParms: sqlParms };
         handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {

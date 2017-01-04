@@ -181,6 +181,17 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to select id, street1, street2, city, state, zip, country, isoCode,phone
+        ///	from ShippingAddresses
+        ///		where code = @code and isDefault = 1;.
+        /// </summary>
+        internal static string GetDefaultBillingAddressForCard {
+            get {
+                return ResourceManager.GetString("GetDefaultBillingAddressForCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select id,cardName,cardNumber,ExpiryDate
         ///	from CreditCards
         ///		where UserId = @userId
@@ -256,14 +267,14 @@ namespace KVConnector.Properties {
         ///	from OrderDetails a join OfferMaster b
         ///		on a.offerId = b.id
         ///			where orderId = @orderId;
-        ///select a.id, street1,zip,state,city
+        ///select a.id, a.street1,a.zip,a.state,a.city
         ///	from OrderImpDetails a join ShippingAddresses b
         ///		on a.addressId = b.id		
         ///	where orderId = @orderId;
-        ///select a.id, cardName,ccNumber=SUBSTRING(ccNumber,1,4) + &apos; XXXX XXXX &apos; + SUBSTRING(ccNumber,(LEN(ccNumber) - 3), 4)
+        ///select a.id, a.cardName,ccNumber=SUBSTRING(a.ccNumber,1,4) + &apos; XXXX XXXX &apos; + SUBSTRING(a.ccNumber,(LEN(a.ccNumber) - 3), 4)
         ///	from OrderImpDetails a join PaymentMethods b
         ///		on a.CreditCardId = b.id
-        ///	where orderId = @orderId;.
+        ///	where order [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetOrderDetails {
             get {

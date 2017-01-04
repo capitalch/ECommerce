@@ -26,6 +26,10 @@ var Util = (function () {
         return (ret);
     };
     ;
+    Util.getMaskedCCNumber = function (ccNumber) {
+        ccNumber = ccNumber.substring(0, 4) + ' XXXX XXXX ' + ccNumber.substr(ccNumber.length - 4, 4);
+        return (ccNumber);
+    };
     return Util;
 }());
 exports.Util = Util;

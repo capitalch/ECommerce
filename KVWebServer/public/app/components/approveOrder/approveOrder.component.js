@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 //import { Location } from '@angular/common';
 var app_service_1 = require("../../services/app.service");
+var util_1 = require("../../services/util");
 var router_1 = require("@angular/router");
 var config_1 = require("../../config");
 var ng2_modal_1 = require("ng2-modal");
@@ -23,6 +24,7 @@ var ApproveOrder = (function () {
         this.selectedCard = {};
         this.defaultCard = {};
         this.allTotals = {};
+        // payMethodForm: FormGroup;
         this.footer = {
             wineTotals: {
                 wine: 0.00, addl: 0.00
@@ -37,9 +39,11 @@ var ApproveOrder = (function () {
         this.approveHeading = config_1.messages['mess:approve:heading'];
         this.allAddresses = [{}];
         this.payMethods = [{}];
+        this.newCard = {};
+        this.ccNumberOrig = '';
         this.alert = { type: "success" };
         this.payLater = function () {
-            if (!_this.selectedCard || _this.selectedCard == '') {
+            if (!_this.selectedCard || Object.keys(_this.selectedCard).length == 0) {
                 return ('Pay later');
             }
             else {
@@ -64,8 +68,6 @@ var ApproveOrder = (function () {
                 console.log(d.data.error);
             }
             else {
-                // shipping and salesTax perc in data
-                console.log(d.data);
             }
         });
         this.approveArtifactsSub = appService.filterOn('get:approve:artifacts').subscribe(function (d) {
@@ -110,11 +112,23 @@ var ApproveOrder = (function () {
             }
             else {
                 _this.payMethods = JSON.parse(d.data).Table;
-                console.log(_this.payMethods);
-                _this.payMethods = JSON.parse(d.data).Table;
             }
         });
+        this.selectNewCardSub = this.appService.filterOn('select:new:card').subscribe(function (d) {
+            _this.newCard = d.data || {};
+            _this.selectedCard = _this.newCard;
+            _this.ccNumberOrig = _this.selectedCard.ccNumber;
+            _this.selectedCard.ccNumber = util_1.Util.getMaskedCCNumber(_this.selectedCard.ccNumber);
+            _this.payMethodModal.close();
+        });
     }
+    ApproveOrder.prototype.useNewCard = function () {
+        this.payMethodModal.open();
+    };
+    ;
+    ApproveOrder.prototype.resetNewCard = function () {
+        this.newCard = {};
+    };
     ;
     ApproveOrder.prototype.changeSelectedAddress = function () {
         this.isAlert = false;
@@ -169,6 +183,12 @@ var ApproveOrder = (function () {
             });
         });
         orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
+        if (!this.selectedCard.id) {
+            if (Object.keys(this.selectedCard).length > 0) {
+                Object.assign(orderBundle.orderImpDetails, this.newCard);
+                orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+            }
+        }
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
     ;
@@ -243,21 +263,29 @@ var ApproveOrder = (function () {
     };
     ;
     ApproveOrder.prototype.ngOnInit = function () {
+        var _this = this;
         this.appService.httpGet('get:approve:artifacts');
-        //Place this call appropriately.
         var body = {};
         body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
         this.appService.httpGet('get:shipping:sales:tax:perc', body);
+        this.appService.reply('close:pay:method:modal', function () { _this.payMethodModal.close(); });
     };
     ;
     ApproveOrder.prototype.ngOnDestroy = function () {
         this.approveArtifactsSub.unsubscribe();
+        this.postApproveSubscription.unsubscribe();
+        this.getShippingSalesTaxPercSub.unsubscribe();
         this.allAddrSubscription.unsubscribe();
         this.allCardSubscription.unsubscribe();
+        this.selectNewCardSub.unsubscribe();
     };
     ;
     return ApproveOrder;
 }());
+__decorate([
+    core_1.ViewChild('payMethodModal'),
+    __metadata("design:type", ng2_modal_1.Modal)
+], ApproveOrder.prototype, "payMethodModal", void 0);
 __decorate([
     core_1.ViewChild('addrModal'),
     __metadata("design:type", ng2_modal_1.Modal)

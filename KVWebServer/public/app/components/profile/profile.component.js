@@ -24,6 +24,7 @@ var Profile = (function () {
         this.messages = [];
         this.isDataReady = false;
         this.user = {};
+        this.mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
         this.user = appService.getCredential().user;
         this.initProfileForm();
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(function (d) {
@@ -126,7 +127,6 @@ var Profile = (function () {
     };
     ;
     Profile.prototype.submit = function () {
-        // this.profile.birthDay = Util.convertToISODate(this.profileForm.controls['birthDay'].value);
         if (this.profileForm.dirty && this.profileForm.valid) {
             this.appService.httpPost('post:save:profile', { profile: this.getUpdatedProfile() });
         }

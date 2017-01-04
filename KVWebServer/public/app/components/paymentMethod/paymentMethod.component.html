@@ -150,7 +150,8 @@
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="bPhone">Billing phone:</label><br/>
                             <!--<input type="text" id="bPhone" formControlName="phone" placeholder="Enter billing phone" class="form-control">-->
-                            <p-inputMask id="bPhone" mask="(999) 999-9999" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>
+                            <!--<p-inputMask formControlName="phone" mask="(999) 999-9999" placeholder="(999) 999-9999"></p-inputMask>-->
+                            <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
                             <control-messages [control]="payMethodForm.controls.phone"></control-messages>
                         </div>
                     </div>

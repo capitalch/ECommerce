@@ -31,9 +31,32 @@ export class Order {
   };
   currentOfferSubscription: Subscription;
   saveOrderSubscription: Subscription;
+  onlineOrderSubscription: Subscription;
   orders: any[];
+  isValidOnlineOrder() {
+    let isValid = false;
+    if (this.onlineOrder) {
+      if (Object.keys(this.onlineOrder).length != 0) {
+        if (!this.onlineOrder.disableOnlineOrderForm) {
+          isValid = true;
+        }
+      }
+    }
+    return (isValid);
+  };
+
+  disableOnlineOrderText() {
+    let disableInlineOrderText = '';
+    if (this.onlineOrder) {
+      disableInlineOrderText = this.onlineOrder.disableOnlineOrderText;
+    }
+    return (disableInlineOrderText);
+  };
+
+
+
   constructor(private appService: AppService, private router: Router) {
-    this.onlineOrder = appService.getSetting('onlineOrder') ;
+    // this.onlineOrder = appService.getSetting('onlineOrder');
     this.currentOfferSubscription = appService.filterOn('get:current:offer')
       .subscribe(d => {
         if (d.data.error) {
@@ -55,6 +78,9 @@ export class Order {
           console.log(d);
         }
       });
+    this.onlineOrderSubscription = appService.behFilterOn('settings:download:success').subscribe(d => {
+      this.onlineOrder = appService.getSetting('onlineOrder');
+    });
   };
   toggleDetails(order) {
     if (order.isShowDetails) {
@@ -106,5 +132,6 @@ export class Order {
   ngOnDestroy() {
     this.currentOfferSubscription.unsubscribe();
     this.saveOrderSubscription.unsubscribe();
+    this.onlineOrderSubscription.unsubscribe();
   }
 }

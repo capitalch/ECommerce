@@ -7,7 +7,7 @@
         </div>
         <summary>{{staticTexts.introText}}</summary>
     </div>
-    <div *ngIf="!onlineOrder.disableOnlineOrderForm">
+    <div *ngIf="isValidOnlineOrder()">
         <div class="panel-group">
         <div class="panel panel-default ProductPanel" *ngFor="let order of orders">
             <div class="panel-heading">
@@ -59,7 +59,7 @@
         </label>
     </div>
     </div>
-    <div *ngIf="onlineOrder.disableOnlineOrderForm">
-        {{onlineOrder.disableOnlineOrderText}}
+    <div *ngIf="!isValidOnlineOrder()">
+        {{ disableOnlineOrderText()}}
     </div>
 </div>

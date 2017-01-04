@@ -29,7 +29,7 @@ export class Login {
     loginForm: FormGroup;
     loginPageText: '';
 
-    constructor(private appService: AppService, private router: Router, private fb: FormBuilder, private activatedRoute: ActivatedRoute) {
+    constructor(private appService: AppService, private router: Router, private fb: FormBuilder, private activatedRoute: ActivatedRoute) {        
         this.loginForm = fb.group({
             email: ['', [Validators.required]]
             , password: ['', [Validators.required, CustomValidators.pwdComplexityValidator]]

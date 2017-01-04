@@ -30,6 +30,7 @@ var ShippingAddress = (function () {
         this.isDataReady = false;
         this.messages = [];
         this.isVerifying = false;
+        this.mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
         this.initShippingForm({});
     }
     ;

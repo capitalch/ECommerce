@@ -81,7 +81,8 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="phone">Phone:</label>
                     <div class="col-sm-4">
-                        <p-inputMask mask="(999) 999-9999" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>
+                        <!--<p-inputMask mask="(999) 999-9999" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>-->
+                        <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
                         <control-messages [control]="profileForm.controls.phone"></control-messages>
                     </div>
                 </div>

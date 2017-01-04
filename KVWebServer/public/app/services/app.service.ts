@@ -42,7 +42,7 @@ export class AppService {
         this.behaviorSubjects = {
             'masters:download:success': new BehaviorSubject({ id: '1', data: {} }),
             'settings:download:success': new BehaviorSubject({ id: '1', data: {} }),
-            'login:page:text': new BehaviorSubject({id:1,data:{}}),
+            'login:page:text': new BehaviorSubject({ id: 1, data: {} }),
             'spinner:hide:show': new BehaviorSubject(false)
         };
         this.channel = {};
@@ -75,12 +75,18 @@ export class AppService {
                             return item.trim();
                         });
                         this.globalSettings.needHelpText = data.Table[0].needHelpText;
-                        this.globalSettings.onlineOrder = {};
-                        this.globalSettings.onlineOrder.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
-                        this.globalSettings.onlineOrder.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
+                        let onlineOrder: any = {};
+                        onlineOrder.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
+                        onlineOrder.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
+                        setTimeout(() => {
+                            this.globalSettings.onlineOrder = onlineOrder;
+                            this.behEmit('settings:download:success');
+                        }, 10000);
+                        this.globalSettings.onlineOrder = onlineOrder;                                                
                         this.globalSettings.loginPage = data.Table[0].loginPage;
+                        this.behEmit('settings:download:success');
                     }
-                    this.behEmit('settings:download:success');
+                    // this.behEmit('settings:download:success');
                 }
             });
     };
@@ -169,7 +175,7 @@ export class AppService {
         headers.append('x-access-token', this.getToken());
         body.token = this.getToken();
         // if (this.spinnerObserver) { this.spinnerObserver.next(true); }
-        this.behEmit('spinner:hide:show',true);
+        this.behEmit('spinner:hide:show', true);
         this.http.post(url, body, { headers: headers })
             .map(response => response.json())
             .subscribe(d => {
@@ -177,14 +183,14 @@ export class AppService {
                     id: id, data: d, body: body
                 });
                 // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
-                this.behEmit('spinner:hide:show',false);
+                this.behEmit('spinner:hide:show', false);
             }, err => {
                 this.subject.next({
                     id: id,
                     data: { error: err }
                 });
                 // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
-                this.behEmit('spinner:hide:show',false);
+                this.behEmit('spinner:hide:show', false);
             });
     };
 
@@ -212,7 +218,7 @@ export class AppService {
             }
         }
         // if (this.spinnerObserver) { this.spinnerObserver.next(true); }
-        this.behEmit('spinner:hide:show',true);
+        this.behEmit('spinner:hide:show', true);
         this.http.get(url, { headers: headers })
             .map(response => response.json())
             .subscribe(d => {
@@ -220,14 +226,14 @@ export class AppService {
                     id: id, data: d
                 });
                 // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
-                this.behEmit('spinner:hide:show',false);
+                this.behEmit('spinner:hide:show', false);
             }, err => {
                 this.subject.next({
                     id: id,
                     data: { error: err }
                 });
                 // if (this.spinnerObserver) { this.spinnerObserver.next(false); }
-                this.behEmit('spinner:hide:show',false);
+                this.behEmit('spinner:hide:show', false);
             });
     };
 
@@ -294,8 +300,8 @@ export class AppService {
         delete this.channel[key];
     };
 
-    resetAllReplies(){
-        Object.keys(this.channel).map((key,index)=>{
+    resetAllReplies() {
+        Object.keys(this.channel).map((key, index) => {
             delete this.channel[key];
         });
     }

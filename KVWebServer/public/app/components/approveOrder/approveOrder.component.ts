@@ -1,22 +1,30 @@
 import { Component, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 //import { Location } from '@angular/common';
 import { AppService } from '../../services/app.service';
+import { Util } from '../../services/util';
 import { Router } from '@angular/router';
 import { messages } from '../../config';
 import { ModalModule, Modal } from "ng2-modal";
 import { AlertModule } from 'ng2-bootstrap/components/alert';
+import { PaymentMethodForm } from '../../components/paymentMethodForm/paymentMethodForm.component';
 @Component({
     templateUrl: 'app/components/approveOrder/approveOrder.component.html'
 })
 export class ApproveOrder {
+    // justTest="ABCD";
     approveArtifactsSub: Subscription;
     postApproveSubscription: Subscription;
     getShippingSalesTaxPercSub: Subscription;
+    allAddrSubscription: Subscription;
+    allCardSubscription: Subscription;
+    selectNewCardSub: Subscription;
     selectedAddress: any = {};
     selectedCard: any = {};
     defaultCard: any = {};
     allTotals: {} = {};
+    // payMethodForm: FormGroup;
     footer: any = {
         wineTotals: {
             wine: 0.00, addl: 0.00
@@ -28,24 +36,30 @@ export class ApproveOrder {
         grandTotals: { wine: 0.00 / 1, addl: 0.00 / 1 },
         salesTaxTotals: { wine: 0.00 / 1, addl: 0.00 / 1 }
     };
-    allAddrSubscription: Subscription;
-    allCardSubscription: Subscription;
-
     approveHeading: string = messages['mess:approve:heading'];
-
     allAddresses: [any] = [{}];
     payMethods: [any] = [{}];
     orders: any[];
-    //orderBundle: any = {};
+    newCard: any = {};
+    ccNumberOrig: string = '';
     isAlert: boolean;
     alert: any = { type: "success" };
     payLater: any = () => {
-        if (!this.selectedCard || this.selectedCard == '') {
+        if (!this.selectedCard || Object.keys(this.selectedCard).length == 0) {
             return ('Pay later');
         } else {
             return ('');
         }
     };
+
+    @ViewChild('payMethodModal') payMethodModal: Modal;
+    useNewCard() {
+        this.payMethodModal.open();
+    };
+
+    resetNewCard() {
+        this.newCard = {};
+    }
 
     constructor(private appService: AppService, private router: Router) {
         let ords = appService.request('orders');
@@ -65,7 +79,7 @@ export class ApproveOrder {
                 console.log(d.data.error)
             } else {
                 // shipping and salesTax perc in data
-                console.log(d.data);
+                // console.log(d.data);
             }
         });
 
@@ -107,11 +121,16 @@ export class ApproveOrder {
                 console.log(d.data.error);
             } else {
                 this.payMethods = JSON.parse(d.data).Table;
-                console.log(this.payMethods);
-                this.payMethods = JSON.parse(d.data).Table;
             }
         });
 
+        this.selectNewCardSub = this.appService.filterOn('select:new:card').subscribe(d => {
+            this.newCard = d.data || {};
+            this.selectedCard = this.newCard;
+            this.ccNumberOrig = this.selectedCard.ccNumber;
+            this.selectedCard.ccNumber = Util.getMaskedCCNumber(this.selectedCard.ccNumber);
+            this.payMethodModal.close();
+        });
     };
 
     @ViewChild('addrModal') addrModal: Modal;
@@ -133,6 +152,7 @@ export class ApproveOrder {
         this.appService.httpGet('get:payment:method', body);
         this.cardModal.open();
     };
+
     selectCard(card) {
         this.selectedCard = card;
         this.cardModal.close();
@@ -170,6 +190,12 @@ export class ApproveOrder {
                     });
             });
         orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
+        if (!this.selectedCard.id) {
+            if (Object.keys(this.selectedCard).length > 0) {
+                Object.assign(orderBundle.orderImpDetails, this.newCard);
+                orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+            }
+        }
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
 
@@ -239,16 +265,21 @@ export class ApproveOrder {
             }
         }
     };
+
     ngOnInit() {
         this.appService.httpGet('get:approve:artifacts');
-        //Place this call appropriately.
         let body: any = {};
         body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
         this.appService.httpGet('get:shipping:sales:tax:perc', body);
+        this.appService.reply('close:pay:method:modal', () => { this.payMethodModal.close() });
     };
+
     ngOnDestroy() {
         this.approveArtifactsSub.unsubscribe();
+        this.postApproveSubscription.unsubscribe();
+        this.getShippingSalesTaxPercSub.unsubscribe();
         this.allAddrSubscription.unsubscribe();
         this.allCardSubscription.unsubscribe();
+        this.selectNewCardSub.unsubscribe();
     };
 }
