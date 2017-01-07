@@ -28,7 +28,7 @@ export class PaymentMethodForm {
     selectedISOCode: string = '';
     selectedCreditCardType = '';
     public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-
+    getDefaultBillingAddressSub: Subscription;
     constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService) {
         // console.log(this.testData);
         this.dataReadySubs = appService.behFilterOn('masters:download:success').subscribe(d => {
@@ -36,6 +36,23 @@ export class PaymentMethodForm {
             this.creditCardTypes = this.appService.getSetting('creditCardTypes');
             this.isDataReady = true;
         });
+
+        this.getDefaultBillingAddressSub = appService.filterOn("get:default:billing:address")
+            .subscribe(d => {
+                if (d.data.error) {
+                    console.log('Error occured fetching default billing address');
+                } else {
+                    let defaultBillingAddress = JSON.parse(d.data).Table[0] || {};
+                    this.payMethodForm.controls['street1'].setValue(defaultBillingAddress.street1);
+                    this.payMethodForm.controls['street2'].setValue(defaultBillingAddress.street2);
+                    this.payMethodForm.controls['city'].setValue(defaultBillingAddress.city);
+                    this.payMethodForm.controls['state'].setValue(defaultBillingAddress.state);
+                    this.payMethodForm.controls['zip'].setValue(defaultBillingAddress.zip);                    
+                    this.payMethodForm.controls['phone'].setValue(defaultBillingAddress.phone);
+                    this.payMethodForm.controls['countryName'].setValue(defaultBillingAddress.isoCode);
+                    this.selectedISOCode = defaultBillingAddress.isoCode;
+                }
+            });
     };
 
     initPayMethodForm() {
@@ -66,7 +83,7 @@ export class PaymentMethodForm {
         this.payMethodForm.controls['ccType'].markAsDirty();
     };
 
-    getFormFromNewCard() {        
+    getFormFromNewCard() {
         this.payMethodForm.controls['cardName'].setValue(this.newCard.cardName);
         this.payMethodForm.controls['ccFirstName'].setValue(this.newCard.ccFirstName);
         this.payMethodForm.controls['ccLastName'].setValue(this.newCard.ccLastName);
@@ -81,9 +98,9 @@ export class PaymentMethodForm {
         this.payMethodForm.controls['city'].setValue(this.newCard.city);
         this.payMethodForm.controls['state'].setValue(this.newCard.state);
         this.payMethodForm.controls['zip'].setValue(this.newCard.zip);
-        this.payMethodForm.controls['countryName'].setValue(this.newCard.country);
+        this.payMethodForm.controls['countryName'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['isoCode'].setValue(this.newCard.isoCode);
-        this.payMethodForm.controls['phone'].setValue(this.newCard.phone);        
+        this.payMethodForm.controls['phone'].setValue(this.newCard.phone);
     };
 
     getNewCardFromForm() {
@@ -101,19 +118,23 @@ export class PaymentMethodForm {
         this.newCard.city = this.payMethodForm.controls['city'].value;
         this.newCard.state = this.payMethodForm.controls['state'].value;
         this.newCard.zip = this.payMethodForm.controls['zip'].value;
-        this.newCard.country = this.payMethodForm.controls['countryName'].value;
-        this.newCard.isoCode = this.payMethodForm.controls['isoCode'].value;
+        let isoCode = this.payMethodForm.controls['countryName'].value;
+        this.newCard.country = this.countries.filter(d => d.isoCode == this.selectedISOCode)[0].countryName;
+        this.newCard.isoCode = this.payMethodForm.controls['countryName'].value;
         this.newCard.phone = this.payMethodForm.controls['phone'].value;
     };
 
     ngOnInit() {
-        this.initPayMethodForm();        
+        // let body: any = {};
+        // body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        // this.appService.httpGet('get:default:billing:address', body);
+        this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
         this.selectedISOCode = "US";
         this.payMethodForm.controls['ccType'].setValue('Visa');
         this.selectedCreditCardType = "Visa";
 
-        if (Object.keys(this.newCard).length > 0){
+        if (Object.keys(this.newCard).length > 0) {
             this.getFormFromNewCard();
         }
     };
@@ -124,10 +145,11 @@ export class PaymentMethodForm {
 
     select() {
         this.getNewCardFromForm()
-        this.appService.emit('select:new:card',this.newCard );
+        this.appService.emit('select:new:card', this.newCard);
     };
 
     ngOnDestroy() {
         this.dataReadySubs.unsubscribe();
+        this.getDefaultBillingAddressSub.unsubscribe();
     };
 }

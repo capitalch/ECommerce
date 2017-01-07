@@ -8,7 +8,7 @@ import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { Message, ConfirmationService } from 'primeng/components/common/api';
-import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
+// import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { TextMaskModule } from 'angular2-text-mask';
 @Component({
@@ -89,7 +89,7 @@ export class PaymentMethod {
                 if (d.data.error) {
                     console.log('Error occured fetching default billing address');
                 } else {
-                    let defaultBillingAddress = JSON.parse(d.data).Table[0];
+                    let defaultBillingAddress = JSON.parse(d.data).Table[0] || {};
                     this.payMethodForm.controls['street1'].setValue(defaultBillingAddress.street1);
                     this.payMethodForm.controls['street2'].setValue(defaultBillingAddress.street2);
                     this.payMethodForm.controls['city'].setValue(defaultBillingAddress.city);

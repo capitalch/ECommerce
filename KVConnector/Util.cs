@@ -114,5 +114,16 @@ namespace KVConnector
         }
 
         #endregion
+
+        #region GetUserIdFromCode
+        public static int GetUserIdFromCode(SeedDataAccess seedDataAccess, string code)
+        {
+            List<SqlParameter> parms = new List<SqlParameter>();
+            parms.Add(new SqlParameter("code", code));
+            string userId = seedDataAccess.ExecuteScalarAsString(SqlResource.GetUserIdFromCode, parms);
+            return (int.Parse(userId));
+        }
+        #endregion
+
     }
 }

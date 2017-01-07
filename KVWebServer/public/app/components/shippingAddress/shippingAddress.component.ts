@@ -7,7 +7,7 @@ import { Modal, ModalModule } from "ng2-modal"
 import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { Message, ConfirmationService } from 'primeng/components/common/api';
-import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
+// import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
 import { TextMaskModule } from 'angular2-text-mask';
@@ -38,9 +38,9 @@ export class ShippingAddress {
     @ViewChild('shippingModal') shippingModal: Modal;
     addresses: [any];
     public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+    
     constructor(private appService: AppService, private fb: FormBuilder, private confirmationService: ConfirmationService) {
         this.initShippingForm({});
-
     };
 
     initSubscriptions() {
@@ -65,6 +65,7 @@ export class ShippingAddress {
             this.countries = this.appService.getCountries();
             this.isDataReady = true;
         });
+
         this.getSubscription = this.appService.filterOn("get:shipping:address")
             .subscribe(d => {
                 this.isVerifying = false;
@@ -76,19 +77,21 @@ export class ShippingAddress {
                     this.addresses[this.radioIndex || 0].isSelected = true;
                 }
             });
+
         this.postSubscription = this.appService.filterOn("post:shipping:address")
             .subscribe(d => {
                 this.showMessage(d);
             });
+
         this.putSubscription = this.appService.filterOn("put:shipping:address")
             .subscribe(d => {
                 this.showMessage(d);
             });
+
         this.postDeleteSubscription = this.appService.filterOn("post:delete:shipping:address")
             .subscribe(d => {
                 if (d.data.error) {
-                    console.log(d.data.error);
-                    // this.appService.doGrowl(this.messages, 'error', 'Error', 'Deletion of address failed at server')
+                    console.log(d.data.error);                    
                     this.messages = [];
                     this.messages.push({
                         severity: 'error'
@@ -129,8 +132,7 @@ export class ShippingAddress {
                 severity: 'success'
                 , summary: 'Saved'
                 , detail: 'Data saved successfully'
-            });
-            // this.appService.doGrowl(this.messages, 'success', 'Saved', 'Data saved successfully');            
+            });            
             this.shippingModal.close();
         }
     };
@@ -155,8 +157,7 @@ export class ShippingAddress {
         if (!address.phone) {
             //separate reset is required to clear the input mask control
             this.shippingForm.controls['phone'].reset();
-        }
-        this.shippingForm.controls['phone'].markAsDirty();
+        }        
     };
 
     ngOnInit() {
@@ -169,14 +170,6 @@ export class ShippingAddress {
         this.initShippingForm(address);
         this.shippingModal.open();
     };
-
-    // delete(address) {
-    //     if (confirm('Are you sure to delete this address')) {
-    //         console.log('true');
-    //     } else {
-    //         console.log(false);
-    //     }
-    // };
 
     verifyOrSubmit() {
         if (this.selectedCountryName == 'United States') {
@@ -202,6 +195,7 @@ export class ShippingAddress {
         let addr = {
             id: this.shippingForm.controls['id'].value,
             name: this.shippingForm.controls['name'].value,
+            co:this.shippingForm.controls['co'].value,
             street1: this.shippingForm.controls['street1'].value,
             street2: this.shippingForm.controls['street2'].value,
             city: this.shippingForm.controls['city'].value,

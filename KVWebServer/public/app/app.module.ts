@@ -5,7 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './components/app.component';
 import { Login } from './components/login/login.component';
 import { CreateAccount } from './components/createAccount/createAccount.component';
-import { ForgotPassword, SendPassword, ChangePassword } from './components/managePassword/managePassword.component';
+import { ForgotPassword } from './components/forgotPassword/forgotPassword.component';
+import { ChangePassword } from './components/changePassword/changePassword.component';
 import { Order } from './components/order/order.component';
 import { AppService, LoginGuard } from './services/app.service';
 import { Routing } from './components/routes/app.routes';
@@ -17,7 +18,7 @@ import { ShippingAddress } from './components/shippingAddress/shippingAddress.co
 import { PaymentMethod } from './components/paymentMethod/paymentMethod.component';
 import { CustomValidators } from './services/customValidators';
 import { ControlMessages } from './components/controlMessages/controlMessages.component';
-import { CreatePassword } from './components/managePassword/createPassword.component';
+// import { CreatePassword } from './components/managePassword/createPassword.component';
 import { ModalModule } from 'ng2-modal';
 import { PaginationModule } from 'ng2-bootstrap/components/pagination';
 import { AlertModule } from 'ng2-bootstrap/components/alert';
@@ -30,7 +31,7 @@ import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { BlockUIModule } from 'primeng/primeng';
 import { SpinnerComponent } from './components/app.spinner';
 import { TextMaskModule } from 'angular2-text-mask';
-import {PaymentMethodForm} from './components/paymentMethodForm/paymentMethodForm.component';
+import { PaymentMethodForm } from './components/paymentMethodForm/paymentMethodForm.component';
 
 @NgModule({
   imports: [BrowserModule, HttpModule, Routing, FormsModule
@@ -47,12 +48,22 @@ import {PaymentMethodForm} from './components/paymentMethodForm/paymentMethodFor
     , BlockUIModule
     , TextMaskModule
   ]
-  , declarations: [AppComponent, Login, Order, ForgotPassword
-    , SendPassword, ChangePassword, CreateAccount,
-    Profile, ApproveOrder, Receipt, OrderHistory, ShippingAddress,
-    PaymentMethod, ControlMessages, CreatePassword
+  , declarations: [AppComponent
+    , Login
+    , Order
+    , ForgotPassword
+    , ChangePassword
+    , CreateAccount
+    , Profile
+    , ApproveOrder
+    , Receipt
+    , OrderHistory
+    , ShippingAddress
+    , PaymentMethod
+    , ControlMessages
+    // , CreatePassword
     , SpinnerComponent
-    ,PaymentMethodForm
+    , PaymentMethodForm
   ]
   , providers: [AppService, LoginGuard, CustomValidators, ConfirmationService]
   , bootstrap: [AppComponent]

@@ -36,10 +36,6 @@ export class Login {
         });
     };
 
-    // forgotPassword() {
-    //     this.loginForm.controls['email'].markAsUntouched();
-    // };
-
     authenticate(pwd) {
         if (this.loginForm.valid) {
             let base64Encoded = this.appService.encodeBase64(this.loginForm.controls["email"].value + ':' + md5(pwd));

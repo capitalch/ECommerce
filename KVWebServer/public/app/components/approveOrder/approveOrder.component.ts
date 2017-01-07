@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
-//import { Location } from '@angular/common';
 import { AppService } from '../../services/app.service';
 import { Util } from '../../services/util';
 import { Router } from '@angular/router';
@@ -9,6 +8,7 @@ import { messages } from '../../config';
 import { ModalModule, Modal } from "ng2-modal";
 import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { PaymentMethodForm } from '../../components/paymentMethodForm/paymentMethodForm.component';
+import {uiText} from '../../config';
 @Component({
     templateUrl: 'app/components/approveOrder/approveOrder.component.html'
 })
@@ -44,6 +44,7 @@ export class ApproveOrder {
     ccNumberOrig: string = '';
     isAlert: boolean;
     alert: any = { type: "success" };
+    otherOptions:string=uiText.otherOptions
     payLater: any = () => {
         if (!this.selectedCard || Object.keys(this.selectedCard).length == 0) {
             return ('Pay later');
@@ -54,6 +55,9 @@ export class ApproveOrder {
 
     @ViewChild('payMethodModal') payMethodModal: Modal;
     useNewCard() {
+        let body: any = {};
+        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        this.appService.httpGet('get:default:billing:address', body);
         this.payMethodModal.open();
     };
 
@@ -91,7 +95,7 @@ export class ApproveOrder {
                 if (artifacts.Table.length > 0) {
                     this.selectedCard = this.defaultCard = artifacts.Table[0];
                 } else {
-                    this.selectedCard = null;
+                    this.selectedCard = {};
                 }
                 if (artifacts.Table1.length > 0) {
                     this.selectedAddress = artifacts.Table1[0];
@@ -199,7 +203,7 @@ export class ApproveOrder {
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
 
-    removePayMethod() {
+    otherOptionsClicked() {
         if (Object.keys(this.selectedCard).length == 0) {
             this.selectedCard = this.defaultCard;
         } else {

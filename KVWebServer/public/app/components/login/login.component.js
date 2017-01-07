@@ -35,9 +35,6 @@ var Login = (function () {
         });
     }
     ;
-    // forgotPassword() {
-    //     this.loginForm.controls['email'].markAsUntouched();
-    // };
     Login.prototype.authenticate = function (pwd) {
         if (this.loginForm.valid) {
             var base64Encoded = this.appService.encodeBase64(this.loginForm.controls["email"].value + ':' + md5_1.md5(pwd));

@@ -11,71 +11,7 @@ import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { md5 } from '../../vendor/md5';
 
 @Component({
-  templateUrl: 'app/components/managePassword/forgotPassword.component.html'
-})
-export class ForgotPassword {
-  subscription: Subscription;
-  forgotForm: FormGroup;
-  constructor(private appService: AppService, private router: Router, private fb: FormBuilder) {
-    this.subscription = appService.filterOn('post:forgot:password')
-      .subscribe(d => {
-        if (d.data.error) {
-          console.log(d.data.error.status)
-        } else {
-          console.log('Success');
-          this.router.navigate(['/login']);
-        }
-      });
-  };
-  ngOnInit() {
-    this.forgotForm = this.fb.group({
-      codeOrMail: ['', Validators.required]
-    });
-  };
-  sendMail(codeOrMail) {
-    let base64Encoded = this.appService.encodeBase64(codeOrMail);
-    this.appService.httpPost('post:forgot:password', { auth: base64Encoded });
-  };
-  cancel() {
-    this.router.navigate(['/login']);
-  };
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-}
-
-//send password component
-@Component({
-  template: `
-  <button (click)="sendPassword()">Send Password</button>
-  `
-})
-export class SendPassword {
-  subscription: Subscription;
-  constructor(private appService: AppService, private router: Router) {
-    this.subscription = appService.filterOn('post:send:password')
-      .subscribe(d => {
-        if (d.data.error) {
-          console.log(d.data.error.status)
-        } else {
-          console.log('Success');
-          this.router.navigate(['/login']);
-        }
-      });
-  };
-  sendPassword() {
-    let code = window.location.search.split('=')[1];
-    console.log(code);
-    this.appService.httpPost('post:send:password', { auth: code });
-  }
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-}
-
-//change password component
-@Component({
-  templateUrl: 'app/components/managePassword/changePassword.component.html'
+  templateUrl: 'app/components/changePassword/changePassword.component.html'
 })
 export class ChangePassword {
   changePwdForm: FormGroup;

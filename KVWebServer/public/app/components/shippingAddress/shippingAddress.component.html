@@ -38,6 +38,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label col-sm-3" for="co1">C/o:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="co1" placeholder="Enter care of" formControlName="co">
+                        <control-messages [control]="shippingForm.controls.co"></control-messages>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-sm-3" for="kvStreet1">Address line 1:</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="kvStreet1" placeholder="Enter address line 1" formControlName="street1">

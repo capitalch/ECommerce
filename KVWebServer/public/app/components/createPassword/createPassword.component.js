@@ -70,7 +70,7 @@ var CreatePassword = (function () {
 }());
 CreatePassword = __decorate([
     core_1.Component({
-        templateUrl: 'app/components/managePassword/createPassword.component.html'
+        templateUrl: 'app/components/createPassword/createPassword.component.html'
     }),
     __metadata("design:paramtypes", [app_service_1.AppService, router_1.Router, forms_1.FormBuilder])
 ], CreatePassword);

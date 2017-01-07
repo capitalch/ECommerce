@@ -82,7 +82,6 @@ var ShippingAddress = (function () {
             .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
-                // this.appService.doGrowl(this.messages, 'error', 'Error', 'Deletion of address failed at server')
                 _this.messages = [];
                 _this.messages.push({
                     severity: 'error',
@@ -127,7 +126,6 @@ var ShippingAddress = (function () {
                 summary: 'Saved',
                 detail: 'Data saved successfully'
             });
-            // this.appService.doGrowl(this.messages, 'success', 'Saved', 'Data saved successfully');            
             this.shippingModal.close();
         }
     };
@@ -153,7 +151,6 @@ var ShippingAddress = (function () {
             //separate reset is required to clear the input mask control
             this.shippingForm.controls['phone'].reset();
         }
-        this.shippingForm.controls['phone'].markAsDirty();
     };
     ;
     ShippingAddress.prototype.ngOnInit = function () {
@@ -167,13 +164,6 @@ var ShippingAddress = (function () {
         this.shippingModal.open();
     };
     ;
-    // delete(address) {
-    //     if (confirm('Are you sure to delete this address')) {
-    //         console.log('true');
-    //     } else {
-    //         console.log(false);
-    //     }
-    // };
     ShippingAddress.prototype.verifyOrSubmit = function () {
         if (this.selectedCountryName == 'United States') {
             this.verify();
@@ -200,6 +190,7 @@ var ShippingAddress = (function () {
         var addr = {
             id: this.shippingForm.controls['id'].value,
             name: this.shippingForm.controls['name'].value,
+            co: this.shippingForm.controls['co'].value,
             street1: this.shippingForm.controls['street1'].value,
             street2: this.shippingForm.controls['street2'].value,
             city: this.shippingForm.controls['city'].value,

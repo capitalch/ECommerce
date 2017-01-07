@@ -22,13 +22,13 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-6">
-          <span *ngIf="!selectedCard.cardName" class="noRecord">Pay later</span>
+          <span *ngIf="!selectedCard.cardName" class="noRecord">{{otherOptions}}</span>
           <span *ngIf="selectedCard.cardName"><span class="name-shipping-address">{{selectedCard.cardName}}</span>, {{selectedCard.ccNumber}}</span>
         </div>
         <div class="col-sm-6 btnApprovedpayment">
-          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Use existing</button>
-          <button type="button" class="btn btn-md btn-kistler" (click)="useNewCard()">Use new</button>
-          <button class="btn btn-md btn-kistler" (click)="removePayMethod()">Pay later</button>
+          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Use Existing Card</button>
+          <button type="button" class="btn btn-md btn-kistler" (click)="useNewCard()">Use New Card</button>
+          <button class="btn btn-md btn-kistler" (click)="otherOptionsClicked()">Other Options</button>
         </div>
       </div>
     </div>

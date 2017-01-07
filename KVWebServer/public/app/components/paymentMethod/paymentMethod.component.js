@@ -84,7 +84,7 @@ var PaymentMethod = (function () {
                 console.log('Error occured fetching default billing address');
             }
             else {
-                var defaultBillingAddress = JSON.parse(d.data).Table[0];
+                var defaultBillingAddress = JSON.parse(d.data).Table[0] || {};
                 _this.payMethodForm.controls['street1'].setValue(defaultBillingAddress.street1);
                 _this.payMethodForm.controls['street2'].setValue(defaultBillingAddress.street2);
                 _this.payMethodForm.controls['city'].setValue(defaultBillingAddress.city);

@@ -9,12 +9,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-//import { Location } from '@angular/common';
 var app_service_1 = require("../../services/app.service");
 var util_1 = require("../../services/util");
 var router_1 = require("@angular/router");
 var config_1 = require("../../config");
 var ng2_modal_1 = require("ng2-modal");
+var config_2 = require("../../config");
 var ApproveOrder = (function () {
     function ApproveOrder(appService, router) {
         var _this = this;
@@ -42,6 +42,7 @@ var ApproveOrder = (function () {
         this.newCard = {};
         this.ccNumberOrig = '';
         this.alert = { type: "success" };
+        this.otherOptions = config_2.uiText.otherOptions;
         this.payLater = function () {
             if (!_this.selectedCard || Object.keys(_this.selectedCard).length == 0) {
                 return ('Pay later');
@@ -80,7 +81,7 @@ var ApproveOrder = (function () {
                     _this.selectedCard = _this.defaultCard = artifacts.Table[0];
                 }
                 else {
-                    _this.selectedCard = null;
+                    _this.selectedCard = {};
                 }
                 if (artifacts.Table1.length > 0) {
                     _this.selectedAddress = artifacts.Table1[0];
@@ -123,6 +124,9 @@ var ApproveOrder = (function () {
         });
     }
     ApproveOrder.prototype.useNewCard = function () {
+        var body = {};
+        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        this.appService.httpGet('get:default:billing:address', body);
         this.payMethodModal.open();
     };
     ;
@@ -192,7 +196,7 @@ var ApproveOrder = (function () {
         this.appService.httpPost('post:save:approve:request', orderBundle);
     };
     ;
-    ApproveOrder.prototype.removePayMethod = function () {
+    ApproveOrder.prototype.otherOptionsClicked = function () {
         if (Object.keys(this.selectedCard).length == 0) {
             this.selectedCard = this.defaultCard;
         }

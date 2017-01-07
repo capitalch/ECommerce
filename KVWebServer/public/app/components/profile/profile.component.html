@@ -2,7 +2,7 @@
     <h2>Profile</h2>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form [formGroup]="profileForm" novalidate (ngSubmit)="submit()" class="form-horizontal">
+            <form [formGroup]="profileForm" novalidate (ngSubmit)="verifyOrSubmit()" class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="code1">Code:</label>
                     <div class="col-sm-4">
@@ -21,6 +21,13 @@
                     <div class="col-sm-4">
                         <input type="text" formControlName="lastName" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
                         <control-messages [control]="profileForm.controls.lastName"></control-messages>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="co1">C/o:</label>
+                    <div class="col-sm-4">
+                        <input type="text" formControlName="co" class="form-control" id="co1" name="co" placeholder="Enter care of">
+                        <control-messages [control]="profileForm.controls.co"></control-messages>
                     </div>
                 </div>
                 <div class="form-group">
@@ -72,7 +79,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-4" for="bCountry">Mailing Country:</label>
                     <div class="col-sm-4">
-                        <select formControlName='mailingCountry' [(ngModel)]='selectedCountryName' class="form-control" id="bCountry">
+                        <select formControlName='mailingCountry'  class="form-control" id="bCountry">
                                 <option *ngFor="let country of countries" [value]="country.countryName">{{country.countryName}}</option>
                             </select>
                         <control-messages [control]="profileForm.controls.mailingCountry"></control-messages>
@@ -89,12 +96,13 @@
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-4">
                         <alert *ngIf="alert.show" [type]="alert.type" [dismissible]="true">{{alert.message}}</alert>
-                        <button type="submit" [disabled]="!(profileForm.valid && profileForm.dirty && profileForm.valueChanges)" class="btn btn-kistler"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Submit</button>
-                        <!--<button type="button" class="btn btn-kistler" (click)="verify()">Verify</button>-->
+                        <button type="submit" [disabled]="!(profileForm.valid && profileForm.dirty && profileForm.valueChanges)" class="btn btn-kistler"><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>Submit</button>
+                        <!--<button type="button" class="btn btn-kistler" (click)="verify1()">Verify</button>-->
                     </div>
                 </div>
             </form>
         </div>
     </div>
     <p-growl [value]="messages"></p-growl>
+    <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="300"></p-confirmDialog>
 </div>

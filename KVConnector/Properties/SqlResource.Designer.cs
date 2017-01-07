@@ -263,6 +263,27 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to declare @isValidUser bit = 0;
+        ///declare @isPwdExists bit = 0;
+        ///declare @ret varchar(7);
+        ///declare @newUserPageText varchar(MAX);
+        ///
+        ///if exists(select 1 from UserMaster where code=@code and OfferId=@offerId)
+        ///	select @isValidUser = 1;
+        ///if exists(select 1 from UserMaster where code=@code and OfferId=@offerId 
+        ///	and pwdHash is not null and rtrim(pwdHash) != &apos;&apos;)
+        ///	select @isPwdExists = 1;
+        ///if((@isValidUser = 0) and (@isPwdExists = 0)) --invalid user so login
+        ///	select @ret = &apos;login&apos;
+        ///else if((@isValidUser = 1) and  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetNewUserLogin {
+            get {
+                return ResourceManager.GetString("GetNewUserLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select a.id, item, packing, orderQty, wishList,a.price
         ///	from OrderDetails a join OfferMaster b
         ///		on a.offerId = b.id
@@ -296,7 +317,7 @@ namespace KVConnector.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
-        ///	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry
+        ///	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry, co
         ///	from UserProfiles where userId = @userId;.
         /// </summary>
         internal static string GetProfile {
@@ -338,6 +359,15 @@ namespace KVConnector.Properties {
         internal static string GetShippingSalesTaxPerc {
             get {
                 return ResourceManager.GetString("GetShippingSalesTaxPerc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select id from userMaster where code = @code;.
+        /// </summary>
+        internal static string GetUserIdFromCode {
+            get {
+                return ResourceManager.GetString("GetUserIdFromCode", resourceCulture);
             }
         }
         
@@ -405,8 +435,8 @@ namespace KVConnector.Properties {
         ///if not exists(select 0 from ShippingAddresses where UserId = @userId)
         ///	select @isDefault = 1;
         ///
-        ///insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId)
-        ///	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userI [rest of string was truncated]&quot;;.
+        ///insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId,Co)
+        ///	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@us [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertShippingAddress {
             get {
@@ -483,12 +513,25 @@ namespace KVConnector.Properties {
         ///	MailingAddress2 = @mailingAddress2,
         ///	MailingCity = @mailingCity,
         ///	MailingState = @mailingState,
-        ///	MailingZip = @mailingZip, MailingCountry=@mailingCountry
+        ///	MailingZip = @mailingZip,
+        ///	MailingCountry = @mailingCountry,
+        ///	IsAddressVerified = @isAddressVerified,
+        ///	co = @co
         ///	where Id = @id;.
         /// </summary>
         internal static string UpdateProfile {
             get {
                 return ResourceManager.GetString("UpdateProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update UserMaster set pwdHash = @hash
+        ///	where code=@code;.
+        /// </summary>
+        internal static string UpdatePwdHash {
+            get {
+                return ResourceManager.GetString("UpdatePwdHash", resourceCulture);
             }
         }
         
@@ -513,13 +556,14 @@ namespace KVConnector.Properties {
         ///update ShippingAddresses
         ///	set Code=@code,
         ///	Name=@name,
+        ///	Co=@co,
         ///	street1=@street1,
         ///	street2=@street2,
         ///	city=@city,state=@state,zip=@zip,country=@country,
         ///	phone=@phone,
         ///	ISOCode=@isoCode,
         ///	IsDefault=@isDefault,
-        ///	IsAddressV [rest of string was truncated]&quot;;.
+        ///	 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UpdateShippingAddress {
             get {

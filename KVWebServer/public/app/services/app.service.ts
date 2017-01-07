@@ -82,7 +82,7 @@ export class AppService {
                             this.globalSettings.onlineOrder = onlineOrder;
                             this.behEmit('settings:download:success');
                         }, 10000);
-                        this.globalSettings.onlineOrder = onlineOrder;                                                
+                        this.globalSettings.onlineOrder = onlineOrder;
                         this.globalSettings.loginPage = data.Table[0].loginPage;
                         this.behEmit('settings:download:success');
                     }
@@ -96,7 +96,18 @@ export class AppService {
     };
 
     behFilterOn(id: string): Observable<any> {
-        return (this.behaviorSubjects[id]);
+        return (this.behaviorSubjects[id].filter(d=>(d.id===id)));
+    };
+
+    //application wide events
+    emit(id: string, options?: any) {
+        this.subject.next({
+            id: id, data: options
+        });
+    };
+
+    filterOn(id: string): Observable<any> {
+        return (this.subject.filter(d => (d.id === id)));
     };
 
     loadSettings() {
@@ -270,16 +281,6 @@ export class AppService {
                     id: id,
                     data: { error: err }
                 }));
-    };
-    //application wide events
-    emit(id: string, options?: any) {
-        this.subject.next({
-            id: id, data: options
-        });
-    };
-
-    filterOn(id: string): Observable<any> {
-        return (this.subject.filter(d => (d.id === id)));
     };
 
     reply(key: string, value: any) {

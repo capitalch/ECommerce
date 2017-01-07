@@ -30,6 +30,23 @@ var PaymentMethodForm = (function () {
             _this.creditCardTypes = _this.appService.getSetting('creditCardTypes');
             _this.isDataReady = true;
         });
+        this.getDefaultBillingAddressSub = appService.filterOn("get:default:billing:address")
+            .subscribe(function (d) {
+            if (d.data.error) {
+                console.log('Error occured fetching default billing address');
+            }
+            else {
+                var defaultBillingAddress = JSON.parse(d.data).Table[0] || {};
+                _this.payMethodForm.controls['street1'].setValue(defaultBillingAddress.street1);
+                _this.payMethodForm.controls['street2'].setValue(defaultBillingAddress.street2);
+                _this.payMethodForm.controls['city'].setValue(defaultBillingAddress.city);
+                _this.payMethodForm.controls['state'].setValue(defaultBillingAddress.state);
+                _this.payMethodForm.controls['zip'].setValue(defaultBillingAddress.zip);
+                _this.payMethodForm.controls['phone'].setValue(defaultBillingAddress.phone);
+                _this.payMethodForm.controls['countryName'].setValue(defaultBillingAddress.isoCode);
+                _this.selectedISOCode = defaultBillingAddress.isoCode;
+            }
+        });
     }
     ;
     PaymentMethodForm.prototype.initPayMethodForm = function () {
@@ -75,12 +92,13 @@ var PaymentMethodForm = (function () {
         this.payMethodForm.controls['city'].setValue(this.newCard.city);
         this.payMethodForm.controls['state'].setValue(this.newCard.state);
         this.payMethodForm.controls['zip'].setValue(this.newCard.zip);
-        this.payMethodForm.controls['countryName'].setValue(this.newCard.country);
+        this.payMethodForm.controls['countryName'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['isoCode'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['phone'].setValue(this.newCard.phone);
     };
     ;
     PaymentMethodForm.prototype.getNewCardFromForm = function () {
+        var _this = this;
         this.newCard.cardName = this.payMethodForm.controls['cardName'].value;
         this.newCard.ccFirstName = this.payMethodForm.controls['ccFirstName'].value;
         this.newCard.ccLastName = this.payMethodForm.controls['ccLastName'].value;
@@ -95,12 +113,16 @@ var PaymentMethodForm = (function () {
         this.newCard.city = this.payMethodForm.controls['city'].value;
         this.newCard.state = this.payMethodForm.controls['state'].value;
         this.newCard.zip = this.payMethodForm.controls['zip'].value;
-        this.newCard.country = this.payMethodForm.controls['countryName'].value;
-        this.newCard.isoCode = this.payMethodForm.controls['isoCode'].value;
+        var isoCode = this.payMethodForm.controls['countryName'].value;
+        this.newCard.country = this.countries.filter(function (d) { return d.isoCode == _this.selectedISOCode; })[0].countryName;
+        this.newCard.isoCode = this.payMethodForm.controls['countryName'].value;
         this.newCard.phone = this.payMethodForm.controls['phone'].value;
     };
     ;
     PaymentMethodForm.prototype.ngOnInit = function () {
+        // let body: any = {};
+        // body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        // this.appService.httpGet('get:default:billing:address', body);
         this.initPayMethodForm();
         this.payMethodForm.controls["countryName"].setValue("US");
         this.selectedISOCode = "US";
@@ -122,6 +144,7 @@ var PaymentMethodForm = (function () {
     ;
     PaymentMethodForm.prototype.ngOnDestroy = function () {
         this.dataReadySubs.unsubscribe();
+        this.getDefaultBillingAddressSub.unsubscribe();
     };
     ;
     return PaymentMethodForm;

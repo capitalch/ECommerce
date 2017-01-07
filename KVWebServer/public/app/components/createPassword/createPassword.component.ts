@@ -9,7 +9,7 @@ import { ControlMessages } from '../controlMessages/controlMessages.component';
 import { md5 } from '../../vendor/md5';
 
 @Component({
-    templateUrl: 'app/components/managePassword/createPassword.component.html'
+    templateUrl: 'app/components/createPassword/createPassword.component.html'
 })
 export class CreatePassword {
     createPasswordSubs: Subscription

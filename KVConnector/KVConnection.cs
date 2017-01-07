@@ -42,6 +42,7 @@ namespace KVConnector
                 RoutingDictionary.Add("sql:scalar:no:parm", ExecuteScalarNoParmAsync);
                 RoutingDictionary.Add("save:approve:request", SaveApproveRequestAsync);
                 RoutingDictionary.Add("get:code:and:mail", GetCodeOrMailAsync);
+                RoutingDictionary.Add("new:user", CreateNewUserAsync);
             }
         }
         #endregion
@@ -630,6 +631,74 @@ namespace KVConnector
         }
         #endregion
 
+        #region CreateNewUserAsync
+        public async Task<object> CreateNewUserAsync(dynamic obj)
+        {
+            dynamic result = new ExpandoObject();
+            Task<object> t = Task.Run<object>(() =>
+            {
+                try
+                {
+                    IDictionary<string, object> objDictionary = (IDictionary<string, object>)obj;
+                    bool success = false;
+
+                    if (objDictionary.ContainsKey("auth"))
+                    {
+                        dynamic authBase64 = (dynamic)objDictionary["auth"];
+                        byte[] authBytes = Convert.FromBase64String(authBase64);
+                        string auth = Encoding.UTF8.GetString(authBytes);
+                        if (auth.IndexOf(":") > 0)
+                        {
+                            string[] splitAuth = auth.Split(':');
+                            if (splitAuth.Length == 2)
+                            {
+                                string code = splitAuth[0];
+                                string hash = splitAuth[1];
+                                List<SqlParameter> paramsList = new List<SqlParameter>();
+                                paramsList.Add(new SqlParameter("code", code));
+                                paramsList.Add(new SqlParameter("hash", hash));
+                                int cnt = seedDataAccess.ExecuteNonQuery(SqlResource.UpdatePwdHash, paramsList);
+                                if (cnt > 0)
+                                {
+                                    //get data for user
+                                    success = true;
+                                    result.authenticated = true;
+                                    dynamic user = new ExpandoObject();
+                                    user.email = Util.GetEmailFromCode(seedDataAccess,code);
+                                    user.userId = Util.GetUserIdFromCode(seedDataAccess,code);
+                                    user.code = code;
+                                    //user.role = role;
+                                    result.user = user;
+                                    //log user
+                                    paramsList.Clear();
+                                    paramsList.Add(new SqlParameter("userCode", code));
+                                    paramsList.Add(new SqlParameter("mType", "newUser"));
+                                    seedDataAccess.ExecuteScalar(SqlResource.InsertUserLog, paramsList);
+                                }
+                            }
+                        }               
+                    }
+                    if (success)
+                    {
+                        result.status = 200;
+                        result.success = true;
+                    }
+                    else
+                    {
+                        Util.SetError(result, 405, Resources.ErrGenericError, Resources.MessGenericError);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Util.SetError(result, 500, Resources.ErrInternalServerError, ex.Message);
+                }
+                return (result);
+            });
+            result = await t;
+            return (result);
+        }
+        #endregion
+
         #region ExecuteSqlQueryAsync
         private async Task<object> ExecuteSqlQueryAsync(dynamic obj)
         {
@@ -698,6 +767,12 @@ namespace KVConnector
                             parms.Add(new SqlParameter("mailingZip", profile.mailingZip));
                             parms.Add(new SqlParameter("mailingCountry", profile.mailingCountry));
                             parms.Add(new SqlParameter("id", profile.id));
+                            parms.Add(new SqlParameter("isAddressVerified", profile.isAddressVerified));
+                            if (profile.co == null)
+                            {
+                                profile.co = DBNull.Value;
+                            }
+                            parms.Add(new SqlParameter("co", profile.co));
                             var i = seedDataAccess.ExecuteNonQuery(SqlResource.UpdateProfile, parms);
                             if (i == 0)
                             {

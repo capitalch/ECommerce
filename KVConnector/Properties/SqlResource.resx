@@ -145,7 +145,7 @@ select adminIp = stringValue
   </data>
   <data name="GetProfile" xml:space="preserve">
     <value>select id, firstName,lastName, phone, convert(varchar(10), birthDay, 120) as birthDay, mailingAddress1
-	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry
+	, mailingAddress2, mailingCity, mailingState, mailingZip, mailingCountry, co
 	from UserProfiles where userId = @userId;</value>
   </data>
   <data name="IsEmailAndHashExist" xml:space="preserve">
@@ -170,7 +170,10 @@ select adminIp = stringValue
 	MailingAddress2 = @mailingAddress2,
 	MailingCity = @mailingCity,
 	MailingState = @mailingState,
-	MailingZip = @mailingZip, MailingCountry=@mailingCountry
+	MailingZip = @mailingZip,
+	MailingCountry = @mailingCountry,
+	IsAddressVerified = @isAddressVerified,
+	co = @co
 	where Id = @id;</value>
   </data>
   <data name="GetOrderHeaders" xml:space="preserve">
@@ -200,6 +203,7 @@ else
 update ShippingAddresses
 	set Code=@code,
 	Name=@name,
+	Co=@co,
 	street1=@street1,
 	street2=@street2,
 	city=@city,state=@state,zip=@zip,country=@country,
@@ -358,8 +362,8 @@ end
 if not exists(select 0 from ShippingAddresses where UserId = @userId)
 	select @isDefault = 1;
 
-insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId)
-	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userID);</value>
+insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId,Co)
+	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userID,@co);</value>
   </data>
   <data name="DeleteShippingAddress" xml:space="preserve">
     <value>delete from ShippingAddresses where id = @id;</value>
@@ -372,6 +376,26 @@ insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,P
   <data name="GetLoginPageText" xml:space="preserve">
     <value>select loginPage = Login_Page from SysParms;</value>
   </data>
+  <data name="GetNewUserLogin" xml:space="preserve">
+    <value>declare @isValidUser bit = 0;
+declare @isPwdExists bit = 0;
+declare @ret varchar(7);
+declare @newUserPageText varchar(MAX);
+
+if exists(select 1 from UserMaster where code=@code and OfferId=@offerId)
+	select @isValidUser = 1;
+if exists(select 1 from UserMaster where code=@code and OfferId=@offerId 
+	and pwdHash is not null and rtrim(pwdHash) != '')
+	select @isPwdExists = 1;
+if((@isValidUser = 0) and (@isPwdExists = 0)) --invalid user so login
+	select @ret = 'login'
+else if((@isValidUser = 1) and (@isPwdExists = 1)) --valid user and pwd exists so login
+	select @ret='login'
+else -- valid user and empty pwd
+	select @ret = 'newUser'
+select @newUserPageText = newUser_Page from sysParms;
+select @ret + '#;' + @newUserPageText;</value>
+  </data>
   <data name="GetSettings" xml:space="preserve">
     <value>select smartyStreetApiKey = (select stringValue from setup where MKey = 'SmartyStreetApiKey')
 	, smartyStreetAuthId = (select smartyStreetApiKey = stringValue from setup where MKey = 'SmartyStreetAuthId')
@@ -381,7 +405,14 @@ insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,P
 	, disableOnlineOrderForm = (select DisableOnlineOrderForm from SysParms)
 	, disableOnlineOrderText = (select disableOnlineOrderText = stringValue from setup where mKey ='DisableOnlineOrderText');</value>
   </data>
+  <data name="GetUserIdFromCode" xml:space="preserve">
+    <value>select id from userMaster where code = @code;</value>
+  </data>
   <data name="InsertUserLog" xml:space="preserve">
     <value>Insert into UsrLog(Code,mType) values(@userCode, @mType);</value>
+  </data>
+  <data name="UpdatePwdHash" xml:space="preserve">
+    <value>update UserMaster set pwdHash = @hash
+	where code=@code;</value>
   </data>
 </root>
