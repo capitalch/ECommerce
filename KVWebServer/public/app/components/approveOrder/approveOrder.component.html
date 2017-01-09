@@ -5,14 +5,14 @@
     <div class="panel-heading">Address</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-7">
           <span *ngIf="!selectedAddress.name" class="noRecord">You must provide a shipping address</span>
           <span *ngIf="selectedAddress.name">
           <span class="name-shipping-address">{{selectedAddress.name}}</span>, {{selectedAddress.street1}}, {{selectedAddress.city}}
           , {{selectedAddress.state}}, {{selectedAddress.zip}}, {{selectedAddress.country}}
           </span>
         </div>
-        <div class="col-sm-4 btnApprovedOrder"><button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
+        <div class="col-sm-5 btnApprovedOrder"><button type="button" class="btn btn-xs pull-right btn-kistler" (click)="changeSelectedAddress()">Change</button></div>
       </div>
     </div>
   </div>
@@ -21,14 +21,14 @@
     <div class="panel-heading">Payment method</div>
     <div class="panel-body">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-7">
           <span *ngIf="!selectedCard.cardName" class="noRecord">{{otherOptions}}</span>
           <span *ngIf="selectedCard.cardName"><span class="name-shipping-address">{{selectedCard.cardName}}</span>, {{selectedCard.ccNumber}}</span>
         </div>
-        <div class="col-sm-6 btnApprovedpayment">
-          <button type="button" class="btn btn-md btn-kistler" (click)="changeSelectedCard()">Use Existing Card</button>
-          <button type="button" class="btn btn-md btn-kistler" (click)="useNewCard()">Use New Card</button>
-          <button class="btn btn-md btn-kistler" (click)="otherOptionsClicked()">Other Options</button>
+        <div class="col-md-5 btnApprovedpayment">
+            <button class="btn btn-xs pull-right btn-kistler" (click)="otherOptionsClicked()">Other Options</button>
+            <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useNewCard()">Use New Card</button>
+            <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="changeSelectedCard()">Use Existing Card</button>
         </div>
       </div>
     </div>

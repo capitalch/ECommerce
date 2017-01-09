@@ -46,9 +46,10 @@ var AppService = (function () {
                 _this.behEmit('masters:download:success');
             }
         });
-        setTimeout(function () {
-            _this.httpGet('get:all:masters');
-        }, 2000);
+        this.httpGet('get:all:masters');
+        // setTimeout(() => {
+        //     this.httpGet('get:all:masters')
+        // }, 2000);
         this.settingsSubscription = this.filterOn('get:all:settings').subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
