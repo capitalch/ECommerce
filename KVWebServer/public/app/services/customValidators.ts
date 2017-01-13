@@ -1,4 +1,6 @@
 import { FormControl, AbstractControl, FormGroup } from '@angular/forms';
+import { Util } from './util';
+
 export class CustomValidators {
     static emailValidator(control: FormControl) {
         if (!control.value.match(/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)) {
@@ -31,6 +33,29 @@ export class CustomValidators {
             if (hasUpperCase + hasLowerCase + hasNumbers + hasNonalphas < 3) {
                 ret = { 'invalidPwd': true };
             }
+        }
+        return (ret);
+    };
+
+    static expiryMonthYearValidator(formGroup: FormGroup) {
+        let ret;
+        let month = formGroup.controls['ccExpiryMonth'].value / 1;
+        let year = formGroup.controls['ccExpiryYear'].value / 1
+        if (!Util.isValidExpiryMonthYear(month, year)) {
+            ret = { 'InvalidExpiryMonthYear': true };
+        }
+        return (ret);
+    };
+
+    static expiryYearValidator(control: FormControl) {
+        let ret;
+        let value = control.value;
+        let thisDate = new Date();
+        let currentYear = thisDate.getFullYear();
+        if ((value >= currentYear) && (value <= currentYear + 7)) {
+            ret = null;
+        } else {
+            ret = { 'invalidExpiryYear': true };
         }
         return (ret);
     };
@@ -69,5 +94,5 @@ export class CustomValidators {
         } else {
             return { 'invalidCreditCard': true };
         }
-    }
+    };
 }

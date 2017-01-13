@@ -60,7 +60,7 @@ var PaymentMethodForm = (function () {
             ccType: ['', forms_1.Validators.required],
             ccNumber: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.creditCardValidator]],
             ccExpiryMonth: [this.month, forms_1.Validators.required],
-            ccExpiryYear: [this.year, forms_1.Validators.required],
+            ccExpiryYear: [this.year, [forms_1.Validators.required, customValidators_1.CustomValidators.expiryYearValidator]],
             ccSecurityCode: ['', forms_1.Validators.required],
             co: [''],
             street1: ['', forms_1.Validators.required],
@@ -71,7 +71,8 @@ var PaymentMethodForm = (function () {
             countryName: ['', forms_1.Validators.required],
             isoCode: [''],
             phone: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
-            isDefault: [false]
+            isDefault: [false],
+            isSaveForLaterUse: [false]
         });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
@@ -95,18 +96,22 @@ var PaymentMethodForm = (function () {
         this.payMethodForm.controls['countryName'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['isoCode'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['phone'].setValue(this.newCard.phone);
+        this.payMethodForm.controls['isSaveForLaterUse'].setValue(this.newCard.isSaveForLaterUse);
     };
     ;
     PaymentMethodForm.prototype.getNewCardFromForm = function () {
         var _this = this;
+        var firstName = this.payMethodForm.controls['ccFirstName'].value;
+        var lastName = this.payMethodForm.controls['ccLastName'].value;
         this.newCard.cardName = this.payMethodForm.controls['cardName'].value;
-        this.newCard.ccFirstName = this.payMethodForm.controls['ccFirstName'].value;
-        this.newCard.ccLastName = this.payMethodForm.controls['ccLastName'].value;
+        this.newCard.ccFirstName = firstName;
+        this.newCard.ccLastName = lastName;
         this.newCard.ccType = this.payMethodForm.controls['ccType'].value;
         this.newCard.ccNumber = this.payMethodForm.controls['ccNumber'].value;
         this.newCard.ccExpiryMonth = this.payMethodForm.controls['ccExpiryMonth'].value;
         this.newCard.ccExpiryYear = this.payMethodForm.controls['ccExpiryYear'].value;
         this.newCard.ccSecurityCode = this.payMethodForm.controls['ccSecurityCode'].value;
+        this.newCard.name = firstName.concat(' ', lastName);
         this.newCard.co = this.payMethodForm.controls['co'].value;
         this.newCard.street1 = this.payMethodForm.controls['street1'].value;
         this.newCard.street2 = this.payMethodForm.controls['street2'].value;
@@ -117,6 +122,8 @@ var PaymentMethodForm = (function () {
         this.newCard.country = this.countries.filter(function (d) { return d.isoCode == _this.selectedISOCode; })[0].countryName;
         this.newCard.isoCode = this.payMethodForm.controls['countryName'].value;
         this.newCard.phone = this.payMethodForm.controls['phone'].value;
+        // this.newCard.isSaveForLaterUse = this.isSaveForLaterUse.nativeElement.checked;
+        this.newCard.isSaveForLaterUse = this.payMethodForm.controls['isSaveForLaterUse'].value;
     };
     ;
     PaymentMethodForm.prototype.ngOnInit = function () {
@@ -153,6 +160,10 @@ __decorate([
     core_1.Input('newCard'),
     __metadata("design:type", Object)
 ], PaymentMethodForm.prototype, "newCard", void 0);
+__decorate([
+    core_1.ViewChild('isSaveForLaterUse'),
+    __metadata("design:type", Object)
+], PaymentMethodForm.prototype, "isSaveForLaterUse", void 0);
 PaymentMethodForm = __decorate([
     core_1.Component({
         selector: 'paymentMethodForm',

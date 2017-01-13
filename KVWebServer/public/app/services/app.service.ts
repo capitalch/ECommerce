@@ -78,10 +78,10 @@ export class AppService {
                         let onlineOrder: any = {};
                         onlineOrder.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
                         onlineOrder.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
-                        setTimeout(() => {
-                            this.globalSettings.onlineOrder = onlineOrder;
-                            this.behEmit('settings:download:success');
-                        }, 10000);
+                        // setTimeout(() => {
+                        //     this.globalSettings.onlineOrder = onlineOrder;
+                        //     this.behEmit('settings:download:success');
+                        // }, 10000);
                         this.globalSettings.onlineOrder = onlineOrder;
                         this.globalSettings.loginPage = data.Table[0].loginPage;
                         this.behEmit('settings:download:success');

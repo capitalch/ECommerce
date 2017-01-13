@@ -96,7 +96,7 @@ export class PaymentMethod {
                     this.payMethodForm.controls['state'].setValue(defaultBillingAddress.state);
                     this.payMethodForm.controls['zip'].setValue(defaultBillingAddress.zip);
                     // this.payMethodForm.controls['phone'].reset();
-                    this.payMethodForm.controls['phone'].setValue(defaultBillingAddress.phone);                    
+                    this.payMethodForm.controls['phone'].setValue(defaultBillingAddress.phone);
                     this.payMethodForm.controls['countryName'].setValue(defaultBillingAddress.isoCode);
                     this.selectedISOCode = defaultBillingAddress.isoCode;
                 }
@@ -121,7 +121,7 @@ export class PaymentMethod {
             , ccType: ['', Validators.required]
             , ccNumber: ['', [Validators.required, CustomValidators.creditCardValidator]]
             , ccExpiryMonth: [this.month, Validators.required]
-            , ccExpiryYear: [this.year, Validators.required]
+            , ccExpiryYear: [this.year, [Validators.required, CustomValidators.expiryYearValidator]]
             , ccSecurityCode: ['', Validators.required]
             , co: ['']
             //, name: ['', Validators.required]
@@ -134,7 +134,7 @@ export class PaymentMethod {
             , isoCode: ['']
             , phone: ['', [Validators.required, CustomValidators.phoneValidator]]
             , isDefault: [false]
-        });       
+        }, { validator: CustomValidators.expiryMonthYearValidator });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
     };

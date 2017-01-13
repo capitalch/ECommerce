@@ -66,7 +66,7 @@ export class PaymentMethodForm {
             , ccType: ['', Validators.required]
             , ccNumber: ['', [Validators.required, CustomValidators.creditCardValidator]]
             , ccExpiryMonth: [this.month, Validators.required]
-            , ccExpiryYear: [this.year, Validators.required]
+            , ccExpiryYear: [this.year, [Validators.required, CustomValidators.expiryYearValidator]]
             , ccSecurityCode: ['', Validators.required]
             , co: ['']
             , street1: ['', Validators.required]
@@ -78,6 +78,7 @@ export class PaymentMethodForm {
             , isoCode: ['']
             , phone: ['', [Validators.required, CustomValidators.phoneValidator]]
             , isDefault: [false]
+            , isSaveForLaterUse: [false]
         });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
@@ -101,17 +102,21 @@ export class PaymentMethodForm {
         this.payMethodForm.controls['countryName'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['isoCode'].setValue(this.newCard.isoCode);
         this.payMethodForm.controls['phone'].setValue(this.newCard.phone);
+        this.payMethodForm.controls['isSaveForLaterUse'].setValue(this.newCard.isSaveForLaterUse);
     };
-
+@ViewChild('isSaveForLaterUse') isSaveForLaterUse: any;
     getNewCardFromForm() {
+        let firstName = this.payMethodForm.controls['ccFirstName'].value;
+        let lastName = this.payMethodForm.controls['ccLastName'].value;
         this.newCard.cardName = this.payMethodForm.controls['cardName'].value;
-        this.newCard.ccFirstName = this.payMethodForm.controls['ccFirstName'].value;
-        this.newCard.ccLastName = this.payMethodForm.controls['ccLastName'].value;
+        this.newCard.ccFirstName = firstName;
+        this.newCard.ccLastName = lastName;
         this.newCard.ccType = this.payMethodForm.controls['ccType'].value;
         this.newCard.ccNumber = this.payMethodForm.controls['ccNumber'].value;
         this.newCard.ccExpiryMonth = this.payMethodForm.controls['ccExpiryMonth'].value;
         this.newCard.ccExpiryYear = this.payMethodForm.controls['ccExpiryYear'].value;
         this.newCard.ccSecurityCode = this.payMethodForm.controls['ccSecurityCode'].value;
+        this.newCard.name = firstName.concat(' ',lastName);
         this.newCard.co = this.payMethodForm.controls['co'].value;
         this.newCard.street1 = this.payMethodForm.controls['street1'].value;
         this.newCard.street2 = this.payMethodForm.controls['street2'].value;
@@ -122,6 +127,8 @@ export class PaymentMethodForm {
         this.newCard.country = this.countries.filter(d => d.isoCode == this.selectedISOCode)[0].countryName;
         this.newCard.isoCode = this.payMethodForm.controls['countryName'].value;
         this.newCard.phone = this.payMethodForm.controls['phone'].value;
+        // this.newCard.isSaveForLaterUse = this.isSaveForLaterUse.nativeElement.checked;
+        this.newCard.isSaveForLaterUse = this.payMethodForm.controls['isSaveForLaterUse'].value;
     };
 
     ngOnInit() {

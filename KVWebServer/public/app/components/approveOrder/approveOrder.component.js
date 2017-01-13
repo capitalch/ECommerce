@@ -24,6 +24,7 @@ var ApproveOrder = (function () {
         this.selectedCard = {};
         this.defaultCard = {};
         this.allTotals = {};
+        this.isExistsAnyCard = false;
         // payMethodForm: FormGroup;
         this.footer = {
             wineTotals: {
@@ -96,6 +97,9 @@ var ApproveOrder = (function () {
                 else {
                     _this.footer.prevBalances = { wine: 0.00, addl: 0.00 };
                 }
+                if (artifacts.Table3.length > 0) {
+                    _this.isExistsAnyCard = artifacts.Table3[0].count == 0 ? false : true;
+                }
             }
             _this.computeTotals();
         });
@@ -123,13 +127,6 @@ var ApproveOrder = (function () {
             _this.payMethodModal.close();
         });
     }
-    ApproveOrder.prototype.useNewCard = function () {
-        var body = {};
-        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
-        this.appService.httpGet('get:default:billing:address', body);
-        this.payMethodModal.open();
-    };
-    ;
     ApproveOrder.prototype.resetNewCard = function () {
         this.newCard = {};
     };
@@ -145,11 +142,27 @@ var ApproveOrder = (function () {
         this.addrModal.close();
     };
     ;
-    ApproveOrder.prototype.changeSelectedCard = function () {
+    ApproveOrder.prototype.useExistingCard = function () {
         var body = {};
         body.data = JSON.stringify({ sqlKey: 'GetAllPaymentMethods' });
         this.appService.httpGet('get:payment:method', body);
         this.cardModal.open();
+    };
+    ;
+    ApproveOrder.prototype.useNewCard = function () {
+        var body = {};
+        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        this.appService.httpGet('get:default:billing:address', body);
+        this.payMethodModal.open();
+    };
+    ;
+    ApproveOrder.prototype.useOtherOptions = function () {
+        if (Object.keys(this.selectedCard).length == 0) {
+            this.selectedCard = this.defaultCard;
+        }
+        else {
+            this.selectedCard = {};
+        }
     };
     ;
     ApproveOrder.prototype.selectCard = function (card) {
@@ -188,21 +201,23 @@ var ApproveOrder = (function () {
         });
         orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
         if (!this.selectedCard.id) {
+            //new card
             if (Object.keys(this.selectedCard).length > 0) {
-                Object.assign(orderBundle.orderImpDetails, this.newCard);
-                orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+                if (this.newCard.isSaveForLaterUse) {
+                    orderBundle.newCard = this.newCard;
+                    orderBundle.newCard.ccNumber = this.ccNumberOrig;
+                }
+                else {
+                    Object.assign(orderBundle.orderImpDetails, this.newCard);
+                    orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+                }
             }
         }
+        // orderBundle.isSaveForLaterUse = this.newCard && this.newCard.isSaveForLaterUse;
+        // if (orderBundle.isSaveForLaterUse) {
+        //     orderBundle.newCard = this.newCard;
+        // }
         this.appService.httpPost('post:save:approve:request', orderBundle);
-    };
-    ;
-    ApproveOrder.prototype.otherOptionsClicked = function () {
-        if (Object.keys(this.selectedCard).length == 0) {
-            this.selectedCard = this.defaultCard;
-        }
-        else {
-            this.selectedCard = {};
-        }
     };
     ;
     ApproveOrder.prototype.computeTotals = function () {
@@ -287,10 +302,6 @@ var ApproveOrder = (function () {
     return ApproveOrder;
 }());
 __decorate([
-    core_1.ViewChild('payMethodModal'),
-    __metadata("design:type", ng2_modal_1.Modal)
-], ApproveOrder.prototype, "payMethodModal", void 0);
-__decorate([
     core_1.ViewChild('addrModal'),
     __metadata("design:type", ng2_modal_1.Modal)
 ], ApproveOrder.prototype, "addrModal", void 0);
@@ -298,6 +309,10 @@ __decorate([
     core_1.ViewChild('cardModal'),
     __metadata("design:type", ng2_modal_1.Modal)
 ], ApproveOrder.prototype, "cardModal", void 0);
+__decorate([
+    core_1.ViewChild('payMethodModal'),
+    __metadata("design:type", ng2_modal_1.Modal)
+], ApproveOrder.prototype, "payMethodModal", void 0);
 ApproveOrder = __decorate([
     core_1.Component({
         templateUrl: 'app/components/approveOrder/approveOrder.component.html'

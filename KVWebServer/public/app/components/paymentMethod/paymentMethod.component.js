@@ -119,7 +119,7 @@ var PaymentMethod = (function () {
             ccType: ['', forms_1.Validators.required],
             ccNumber: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.creditCardValidator]],
             ccExpiryMonth: [this.month, forms_1.Validators.required],
-            ccExpiryYear: [this.year, forms_1.Validators.required],
+            ccExpiryYear: [this.year, [forms_1.Validators.required, customValidators_1.CustomValidators.expiryYearValidator]],
             ccSecurityCode: ['', forms_1.Validators.required],
             co: [''],
             street1: ['', forms_1.Validators.required],
@@ -131,7 +131,7 @@ var PaymentMethod = (function () {
             isoCode: [''],
             phone: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
             isDefault: [false]
-        });
+        }, { validator: customValidators_1.CustomValidators.expiryMonthYearValidator });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
     };

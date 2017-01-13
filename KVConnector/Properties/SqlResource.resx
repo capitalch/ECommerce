@@ -288,7 +288,11 @@ select id, name,phone,co,street1,street2,city,state,a.zip, country,isoCode,
 			on a.zip = b.zip
 				where UserId=@userId and IsDefault = 1;
 
-select prevBalanceWine,prevBalanceAddl from UserProfiles where UserId = @userId;</value>
+select prevBalanceWine,prevBalanceAddl from UserProfiles where UserId = @userId;
+
+select count = count(*) 
+	from PaymentMethods
+		where UserId = @userId;</value>
   </data>
   <data name="GetOrderDetails" xml:space="preserve">
     <value>select a.id, item, packing, orderQty, wishList,a.price
@@ -410,6 +414,16 @@ select @ret + '#;' + @newUserPageText;</value>
   </data>
   <data name="InsertUserLog" xml:space="preserve">
     <value>Insert into UsrLog(Code,mType) values(@userCode, @mType);</value>
+  </data>
+  <data name="PaymentMethodsResetDefault" xml:space="preserve">
+    <value>update PaymentMethods
+	set IsDefault = 0
+		where userId = @userId;</value>
+  </data>
+  <data name="UpdateCardIdInOrderImpDetails" xml:space="preserve">
+    <value>update OrderImpDetails
+	set CreditCardId = @cardId
+		where Id = @OrderImpDetailsId;</value>
   </data>
   <data name="UpdatePwdHash" xml:space="preserve">
     <value>update UserMaster set pwdHash = @hash

@@ -483,6 +483,17 @@ namespace KVConnector.Properties {
         /// <summary>
         ///   Looks up a localized string similar to update PaymentMethods
         ///	set IsDefault = 0
+        ///		where userId = @userId;.
+        /// </summary>
+        internal static string PaymentMethodsResetDefault {
+            get {
+                return ResourceManager.GetString("PaymentMethodsResetDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update PaymentMethods
+        ///	set IsDefault = 0
         ///			where UserId=@userId;
         ///update PaymentMethods
         ///	set IsDefault = 1
@@ -500,6 +511,17 @@ namespace KVConnector.Properties {
         internal static string SetMaxOrderNumber {
             get {
                 return ResourceManager.GetString("SetMaxOrderNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update OrderImpDetails
+        ///	set CreditCardId = @cardId
+        ///		where Id = @OrderImpDetailsId;.
+        /// </summary>
+        internal static string UpdateCardIdInOrderImpDetails {
+            get {
+                return ResourceManager.GetString("UpdateCardIdInOrderImpDetails", resourceCulture);
             }
         }
         

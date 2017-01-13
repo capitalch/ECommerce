@@ -69,8 +69,7 @@
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="ccExpiryYear">Expiry year:</label>
                             <!--<p-spinner size="20" [(ngModel)]="year" [min]="currentYear" [max]="currentYear + 10" id="ccExpiryYear" placeholder="Year" formControlName="ccExpiryYear" thousandSeparator="" [maxlength]="4"></p-spinner>-->
-                            <input type="number" class="form-control" id="ccExpiryYear" formControlName="ccExpiryYear" placeholder="Year" [min]="year"
-                                [max]="year + 20">
+                            <input type="number" class="form-control" id="ccExpiryYear" formControlName="ccExpiryYear" placeholder="Year">
                             <control-messages [control]="payMethodForm.controls.ccExpiryYear"></control-messages>
                         </div>
                     </div>
@@ -95,11 +94,8 @@
                             <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
                             <control-messages [control]="payMethodForm.controls.phone"></control-messages>
                         </div>
-
-                       
                     </div>
-
-  <div class="row">
+                    <div class="row">
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="ccFirstName">First name:</label>
                             <input type="text" class="form-control" id="ccFirstName" placeholder="Enter first name" formControlName="ccFirstName">
@@ -113,7 +109,7 @@
                         </div>
                     </div>
                     <div class="row">
- <div class="col-sm-6 formGap">
+                        <div class="col-sm-6 formGap">
                             <label class="control-label" for="bStreet1">Billing address 1:</label>
                             <input type="text" id="bStreet1" class="form-control" formControlName="street1" placeholder="Enter billing address 1">
                             <control-messages [control]="payMethodForm.controls.street1"></control-messages>
@@ -123,11 +119,9 @@
                             <input type="text" id="bStreet2" class="form-control" placeholder="Enter billing address 2" formControlName="street2">
                             <control-messages [control]="payMethodForm.controls.street2"></control-messages>
                         </div>
-                        
                     </div>
-
                     <div class="row">
-<div class="col-sm-6 formGap">
+                        <div class="col-sm-6 formGap">
                             <label class="control-label" for="bCity">Billing City:</label>
                             <input type="text" class="form-control" id="bCity" placeholder="Enter billing city" formControlName="city">
                             <control-messages [control]="payMethodForm.controls.city"></control-messages>
@@ -137,10 +131,7 @@
                             <input type="text" class="form-control" id="bState" placeholder="Enter billing state/province/region" formControlName="state">
                             <control-messages [control]="payMethodForm.controls.state"></control-messages>
                         </div>
-                        
-
                     </div>
-
                     <div class="row">
                         <div class="col-sm-6 formGap">
                             <label class="control-label" for="bZip">Billing zip:</label>
@@ -154,20 +145,15 @@
                             </select>
                             <control-messages [control]="payMethodForm.controls.countryName"></control-messages>
                         </div>
-                        
                     </div>
-
-
                     <div class="row paymentPageFixGap">
-
                         <div class="col-sm-6 formGap">
                             <div class="checkbox">
                                 <label><input type="checkbox" formControlName="isDefault"> Use as default card</label>
                             </div>
                         </div>
-
                     </div>
-
+                    <control-messages [formGroup]="payMethodForm"></control-messages>
                     <div class="row paymentSubmit">
                         <alert *ngIf="alert.show" [type]="alert.type" dismissable="true">{{alert.message}}</alert>
                         <div class="text-center ">

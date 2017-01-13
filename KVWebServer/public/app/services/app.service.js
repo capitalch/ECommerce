@@ -64,14 +64,14 @@ var AppService = (function () {
                         return item.trim();
                     });
                     _this.globalSettings.needHelpText = data.Table[0].needHelpText;
-                    var onlineOrder_1 = {};
-                    onlineOrder_1.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
-                    onlineOrder_1.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
-                    setTimeout(function () {
-                        _this.globalSettings.onlineOrder = onlineOrder_1;
-                        _this.behEmit('settings:download:success');
-                    }, 10000);
-                    _this.globalSettings.onlineOrder = onlineOrder_1;
+                    var onlineOrder = {};
+                    onlineOrder.disableOnlineOrderForm = data.Table[0].disableOnlineOrderForm;
+                    onlineOrder.disableOnlineOrderText = data.Table[0].disableOnlineOrderText;
+                    // setTimeout(() => {
+                    //     this.globalSettings.onlineOrder = onlineOrder;
+                    //     this.behEmit('settings:download:success');
+                    // }, 10000);
+                    _this.globalSettings.onlineOrder = onlineOrder;
                     _this.globalSettings.loginPage = data.Table[0].loginPage;
                     _this.behEmit('settings:download:success');
                 }

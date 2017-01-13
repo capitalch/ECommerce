@@ -22,7 +22,8 @@ namespace KVConnector
             JToken orderMaster = jBundle.SelectToken("orderMaster");
             JToken orderDetails = jBundle.SelectToken("orderDetails");
             JToken orderImpDetails = jBundle.SelectToken("orderImpDetails");
-
+            JToken newCard = jBundle.SelectToken("newCard");
+            var userId = jObjDict.GetValue("userId").ToString();
             #region OrderMaster
 
             Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> preSaveAction = (d1, d2, l) =>
@@ -82,16 +83,62 @@ namespace KVConnector
             List<KeyValuePair<string, string>> kvImpListDetails = new List<KeyValuePair<string, string>>();
             kvImpListDetails.Add(kvImpDetails);
 
+            object orderImpDetailsId = null;
+            Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> postSaveActionOrderImpDetails = (d1, d2, l) =>
+            {
+                orderImpDetailsId = d2["orderImpDetails"];
+            };
+
+
             var seedOrderImpDetails = new Seed()
             {
                 PKeyColName = "Id",
                 TableName = "OrderImpDetails",
                 TableDict = SeedUtil.GetDictFromDynamicObject(orderImpDetails),
                 IsCustomIDGenerated = false,
-                DetailsTableColNameTagNamePairs = kvImpListDetails
+                DetailsTableColNameTagNamePairs = kvImpListDetails,
+                PostSaveAction = postSaveActionOrderImpDetails,
+                PKeyTagName = "orderImpDetails",
             };
             seedList.Add(seedOrderImpDetails);
             #endregion
+            
+            if (newCard != null) //save new card in PaymentMethods table and store new cardId in orderImpDetails
+            {
+                var tableDict = SeedUtil.GetDictFromDynamicObject(newCard);
+                tableDict.Remove("isSaveForLaterUse");
+                tableDict["userId"] = userId;
+                tableDict[ "isDefault"]= true;
+
+                Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> preSaveActionNewCard = (d1, d2, l) =>
+                {                    
+                    List<SqlParameter> parms = new List<SqlParameter>();
+                    parms.Add(new SqlParameter("userId", userId));
+                    seedDataAccess.ExecuteScalar(SqlResource.PaymentMethodsResetDefault, parms);
+                };
+
+                Action<Dictionary<string, object>, Dictionary<string, object>, List<Seed>> postSaveActionNewCard = (d1, d2, l) =>
+                {
+                    var cardId = d2["card"];
+
+                    List<SqlParameter> parms = new List<SqlParameter>();
+                    parms.Add(new SqlParameter("cardId", cardId));
+                    parms.Add(new SqlParameter("orderImpDetailsId", orderImpDetailsId));
+                    seedDataAccess.ExecuteScalar(SqlResource.UpdateCardIdInOrderImpDetails, parms);
+                };
+
+                var seedNewCard = new Seed()
+                {
+                    PKeyColName = "Id",
+                    TableName = "PaymentMethods",
+                    TableDict = tableDict,
+                    IsCustomIDGenerated = false,
+                    PostSaveAction = postSaveActionNewCard,
+                    PreSaveAction = preSaveActionNewCard,
+                    PKeyTagName = "card",
+                };
+                seedList.Add(seedNewCard);
+            }
 
             return (seedList);
         }

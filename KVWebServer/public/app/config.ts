@@ -75,7 +75,9 @@ export var validationErrorMessages = {
     'addressDeleteFailed': 'Address could not be removed due to server side error',
     'someNegativeValues': 'Some values in your request or wish list are negative which is not allowed',
     'pwdLengthLt8': 'Password must have at least 8 characters',
-    'invalidPwd': 'Password must satisfy at least three out of following four criterias: 1) Lower case, 2) Upper case, 3) Number, 4)  Special character like “!@#$%^&*()'
+    'invalidPwd': 'Password must satisfy at least three out of following four criterias: 1) Lower case, 2) Upper case, 3) Number, 4)  Special character like “!@#$%^&*()',
+    'invalidExpiryYear':'Expiry year of card is not valid',
+    'InvalidExpiryMonthYear':'Expiry month and expiry year combination is not valid'
 };
 export var viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },

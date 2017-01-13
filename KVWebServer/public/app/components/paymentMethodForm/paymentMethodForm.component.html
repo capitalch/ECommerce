@@ -1,4 +1,3 @@
-<!--<div>Test</div>-->
 <form [formGroup]="payMethodForm" novalidate (ngSubmit)="submit()" class="form-horizontal">
     <div class="row">
         <div class="col-xs-12 formGap">
@@ -7,7 +6,7 @@
             <control-messages [control]="payMethodForm.controls.cardName"></control-messages>
         </div>
     </div>
-   
+
 
     <div class="row">
         <div class="col-sm-6 formGap">
@@ -34,8 +33,7 @@
         </div>
         <div class="col-sm-6 formGap">
             <label class="control-label" for="ccExpiryYear">Expiry year:</label>
-            <input type="number" class="form-control" id="ccExpiryYear" formControlName="ccExpiryYear" placeholder="Year" [min]="year"
-                [max]="year + 20">
+            <input type="number" class="form-control" id="ccExpiryYear" formControlName="ccExpiryYear" placeholder="Year">
             <control-messages [control]="payMethodForm.controls.ccExpiryYear"></control-messages>
         </div>
     </div>
@@ -46,13 +44,13 @@
             <input type="text" class="form-control lock-number" id="ccSecurityCode" formControlName="ccSecurityCode" placeholder="Enter security code">
             <control-messages [control]="payMethodForm.controls.ccSecurityCode"></control-messages>
         </div>
-         <div class="col-sm-6 formGap">
+        <div class="col-sm-6 formGap">
             <label class="control-label" for="bPhone">Billing phone:</label><br/>
             <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
             <control-messages [control]="payMethodForm.controls.phone"></control-messages>
         </div>
     </div>
-     <div class="row">
+    <div class="row">
         <div class="col-sm-6 formGap">
             <label class="control-label" for="ccFirstName">First name:</label>
             <input type="text" class="form-control" id="ccFirstName" placeholder="Enter first name" formControlName="ccFirstName">
@@ -81,7 +79,7 @@
     </div>
 
     <div class="row">
- <div class="col-sm-6 formGap">
+        <div class="col-sm-6 formGap">
             <label class="control-label" for="bCity">Billing City:</label>
             <input type="text" class="form-control" id="bCity" placeholder="Enter billing city" formControlName="city">
             <control-messages [control]="payMethodForm.controls.city"></control-messages>
@@ -92,8 +90,6 @@
             <input type="text" class="form-control" id="bState" placeholder="Enter billing state/province/region" formControlName="state">
             <control-messages [control]="payMethodForm.controls.state"></control-messages>
         </div>
-        
-
     </div>
     <div class="row">
         <div class="col-sm-6 formGap">
@@ -108,19 +104,20 @@
                             </select>
             <control-messages [control]="payMethodForm.controls.countryName"></control-messages>
         </div>
-       
-    </div>
-
-    <!--<div class="row paymentPageFixGap">
+    </div>    
+    <!--<div class="row">
         <div class="col-sm-6 formGap">
-            <div class="checkbox">
-                <label><input type="checkbox" formControlName="isDefault"> Use as default card</label>
-            </div>
+            <input type="checkbox" #isSaveForLaterUse id="saveForLaterUse">Save payment information for later use<br>
         </div>
     </div>-->
-
-    <div class="row paymentSubmit">
-        <!--<alert *ngIf="alert.show" [type]="alert.type" dismissable="true">{{alert.message}}</alert>-->
+    <div class="form-group">
+        <div class="col-sm-6 formGap">
+            <div class="checkbox">
+                <label><input type="checkbox" formControlName="isSaveForLaterUse"> Save payment information for later use</label>
+            </div>
+        </div>
+    </div>
+    <div class="row paymentSubmit">        
         <div class="text-center ">
             <button *ngIf="isDataReady" (click)="select()" type="button" class="btn btn-md btn-kistler" [disabled]="!payMethodForm.valid">Select</button>
             <button type="button" class="btn btn-md btn-kistler" (click)="cancel()">Cancel</button>

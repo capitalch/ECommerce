@@ -1,4 +1,5 @@
 "use strict";
+var util_1 = require("./util");
 var CustomValidators = (function () {
     function CustomValidators() {
     }
@@ -38,6 +39,30 @@ var CustomValidators = (function () {
         return (ret);
     };
     ;
+    CustomValidators.expiryMonthYearValidator = function (formGroup) {
+        var ret;
+        var month = formGroup.controls['ccExpiryMonth'].value / 1;
+        var year = formGroup.controls['ccExpiryYear'].value / 1;
+        if (!util_1.Util.isValidExpiryMonthYear(month, year)) {
+            ret = { 'InvalidExpiryMonthYear': true };
+        }
+        return (ret);
+    };
+    ;
+    CustomValidators.expiryYearValidator = function (control) {
+        var ret;
+        var value = control.value;
+        var thisDate = new Date();
+        var currentYear = thisDate.getFullYear();
+        if ((value >= currentYear) && (value <= currentYear + 7)) {
+            ret = null;
+        }
+        else {
+            ret = { 'invalidExpiryYear': true };
+        }
+        return (ret);
+    };
+    ;
     CustomValidators.phoneValidator = function (control) {
         var ret;
         var international = /^\(?[+]?(\d{1})\)?[- ]?\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
@@ -71,6 +96,7 @@ var CustomValidators = (function () {
             return { 'invalidCreditCard': true };
         }
     };
+    ;
     return CustomValidators;
 }());
 exports.CustomValidators = CustomValidators;

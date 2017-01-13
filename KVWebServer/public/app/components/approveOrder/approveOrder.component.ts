@@ -8,7 +8,7 @@ import { messages } from '../../config';
 import { ModalModule, Modal } from "ng2-modal";
 import { AlertModule } from 'ng2-bootstrap/components/alert';
 import { PaymentMethodForm } from '../../components/paymentMethodForm/paymentMethodForm.component';
-import {uiText} from '../../config';
+import { uiText } from '../../config';
 @Component({
     templateUrl: 'app/components/approveOrder/approveOrder.component.html'
 })
@@ -24,6 +24,7 @@ export class ApproveOrder {
     selectedCard: any = {};
     defaultCard: any = {};
     allTotals: {} = {};
+    isExistsAnyCard: boolean = false;
     // payMethodForm: FormGroup;
     footer: any = {
         wineTotals: {
@@ -44,21 +45,13 @@ export class ApproveOrder {
     ccNumberOrig: string = '';
     isAlert: boolean;
     alert: any = { type: "success" };
-    otherOptions:string=uiText.otherOptions
+    otherOptions: string = uiText.otherOptions
     payLater: any = () => {
         if (!this.selectedCard || Object.keys(this.selectedCard).length == 0) {
             return ('Pay later');
         } else {
             return ('');
         }
-    };
-
-    @ViewChild('payMethodModal') payMethodModal: Modal;
-    useNewCard() {
-        let body: any = {};
-        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
-        this.appService.httpGet('get:default:billing:address', body);
-        this.payMethodModal.open();
     };
 
     resetNewCard() {
@@ -108,6 +101,9 @@ export class ApproveOrder {
                 } else {
                     this.footer.prevBalances = { wine: 0.00, addl: 0.00 };
                 }
+                if (artifacts.Table3.length > 0) {
+                    this.isExistsAnyCard = artifacts.Table3[0].count == 0 ? false : true;
+                }
             }
             this.computeTotals();
         });
@@ -150,11 +146,27 @@ export class ApproveOrder {
     };
 
     @ViewChild('cardModal') cardModal: Modal;
-    changeSelectedCard() {
+    useExistingCard() {
         let body: any = {};
         body.data = JSON.stringify({ sqlKey: 'GetAllPaymentMethods' });
         this.appService.httpGet('get:payment:method', body);
         this.cardModal.open();
+    };
+
+    @ViewChild('payMethodModal') payMethodModal: Modal;
+    useNewCard() {
+        let body: any = {};
+        body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
+        this.appService.httpGet('get:default:billing:address', body);
+        this.payMethodModal.open();
+    };
+
+    useOtherOptions() {
+        if (Object.keys(this.selectedCard).length == 0) {
+            this.selectedCard = this.defaultCard;
+        } else {
+            this.selectedCard = {};
+        }
     };
 
     selectCard(card) {
@@ -195,20 +207,23 @@ export class ApproveOrder {
             });
         orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
         if (!this.selectedCard.id) {
+            //new card
             if (Object.keys(this.selectedCard).length > 0) {
-                Object.assign(orderBundle.orderImpDetails, this.newCard);
-                orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+                if (this.newCard.isSaveForLaterUse) {
+                    
+                    orderBundle.newCard = this.newCard;
+                    orderBundle.newCard.ccNumber = this.ccNumberOrig;
+                } else {
+                    Object.assign(orderBundle.orderImpDetails, this.newCard);
+                    orderBundle.orderImpDetails.ccNumber = this.ccNumberOrig;
+                }
             }
         }
+        // orderBundle.isSaveForLaterUse = this.newCard && this.newCard.isSaveForLaterUse;
+        // if (orderBundle.isSaveForLaterUse) {
+        //     orderBundle.newCard = this.newCard;
+        // }
         this.appService.httpPost('post:save:approve:request', orderBundle);
-    };
-
-    otherOptionsClicked() {
-        if (Object.keys(this.selectedCard).length == 0) {
-            this.selectedCard = this.defaultCard;
-        } else {
-            this.selectedCard = {};
-        }
     };
 
     computeTotals() {

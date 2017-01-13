@@ -3,8 +3,15 @@ var moment = require("moment");
 var Util = (function () {
     function Util(appService) {
         this.appService = appService;
-        //console.log(moment());
     }
+    ;
+    Util.isValidExpiryMonthYear = function (month, year) {
+        var mDate = moment(new Date(year, month - 1, 1));
+        var today = moment(new Date());
+        today = today.clone().set('date', 1);
+        var isValid = (mDate.isSame(today, 'day') || mDate.isAfter(today, 'day')) && mDate.isBefore(today.clone().add(8, 'years'), 'day');
+        return (isValid);
+    };
     Util.convertToUSDate = function (inStr) {
         var ret = null;
         if (inStr) {
@@ -30,6 +37,7 @@ var Util = (function () {
         ccNumber = ccNumber.substring(0, 4) + ' XXXX XXXX ' + ccNumber.substr(ccNumber.length - 4, 4);
         return (ccNumber);
     };
+    ;
     return Util;
 }());
 exports.Util = Util;
