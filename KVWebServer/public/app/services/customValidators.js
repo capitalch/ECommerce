@@ -44,7 +44,7 @@ var CustomValidators = (function () {
         var month = formGroup.controls['ccExpiryMonth'].value / 1;
         var year = formGroup.controls['ccExpiryYear'].value / 1;
         if (!util_1.Util.isValidExpiryMonthYear(month, year)) {
-            ret = { 'InvalidExpiryMonthYear': true };
+            ret = { 'invalidExpiryMonthYear': true };
         }
         return (ret);
     };

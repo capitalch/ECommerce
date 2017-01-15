@@ -42,7 +42,7 @@ export class CustomValidators {
         let month = formGroup.controls['ccExpiryMonth'].value / 1;
         let year = formGroup.controls['ccExpiryYear'].value / 1
         if (!Util.isValidExpiryMonthYear(month, year)) {
-            ret = { 'InvalidExpiryMonthYear': true };
+            ret = { 'invalidExpiryMonthYear': true };
         }
         return (ret);
     };

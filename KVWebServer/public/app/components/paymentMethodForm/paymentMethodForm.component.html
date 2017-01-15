@@ -19,7 +19,7 @@
         </div>
         <div class="col-sm-6 formGap">
             <label class="control-label" for="ccNumber">Card number:</label>
-            <input type="text" class="form-control lock-number" id="ccNumber" placeholder="Enter card number" formControlName="ccNumber">
+            <input type="number" class="form-control lock-number" id="ccNumber" placeholder="Enter card number" formControlName="ccNumber">
             <control-messages [control]="payMethodForm.controls.ccNumber"></control-messages>
         </div>
     </div>
@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-sm-6 formGap">
             <label class="control-label" for="ccSecurityCode">Security code:</label>
-            <input type="text" class="form-control lock-number" id="ccSecurityCode" formControlName="ccSecurityCode" placeholder="Enter security code">
+            <input type="number" class="form-control lock-number" id="ccSecurityCode" formControlName="ccSecurityCode" placeholder="Enter security code">
             <control-messages [control]="payMethodForm.controls.ccSecurityCode"></control-messages>
         </div>
         <div class="col-sm-6 formGap">
@@ -117,6 +117,7 @@
             </div>
         </div>
     </div>
+    <control-messages [formGroup]="payMethodForm"></control-messages>
     <div class="row paymentSubmit">        
         <div class="text-center ">
             <button *ngIf="isDataReady" (click)="select()" type="button" class="btn btn-md btn-kistler" [disabled]="!payMethodForm.valid">Select</button>

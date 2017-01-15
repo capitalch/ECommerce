@@ -25,13 +25,19 @@ export class ControlMessages {
     isValid() {
         let ret = true;
         if (this.formGroup) {
-            if (this.formGroup.errors) {
-                let propertyArray = Object.keys(this.formGroup.errors);
-                if ((propertyArray.length > 0) && this.formGroup.touched) {
-                    ret = false;
-                    this.errorMessage = this.appService.getValidationErrorMessage(propertyArray[0]);
+            if (this.formGroup.invalid) {
+                if (this.formGroup.errors) {
+                    let propertyArray = Object.keys(this.formGroup.errors);
+                    if ((propertyArray.length > 0) && this.formGroup.touched) {
+                        ret = false;
+                        this.errorMessage = this.appService.getValidationErrorMessage(propertyArray[0]);
+                    }
+                } else{
+                    ret=false;
+                    this.errorMessage=this.appService.getValidationErrorMessage('invalidForm');
                 }
             }
+
         } else {
             if (this.control.errors) {
                 let propertyArray = Object.keys(this.control.errors);

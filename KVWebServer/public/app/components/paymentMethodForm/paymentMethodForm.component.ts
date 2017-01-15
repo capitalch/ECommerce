@@ -79,7 +79,7 @@ export class PaymentMethodForm {
             , phone: ['', [Validators.required, CustomValidators.phoneValidator]]
             , isDefault: [false]
             , isSaveForLaterUse: [false]
-        });
+        }, { validator: CustomValidators.expiryMonthYearValidator });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
     };

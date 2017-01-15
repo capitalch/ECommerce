@@ -77,7 +77,8 @@ export var validationErrorMessages = {
     'pwdLengthLt8': 'Password must have at least 8 characters',
     'invalidPwd': 'Password must satisfy at least three out of following four criterias: 1) Lower case, 2) Upper case, 3) Number, 4)  Special character like “!@#$%^&*()',
     'invalidExpiryYear':'Expiry year of card is not valid',
-    'InvalidExpiryMonthYear':'Expiry month and expiry year combination is not valid'
+    'invalidExpiryMonthYear':'Expiry month and expiry year combination of the card is not valid',
+    'invalidForm':'Data in the form is invalid'
 };
 export var viewBoxConfig = {
     '/login': { home: true, needHelp: false, order: false, myAccount: false, menuBar: false, logout: false },

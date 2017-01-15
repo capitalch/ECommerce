@@ -73,7 +73,7 @@ var PaymentMethodForm = (function () {
             phone: ['', [forms_1.Validators.required, customValidators_1.CustomValidators.phoneValidator]],
             isDefault: [false],
             isSaveForLaterUse: [false]
-        });
+        }, { validator: customValidators_1.CustomValidators.expiryMonthYearValidator });
         this.payMethodForm.controls['phone'].markAsDirty();
         this.payMethodForm.controls['ccType'].markAsDirty();
     };
