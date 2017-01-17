@@ -92,6 +92,7 @@ var AppComponent = (function () {
         }).subscribe(function (event) {
             var url = event.urlAfterRedirects.split('?')[0];
             _this.viewBox = config_1.viewBoxConfig[url];
+            document.body.scrollTop = 0;
         });
     }
     ;

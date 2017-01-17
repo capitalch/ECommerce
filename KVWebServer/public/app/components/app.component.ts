@@ -48,6 +48,7 @@ export class AppComponent {
     }).subscribe((event: any) => {
       let url = event.urlAfterRedirects.split('?')[0];
       this.viewBox = viewBoxConfig[url];
+      document.body.scrollTop = 0;
     });
   };
 
