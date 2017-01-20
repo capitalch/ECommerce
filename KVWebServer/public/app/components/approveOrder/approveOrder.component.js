@@ -23,26 +23,43 @@ var ApproveOrder = (function () {
         this.selectedAddress = {};
         this.selectedCard = {};
         this.defaultCard = {};
+        this.growlMessages = [];
         this.allTotals = {};
         this.isExistsAnyCard = false;
         // payMethodForm: FormGroup;
         this.footer = {
             wineTotals: {
-                wine: 0.00, addl: 0.00
+                wine: 0.00,
+                addl: 0.00
             },
             salesTaxPerc: 0.00,
             shippingCharges: 0.00,
-            shippingTotals: { wine: 0.00 / 1, addl: 0.00 / 1 },
-            prevBalances: { wine: 0.00 / 1, addl: 0.00 / 1 },
-            grandTotals: { wine: 0.00 / 1, addl: 0.00 / 1 },
-            salesTaxTotals: { wine: 0.00 / 1, addl: 0.00 / 1 }
+            shippingTotals: {
+                wine: 0.00 / 1,
+                addl: 0.00 / 1
+            },
+            prevBalances: {
+                wine: 0.00 / 1,
+                addl: 0.00 / 1
+            },
+            grandTotals: {
+                wine: 0.00 / 1,
+                addl: 0.00 / 1
+            },
+            salesTaxTotals: {
+                wine: 0.00 / 1,
+                addl: 0.00 / 1
+            }
         };
         this.approveHeading = config_1.messages['mess:approve:heading'];
         this.allAddresses = [{}];
         this.payMethods = [{}];
         this.newCard = {};
+        this.newAddress = {};
         this.ccNumberOrig = '';
-        this.alert = { type: "success" };
+        this.alert = {
+            type: "success"
+        };
         this.otherOptions = config_2.uiText.otherOptions;
         this.payLater = function () {
             if (!_this.selectedCard || Object.keys(_this.selectedCard).length == 0) {
@@ -56,23 +73,33 @@ var ApproveOrder = (function () {
         if (!ords) {
             router.navigate(['order']);
         }
-        this.postApproveSubscription = appService.filterOn('post:save:approve:request').subscribe(function (d) {
+        this.postApproveSubscription = appService
+            .filterOn('post:save:approve:request')
+            .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
-                _this.appService.reset('orders');
-                _this.router.navigate(['receipt']);
+                _this
+                    .appService
+                    .reset('orders');
+                _this
+                    .router
+                    .navigate(['receipt']);
             }
         });
-        this.getShippingSalesTaxPercSub = appService.filterOn('get:shipping:sales:tax:perc').subscribe(function (d) {
+        this.getShippingSalesTaxPercSub = appService
+            .filterOn('get:shipping:sales:tax:perc')
+            .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
             }
         });
-        this.approveArtifactsSub = appService.filterOn('get:approve:artifacts').subscribe(function (d) {
+        this.approveArtifactsSub = appService
+            .filterOn('get:approve:artifacts')
+            .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
@@ -92,68 +119,127 @@ var ApproveOrder = (function () {
                 }
                 if (artifacts.Table2.length > 0) {
                     _this.footer.prevBalance = artifacts.Table2[0] / 1;
-                    _this.footer.prevBalances = { wine: artifacts.Table2[0].prevBalanceWine, addl: artifacts.Table2[0].prevBalanceAddl };
+                    _this.footer.prevBalances = {
+                        wine: artifacts.Table2[0].prevBalanceWine,
+                        addl: artifacts.Table2[0].prevBalanceAddl
+                    };
                 }
                 else {
-                    _this.footer.prevBalances = { wine: 0.00, addl: 0.00 };
+                    _this.footer.prevBalances = {
+                        wine: 0.00,
+                        addl: 0.00
+                    };
                 }
                 if (artifacts.Table3.length > 0) {
-                    _this.isExistsAnyCard = artifacts.Table3[0].count == 0 ? false : true;
+                    _this.isExistsAnyCard = artifacts.Table3[0].count == 0
+                        ? false
+                        : true;
                 }
             }
             _this.computeTotals();
         });
-        this.allAddrSubscription = appService.filterOn('get:shipping:address').subscribe(function (d) {
+        this.allAddrSubscription = appService
+            .filterOn('get:shipping:address')
+            .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
-                _this.allAddresses = JSON.parse(d.data).Table;
+                _this.allAddresses = JSON
+                    .parse(d.data)
+                    .Table;
             }
         });
-        this.allCardSubscription = appService.filterOn('get:payment:method').subscribe(function (d) {
+        this.allCardSubscription = appService
+            .filterOn('get:payment:method')
+            .subscribe(function (d) {
             if (d.data.error) {
                 console.log(d.data.error);
             }
             else {
-                _this.payMethods = JSON.parse(d.data).Table;
+                _this.payMethods = JSON
+                    .parse(d.data)
+                    .Table;
             }
         });
-        this.selectNewCardSub = this.appService.filterOn('select:new:card').subscribe(function (d) {
+        this.selectNewCardSub = this
+            .appService
+            .filterOn('select:new:card')
+            .subscribe(function (d) {
             _this.newCard = d.data || {};
             _this.selectedCard = _this.newCard;
             _this.ccNumberOrig = _this.selectedCard.ccNumber;
             _this.selectedCard.ccNumber = util_1.Util.getMaskedCCNumber(_this.selectedCard.ccNumber);
-            _this.payMethodModal.close();
+            _this
+                .payMethodModal
+                .close();
+        });
+        this.useNewAddressSub = this
+            .appService
+            .filterOn('close:new:address:modal')
+            .subscribe(function (d) {
+            _this
+                .newAddressModal
+                .close();
+            if (d.data.success) {
+                _this.growlMessages = [];
+                _this
+                    .growlMessages
+                    .push({ severity: 'success', summary: 'Saved', detail: 'Data saved successfully' });
+                _this.selectedAddress = d.data.address;
+            }
         });
     }
     ApproveOrder.prototype.resetNewCard = function () {
         this.newCard = {};
     };
     ;
-    ApproveOrder.prototype.changeSelectedAddress = function () {
+    ;
+    ApproveOrder.prototype.useNewAddress = function () {
+        this
+            .appService
+            .behEmit('open:new:address:modal');
+        this
+            .newAddressModal
+            .open();
+    };
+    ApproveOrder.prototype.useExistingAddress = function () {
         this.isAlert = false;
-        this.appService.httpGet('get:shipping:address');
-        this.addrModal.open();
+        this
+            .appService
+            .httpGet('get:shipping:address');
+        this
+            .addrModal
+            .open();
     };
     ;
     ApproveOrder.prototype.selectAddress = function (address) {
         this.selectedAddress = address;
-        this.addrModal.close();
+        this
+            .addrModal
+            .close();
     };
     ;
     ApproveOrder.prototype.useExistingCard = function () {
         var body = {};
         body.data = JSON.stringify({ sqlKey: 'GetAllPaymentMethods' });
-        this.appService.httpGet('get:payment:method', body);
-        this.cardModal.open();
+        this
+            .appService
+            .httpGet('get:payment:method', body);
+        this
+            .cardModal
+            .open();
     };
     ;
     ApproveOrder.prototype.useNewCard = function () {
         var body = {};
         body.data = JSON.stringify({ sqlKey: 'GetDefaultBillingAddressForCard' });
-        this.appService.httpGet('get:default:billing:address', body);
-        this.payMethodModal.open();
+        this
+            .appService
+            .httpGet('get:default:billing:address', body);
+        this
+            .payMethodModal
+            .open();
     };
     ;
     ApproveOrder.prototype.useOtherOptions = function () {
@@ -167,11 +253,15 @@ var ApproveOrder = (function () {
     ;
     ApproveOrder.prototype.selectCard = function (card) {
         this.selectedCard = card;
-        this.cardModal.close();
+        this
+            .cardModal
+            .close();
     };
     ;
     ApproveOrder.prototype.editWineRequest = function () {
-        this.router.navigate(['order']);
+        this
+            .router
+            .navigate(['order']);
     };
     ;
     ApproveOrder.prototype.approve = function () {
@@ -186,20 +276,20 @@ var ApproveOrder = (function () {
             ShippingAddl: this.footer.shippingTotals.addl / 1
         };
         var master = orderBundle.orderMaster;
-        orderBundle.orderMaster.Amount = master.TotalPriceWine + master.TotalPriceAddl + master.SalesTaxWine
-            + master.SalesTaxAddl + master.ShippingWine + master.ShippingAddl;
+        orderBundle.orderMaster.Amount = master.TotalPriceWine + master.TotalPriceAddl + master.SalesTaxWine + master.SalesTaxAddl + master.ShippingWine + master.ShippingAddl;
         //to remove zero quantities
-        orderBundle.orderDetails = this.orders.filter(function (a) {
+        orderBundle.orderDetails = this
+            .orders
+            .filter(function (a) {
             return ((a.orderQty && a.orderQty > 0) || (a.wishList && a.wishList > 0));
-        }).map(function (a) {
-            return ({
-                OfferId: a.id,
-                OrderQty: a.orderQty,
-                WishList: a.wishList,
-                Price: a.price
-            });
+        })
+            .map(function (a) {
+            return ({ OfferId: a.id, OrderQty: a.orderQty, WishList: a.wishList, Price: a.price });
         });
-        orderBundle.orderImpDetails = { AddressId: this.selectedAddress.id, CreditCardId: this.selectedCard.id };
+        orderBundle.orderImpDetails = {
+            AddressId: this.selectedAddress.id,
+            CreditCardId: this.selectedCard.id
+        };
         if (!this.selectedCard.id) {
             //new card
             if (Object.keys(this.selectedCard).length > 0) {
@@ -213,35 +303,38 @@ var ApproveOrder = (function () {
                 }
             }
         }
-        // orderBundle.isSaveForLaterUse = this.newCard && this.newCard.isSaveForLaterUse;
-        // if (orderBundle.isSaveForLaterUse) {
-        //     orderBundle.newCard = this.newCard;
-        // }
-        this.appService.httpPost('post:save:approve:request', orderBundle);
+        this
+            .appService
+            .httpPost('post:save:approve:request', orderBundle);
     };
     ;
     ApproveOrder.prototype.computeTotals = function () {
-        this.orders = this.appService.request('orders');
+        this.orders = this
+            .appService
+            .request('orders');
         //totals
         if (!this.orders) {
             console.log('Order request is not available.');
             return;
         }
-        this.footer.wineTotals = this.orders.reduce(function (a, b) {
+        this.footer.wineTotals = this
+            .orders
+            .reduce(function (a, b) {
             return ({
                 wine: a.wine + b.price * b.orderQty,
                 addl: a.addl + b.price * b.wishList
             });
-        }, { wine: 0, addl: 0 });
+        }, {
+            wine: 0,
+            addl: 0
+        });
         //Sales tax
         this.computeSalesTax();
         this.computeShipping();
         //grand totals
         this.footer.grandTotals = {
-            wine: this.footer.wineTotals.wine / 1 + this.footer.salesTaxTotals.wine / 1 + this.footer.shippingTotals.wine / 1
-                + this.footer.prevBalances.wine / 1,
-            addl: this.footer.wineTotals.addl / 1 + this.footer.salesTaxTotals.addl / 1 + this.footer.shippingTotals.addl / 1
-                + this.footer.prevBalances.addl / 1
+            wine: this.footer.wineTotals.wine / 1 + this.footer.salesTaxTotals.wine / 1 + this.footer.shippingTotals.wine / 1 + this.footer.prevBalances.wine / 1,
+            addl: this.footer.wineTotals.addl / 1 + this.footer.salesTaxTotals.addl / 1 + this.footer.shippingTotals.addl / 1 + this.footer.prevBalances.addl / 1
         };
     };
     ;
@@ -273,34 +366,75 @@ var ApproveOrder = (function () {
         else {
             effectiveShipping = this.selectedAddress.defaultShippingCharges;
             if (effectiveShipping && (effectiveShipping > 0)) {
-                this.footer.shippingTotals = { wine: effectiveShipping, addl: effectiveShipping };
+                this.footer.shippingTotals = {
+                    wine: effectiveShipping,
+                    addl: effectiveShipping
+                };
             }
             else {
-                this.footer.shippingTotals = { wine: 0.00, addl: 0.00 };
+                this.footer.shippingTotals = {
+                    wine: 0.00,
+                    addl: 0.00
+                };
             }
         }
     };
     ;
     ApproveOrder.prototype.ngOnInit = function () {
         var _this = this;
-        this.appService.httpGet('get:approve:artifacts');
+        this
+            .appService
+            .httpGet('get:approve:artifacts');
         var body = {};
-        body.data = JSON.stringify({ sqlKey: 'GetShippingSalesTaxPerc', sqlParms: { zip: '1111', bottles: 100 } });
-        this.appService.httpGet('get:shipping:sales:tax:perc', body);
-        this.appService.reply('close:pay:method:modal', function () { _this.payMethodModal.close(); });
+        body.data = JSON.stringify({
+            sqlKey: 'GetShippingSalesTaxPerc',
+            sqlParms: {
+                zip: '1111',
+                bottles: 100
+            }
+        });
+        this
+            .appService
+            .httpGet('get:shipping:sales:tax:perc', body);
+        this
+            .appService
+            .reply('close:pay:method:modal', function () {
+            _this
+                .payMethodModal
+                .close();
+        });
     };
     ;
     ApproveOrder.prototype.ngOnDestroy = function () {
-        this.approveArtifactsSub.unsubscribe();
-        this.postApproveSubscription.unsubscribe();
-        this.getShippingSalesTaxPercSub.unsubscribe();
-        this.allAddrSubscription.unsubscribe();
-        this.allCardSubscription.unsubscribe();
-        this.selectNewCardSub.unsubscribe();
+        this
+            .approveArtifactsSub
+            .unsubscribe();
+        this
+            .postApproveSubscription
+            .unsubscribe();
+        this
+            .getShippingSalesTaxPercSub
+            .unsubscribe();
+        this
+            .allAddrSubscription
+            .unsubscribe();
+        this
+            .allCardSubscription
+            .unsubscribe();
+        this
+            .selectNewCardSub
+            .unsubscribe();
+        this
+            .useNewAddressSub
+            .unsubscribe();
     };
     ;
     return ApproveOrder;
 }());
+__decorate([
+    core_1.ViewChild('newAddressModal'),
+    __metadata("design:type", ng2_modal_1.Modal)
+], ApproveOrder.prototype, "newAddressModal", void 0);
 __decorate([
     core_1.ViewChild('addrModal'),
     __metadata("design:type", ng2_modal_1.Modal)
@@ -314,9 +448,7 @@ __decorate([
     __metadata("design:type", ng2_modal_1.Modal)
 ], ApproveOrder.prototype, "payMethodModal", void 0);
 ApproveOrder = __decorate([
-    core_1.Component({
-        templateUrl: 'app/components/approveOrder/approveOrder.component.html'
-    }),
+    core_1.Component({ templateUrl: 'app/components/approveOrder/approveOrder.component.html' }),
     __metadata("design:paramtypes", [app_service_1.AppService, router_1.Router])
 ], ApproveOrder);
 exports.ApproveOrder = ApproveOrder;

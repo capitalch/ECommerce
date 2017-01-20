@@ -84,7 +84,7 @@
                     <div class="col-sm-9">
                         <select formControlName='countryName' [(ngModel)]='selectedCountryName' class="form-control" id="kvCountry">
                                 <option *ngFor="let countryObj of countries" [value]="countryObj.countryName">{{countryObj.countryName}}</option>
-                            </select>                        
+                            </select>
                         <control-messages [control]="shippingForm.controls.countryName"></control-messages>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                     <div class="col-sm-9">
                         <!--<input type="text" class="form-control" id="kvPhone" placeholder="Enter shipping phone number" formControlName="phone">-->
                         <!--<p-inputMask mask="(999) 999-9999" id="kvPhone" placeholder="(999) 999-9999" formControlName="phone"></p-inputMask>-->
-                                                    <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
+                        <input class="form-control" [textMask]="{mask: mask}" placeholder="(999) 999-9999" formControlName="phone" type="text" />
                         <control-messages [control]="shippingForm.controls.phone"></control-messages>
                     </div>
                 </div>

@@ -423,6 +423,7 @@ namespace KVConnector.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to --insert
+        ///declare @id int;
         ///if @isDefault is null
         ///	select @isDefault = 0;
         ///
@@ -436,7 +437,7 @@ namespace KVConnector.Properties {
         ///	select @isDefault = 1;
         ///
         ///insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId,Co)
-        ///	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@us [rest of string was truncated]&quot;;.
+        ///	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isA [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertShippingAddress {
             get {

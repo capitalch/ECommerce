@@ -53,8 +53,6 @@ export class Order {
     return (disableInlineOrderText);
   };
 
-
-
   constructor(private appService: AppService, private router: Router) {
     // this.onlineOrder = appService.getSetting('onlineOrder');
     this.currentOfferSubscription = appService.filterOn('get:current:offer')
@@ -119,7 +117,6 @@ export class Order {
         }
       }
     }
-
   }
   ngOnInit() {
     let ords = this.appService.request('orders');

@@ -354,6 +354,7 @@ select(@id);</value>
   </data>
   <data name="InsertShippingAddress" xml:space="preserve">
     <value>--insert
+declare @id int;
 if @isDefault is null
 	select @isDefault = 0;
 
@@ -367,7 +368,10 @@ if not exists(select 0 from ShippingAddresses where UserId = @userId)
 	select @isDefault = 1;
 
 insert into ShippingAddresses(Code,Name,Street1,Street2,City,State,Zip,Country,Phone,ISOCode,IsDefault,isAddressVerified,UserId,Co)
-	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userID,@co);</value>
+	values(@code,@name,@street1,@street2,@city,@state,@zip,@country,@phone,@isoCode,@isDefault,@isAddressVerified,@userID,@co);
+
+SELECT @id = CAST(scope_identity() AS int);
+select(@id);</value>
   </data>
   <data name="DeleteShippingAddress" xml:space="preserve">
     <value>delete from ShippingAddresses where id = @id;</value>

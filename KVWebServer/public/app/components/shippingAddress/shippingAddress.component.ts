@@ -61,6 +61,7 @@ export class ShippingAddress {
                 }
             }
         });
+        
         this.dataReadySubs = this.appService.behFilterOn('masters:download:success').subscribe(d => {
             this.countries = this.appService.getCountries();
             this.isDataReady = true;

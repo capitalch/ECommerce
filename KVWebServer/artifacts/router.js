@@ -15,6 +15,18 @@ router.init = function (app) {
     data = { action: 'init', conn: config.connString.replace('@dbName', config.dbName) }
     handler.init(app, data);
 }
+// router.get('/newuser', function (req, res, next) {
+//     if (config.failOver) {
+//         let code = req.query.code;
+//         let offerId = req.query.offerId;
+//         let failOverUrl = config.failOverUrl
+//             .replace('@code', code)
+//             .replace('@offerId', offerId);
+//         res.redirect(failOverUrl);
+//     } else {
+//         next();
+//     }
+// });
 
 router.post('/api/validate/token', function (req, res, next) {
     try {
@@ -340,12 +352,12 @@ router.get('/api/shipping/address', function (req, res, next) {
 router.post('/api/shipping/address', function (req, res, next) {
     try {
         let data = {
-            action: 'sql:non:query',
+            action: 'sql:scalar',
             sqlKey: 'InsertShippingAddress',
             sqlParms: {
                 code: req.user.code,
                 name: req.body.address.name,
-                co:req.body.address.co,
+                co: req.body.address.co,
                 street1: req.body.address.street1,
                 street2: req.body.address.street2,
                 city: req.body.address.city,
@@ -359,7 +371,7 @@ router.post('/api/shipping/address', function (req, res, next) {
                 isAddressVerified: req.body.address.isAddressVerified
             }
         };
-        handler.edgePush(res, next, 'common:result:no:data', data);
+        handler.edgePush(res, next, 'common:result:data', data);
     } catch (error) {
         let err = new def.NError(500, messages.errInternalServerError, error.message);
         next(err);
@@ -375,7 +387,7 @@ router.put('/api/shipping/address', function (req, res, next) {
                 id: req.body.address.id,
                 code: req.user.code,
                 name: req.body.address.name,
-                co:req.body.address.co,
+                co: req.body.address.co,
                 street1: req.body.address.street1,
                 street2: req.body.address.street2,
                 city: req.body.address.city,

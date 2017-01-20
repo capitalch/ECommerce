@@ -18,7 +18,6 @@ import { ShippingAddress } from './components/shippingAddress/shippingAddress.co
 import { PaymentMethod } from './components/paymentMethod/paymentMethod.component';
 import { CustomValidators } from './services/customValidators';
 import { ControlMessages } from './components/controlMessages/controlMessages.component';
-// import { CreatePassword } from './components/managePassword/createPassword.component';
 import { ModalModule } from 'ng2-modal';
 import { PaginationModule } from 'ng2-bootstrap/components/pagination';
 import { AlertModule } from 'ng2-bootstrap/components/alert';
@@ -30,8 +29,10 @@ import { Message, ConfirmationService } from 'primeng/components/common/api';
 import { InputMaskModule } from 'primeng/components/inputMask/inputMask';
 import { BlockUIModule } from 'primeng/primeng';
 import { SpinnerComponent } from './components/app.spinner';
+
 import { TextMaskModule } from 'angular2-text-mask';
 import { PaymentMethodForm } from './components/paymentMethodForm/paymentMethodForm.component';
+import { ShippingAddressForm } from './components/shippingAddressForm/shippingAddressForm.component';
 
 @NgModule({
   imports: [BrowserModule, HttpModule, Routing, FormsModule
@@ -48,6 +49,7 @@ import { PaymentMethodForm } from './components/paymentMethodForm/paymentMethodF
     , BlockUIModule
     , TextMaskModule
   ]
+  
   , declarations: [AppComponent
     , Login
     , Order
@@ -61,9 +63,9 @@ import { PaymentMethodForm } from './components/paymentMethodForm/paymentMethodF
     , ShippingAddress
     , PaymentMethod
     , ControlMessages
-    // , CreatePassword
     , SpinnerComponent
     , PaymentMethodForm
+    , ShippingAddressForm
   ]
   , providers: [AppService, LoginGuard, CustomValidators, ConfirmationService]
   , bootstrap: [AppComponent]
