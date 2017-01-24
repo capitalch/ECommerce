@@ -103,15 +103,37 @@ namespace KVConnector
         #endregion
 
         #region IsValidEmail
-        public static bool IsValidEmail(string input)
+
+        public static bool IsValidEmail(string email)
         {
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(input);
-            if (match.Success)
-                return true;
+            string expresion;
+            expresion = "\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+            if (Regex.IsMatch(email, expresion))
+            {
+                if (Regex.Replace(email, expresion, string.Empty).Length == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
             else
+            {
                 return false;
+            }
         }
+
+        //public static bool IsValidEmail(string input)
+        //{
+        //    Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+        //    Match match = regex.Match(input);
+        //    if (match.Success)
+        //        return true;
+        //    else
+        //        return false;
+        //}
 
         #endregion
 

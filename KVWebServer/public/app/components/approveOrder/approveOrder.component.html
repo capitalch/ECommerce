@@ -13,8 +13,8 @@
         </span>
       </div>
       <div class="col-md-5 btnApprovedpayment">
-        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useNewAddress()">Use new address</button>
-        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useExistingAddress()">Use existing address</button>
+        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useNewAddress()">Create New Address</button>
+        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useExistingAddress()">Use Existing Address</button>
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@
       </div>
       <div class="col-md-5 btnApprovedpayment">
         <button class="btn btn-xs pull-right btn-kistler btnOtherOptions" (click)="useOtherOptions()">Other Options</button>
-        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useNewCard()">Use New Card</button>
+        <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="useNewCard()">Enter New Card</button>
         <button *ngIf="isExistsAnyCard" type="button" class="btn btn-xs pull-right btn-kistler" (click)="useExistingCard()">Use Existing Card</button>
       </div>
     </div>
