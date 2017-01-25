@@ -1,15 +1,15 @@
-import { AppService } from './app.service';
+import {AppService} from './app.service';
 import * as moment from 'moment';
 export class Util {
-    constructor(private appService: AppService) {
+    constructor(private appService : AppService) {};
 
-    };
-
-    static isValidExpiryMonthYear(month: number, year: number) {            
+    static isValidExpiryMonthYear(month : number, year : number) {
         let mDate = moment(new Date(year, month - 1, 1));
         let today = moment(new Date());
-        today = today.clone().set('date',1);
-        let isValid = (mDate.isSame(today,'day') || mDate.isAfter(today,'day')) && mDate.isBefore(today.clone().add(8, 'years'),'day');        
+        today = today
+            .clone()
+            .set('date', 1);
+        let isValid = (mDate.isSame(today, 'day') || mDate.isAfter(today, 'day')) && mDate.isBefore(today.clone().add(8, 'years'), 'day');
         return (isValid);
     }
 
@@ -38,4 +38,16 @@ export class Util {
         ccNumber = ccNumber.substring(0, 4) + ' XXXX XXXX ' + ccNumber.substr(ccNumber.length - 4, 4)
         return (ccNumber);
     };
+
+    static storageAvailable(type) {
+        try {
+            let storage : any = window[type],
+                x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 }

@@ -17,6 +17,7 @@ import 'rxjs/add/operator/filter';
 import {Message} from 'primeng/components/common/api';
 //import * as _ from 'lodash';
 import {urlHash, messages, validationErrorMessages} from '../config';
+import {Util} from './util';
 
 @Injectable()
 export class AppService {
@@ -32,6 +33,7 @@ export class AppService {
     settingsSubscription : Subscription;
     channel : any;
     globalSettings : any = {};
+    globalCredential : any;
     countries : [{
             any
         }];
@@ -153,14 +155,21 @@ export class AppService {
             token: token,
             inactivityTimeoutSecs: inactivityTimeoutSecs
         };
-        localStorage.setItem('credential', JSON.stringify(credential));
+        if (Util.storageAvailable('localStorage')) {
+            localStorage.setItem('credential', JSON.stringify(credential));
+        } else {
+            this.globalCredential = credential;
+        }
     };
 
     getCredential() : any {
-        let credentialString = localStorage.getItem('credential');
         let credential;
-        if (credentialString) {
+        // credentialString;
+        if (Util.storageAvailable('localStorage')) {
+            let credentialString = localStorage.getItem('credential');
             credential = JSON.parse(credentialString);
+        } else {
+            credential = this.globalCredential;
         }
         return (credential);
     };
@@ -175,7 +184,10 @@ export class AppService {
     };
 
     resetCredential() {
-        localStorage.removeItem('credential');
+        if (Util.storageAvailable('localStorage')) {
+            localStorage.removeItem('credential');
+        }
+        this.globalCredential = undefined;
     };
 
     showAlert(alert : any, show : boolean, id?: string, type?: string) {

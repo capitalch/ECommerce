@@ -8,7 +8,9 @@ var Util = (function () {
     Util.isValidExpiryMonthYear = function (month, year) {
         var mDate = moment(new Date(year, month - 1, 1));
         var today = moment(new Date());
-        today = today.clone().set('date', 1);
+        today = today
+            .clone()
+            .set('date', 1);
         var isValid = (mDate.isSame(today, 'day') || mDate.isAfter(today, 'day')) && mDate.isBefore(today.clone().add(8, 'years'), 'day');
         return (isValid);
     };
@@ -38,6 +40,17 @@ var Util = (function () {
         return (ccNumber);
     };
     ;
+    Util.storageAvailable = function (type) {
+        try {
+            var storage = window[type], x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    };
     return Util;
 }());
 exports.Util = Util;

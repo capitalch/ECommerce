@@ -21,6 +21,7 @@ require("rxjs/add/observable/of");
 require("rxjs/add/operator/filter");
 //import * as _ from 'lodash';
 var config_1 = require("../config");
+var util_1 = require("./util");
 var AppService = (function () {
     function AppService(http) {
         // this.spinnerObservable = new Observable(observer => { this.spinnerObserver =
@@ -142,14 +143,23 @@ var AppService = (function () {
             token: token,
             inactivityTimeoutSecs: inactivityTimeoutSecs
         };
-        localStorage.setItem('credential', JSON.stringify(credential));
+        if (util_1.Util.storageAvailable('localStorage')) {
+            localStorage.setItem('credential', JSON.stringify(credential));
+        }
+        else {
+            this.globalCredential = credential;
+        }
     };
     ;
     AppService.prototype.getCredential = function () {
-        var credentialString = localStorage.getItem('credential');
         var credential;
-        if (credentialString) {
+        // credentialString;
+        if (util_1.Util.storageAvailable('localStorage')) {
+            var credentialString = localStorage.getItem('credential');
             credential = JSON.parse(credentialString);
+        }
+        else {
+            credential = this.globalCredential;
         }
         return (credential);
     };
@@ -164,7 +174,10 @@ var AppService = (function () {
     };
     ;
     AppService.prototype.resetCredential = function () {
-        localStorage.removeItem('credential');
+        if (util_1.Util.storageAvailable('localStorage')) {
+            localStorage.removeItem('credential');
+        }
+        this.globalCredential = undefined;
     };
     ;
     AppService.prototype.showAlert = function (alert, show, id, type) {
