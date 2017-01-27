@@ -284,18 +284,17 @@ namespace KVConnector.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to select a.id, item, packing, orderQty, wishList,a.price
+        ///   Looks up a localized string similar to --declare @orderId int;
+        ///--select @orderId = 84;
+        ///select a.id, item, packing, orderQty, wishList,a.price
         ///	from OrderDetails a join OfferMaster b
         ///		on a.offerId = b.id
         ///			where orderId = @orderId;
-        ///select a.id, a.street1,a.zip,a.state,a.city
+        ///select orderImpDetailsId=a.id, b.id, b.name, b.street1, b.street2, b.zip,b.state,b.city, b.co,b.phone,b.country
         ///	from OrderImpDetails a join ShippingAddresses b
         ///		on a.addressId = b.id		
         ///	where orderId = @orderId;
-        ///select a.id, a.cardName,ccNumber=SUBSTRING(a.ccNumber,1,4) + &apos; XXXX XXXX &apos; + SUBSTRING(a.ccNumber,(LEN(a.ccNumber) - 3), 4)
-        ///	from OrderImpDetails a join PaymentMethods b
-        ///		on a.CreditCardId = b.id
-        ///	where order [rest of string was truncated]&quot;;.
+        ///select orderImpDetailsId=a.id,b.id, b.cardName,ccNumber=SUBSTRING(b.ccNumber,1,4) + &apos; XXXX XXX [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetOrderDetails {
             get {
@@ -523,6 +522,28 @@ namespace KVConnector.Properties {
         internal static string UpdateCardIdInOrderImpDetails {
             get {
                 return ResourceManager.GetString("UpdateCardIdInOrderImpDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update OrderImpDetails
+        ///	set CreditCardId = @cardId
+        ///		where id = @id.
+        /// </summary>
+        internal static string UpdateOrderPaymentMethod {
+            get {
+                return ResourceManager.GetString("UpdateOrderPaymentMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to update OrderImpDetails
+        ///	set addressId = @addressId
+        ///		where id = @id.
+        /// </summary>
+        internal static string UpdateOrderShippingAddress {
+            get {
+                return ResourceManager.GetString("UpdateOrderShippingAddress", resourceCulture);
             }
         }
         

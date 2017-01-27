@@ -14,6 +14,8 @@ export var urlHash = {
     'post:delete:shipping:address': '/api/generic/non/query',
     'post:set:default:payment:method': '/api/generic/non/query',
     'post:new:user:login': '/api/newuser/login',
+    'post:order:change:shipping:address': '/api/generic/scalar',
+    'post:order:change:payment:method': '/api/generic/scalar',
 
     'get:current:offer': '/api/current/offer',
     'get:user:profile': '/api/profile',
@@ -33,7 +35,7 @@ export var urlHash = {
     'get:smartyStreet': 'https://us-street.api.smartystreets.com/street-address?auth-id=:authId&auth-token=:authToken&street=:street&street2=:street2&city=:city&state=:state&zipcode=:zipcode&',
     'smartyStreetAutoCom': 'https://us-autocomplete.api.smartystreets.com/suggest?auth-id=63395b2b-4df2-c8c7-a487-21ecc25979c8&auth-token=ikDR4hndQSAScpWSPdj8&prefix=Wyomi'
 
-    , 'put:shipping:address': '/api/shipping/address'
+    , 'put:shipping:address': '/api/shipping/address'    
     , 'insert:credit:card': '/api/credit/card'
     , 'set:default:card': '/api/credit/card/default'
     , 'delete:credit:card': '/api/credit/card'
@@ -62,7 +64,7 @@ export var validationErrorMessages = {
     'oldAndNewPasswordsSame': 'Old and new passwords cannot be same',
     'confirmPasswordMismatch': 'New Password and Confirm New Password mismatch',
     'invalidCreditCard': 'Credit card is invalid',
-    'addressSaveFailed': 'Saving of of address at server failed',
+    'addressSaveFailed': 'Saving of address at server failed',
     'dataSaved': 'Data successfully saved',
     'invalidDate': 'Date is invalid',
     'dataNotSaved': 'Data could not be saved',

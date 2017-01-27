@@ -10,6 +10,7 @@ import {AlertModule} from 'ng2-bootstrap/components/alert';
 import {PaymentMethodForm} from '../../components/paymentMethodForm/paymentMethodForm.component';
 import {ShippingAddressForm} from '../../components/shippingAddressForm/shippingAddressForm.component';
 import {uiText} from '../../config';
+
 @Component({templateUrl: 'app/components/approveOrder/approveOrder.component.html'})
 export class ApproveOrder {
     // justTest="ABCD";
@@ -25,7 +26,6 @@ export class ApproveOrder {
     growlMessages : any = [];
     allTotals : {} = {};
     isExistsAnyCard : boolean = false;
-    // payMethodForm: FormGroup;
     footer : any = {
         wineTotals: {
             wine: 0.00,
@@ -177,6 +177,7 @@ export class ApproveOrder {
                     .payMethodModal
                     .close();
             });
+
         this.useNewAddressSub = this
             .appService
             .filterOn('close:new:address:modal')

@@ -108,7 +108,6 @@
     </modal-header>
     <modal-content>
       <div class="form-group" *ngFor="let address of allAddresses; let i=index">
-        <!--<input type="radio" [checked]="address.isDefault" (click)=selectAddress(address) name="isDefault"> -->
         <button type="button" class="btn btn-link" (click)="selectAddress(address)">
           {{address.name}},
           {{address.street1}}, {{address.city}}, {{address.state}}, {{address.zip}}, {{address.country}}
@@ -173,5 +172,5 @@
     </modal-footer>
   </modal>
 </div>
-<p-growl [value]="growlMessages"></p-growl>
+<!--<p-growl [value]="growlMessages"></p-growl>-->
 </div>

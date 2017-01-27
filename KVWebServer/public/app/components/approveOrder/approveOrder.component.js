@@ -26,7 +26,6 @@ var ApproveOrder = (function () {
         this.growlMessages = [];
         this.allTotals = {};
         this.isExistsAnyCard = false;
-        // payMethodForm: FormGroup;
         this.footer = {
             wineTotals: {
                 wine: 0.00,

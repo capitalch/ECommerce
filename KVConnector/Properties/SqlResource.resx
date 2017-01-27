@@ -295,16 +295,19 @@ select count = count(*)
 		where UserId = @userId;</value>
   </data>
   <data name="GetOrderDetails" xml:space="preserve">
-    <value>select a.id, item, packing, orderQty, wishList,a.price
+    <value>--declare @orderId int;
+--select @orderId = 84;
+select a.id, item, packing, orderQty, wishList,a.price
 	from OrderDetails a join OfferMaster b
 		on a.offerId = b.id
 			where orderId = @orderId;
-select a.id, a.street1,a.zip,a.state,a.city
+select orderImpDetailsId=a.id, b.id, b.name, b.street1, b.street2, b.zip,b.state,b.city, b.co,b.phone,b.country
 	from OrderImpDetails a join ShippingAddresses b
 		on a.addressId = b.id		
 	where orderId = @orderId;
-select a.id, a.cardName,ccNumber=SUBSTRING(a.ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(a.ccNumber,(LEN(a.ccNumber) - 3), 4)
-	from OrderImpDetails a join PaymentMethods b
+select orderImpDetailsId=a.id,b.id, b.cardName,ccNumber=SUBSTRING(b.ccNumber,1,4) + ' XXXX XXXX ' + SUBSTRING(b.ccNumber,(LEN(a.ccNumber) - 3), 4)
+	from OrderImpDetails a 
+	left outer join PaymentMethods b
 		on a.CreditCardId = b.id
 	where orderId = @orderId;</value>
   </data>
@@ -432,5 +435,15 @@ select @ret + '#;' + @newUserPageText;</value>
   <data name="UpdatePwdHash" xml:space="preserve">
     <value>update UserMaster set pwdHash = @hash
 	where code=@code;</value>
+  </data>
+  <data name="UpdateOrderPaymentMethod" xml:space="preserve">
+    <value>update OrderImpDetails
+	set CreditCardId = @cardId
+		where id = @id</value>
+  </data>
+  <data name="UpdateOrderShippingAddress" xml:space="preserve">
+    <value>update OrderImpDetails
+	set addressId = @addressId
+		where id = @id</value>
   </data>
 </root>

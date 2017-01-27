@@ -87,35 +87,55 @@
                     </table>
                 </div>
             </div>
-
             <div class="panel panel-default" name="shippingAddress">
-                <div class="panel-heading">Address</div>
+                <div class="panel-heading">Shipping Address <span>
+                    <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="changeAddress()">Change Address</button>
+                    </span></div>
                 <div class="panel-body">
                     <table class="table">
+                        <tr>
+                            <td width="20%" class="noBorder">Name:</td>
+                            <td class="noBorder">{{orderDetails.address.name}}</td>
+                        </tr>
+                        <tr>
+                            <td width="20%" class="noBorder">Phone:</td>
+                            <td class="noBorder">{{orderDetails.address.phone}}</td>
+                        </tr>
+                        <tr>
+                            <td width="20%" class="noBorder">C/o:</td>
+                            <td class="noBorder">{{orderDetails.address.co}}</td>
+                        </tr>
                         <tr>
                             <td width="20%" class="noBorder">Address1:</td>
                             <td class="noBorder">{{orderDetails.address.street1}}</td>
                         </tr>
                         <tr>
-                            <td width="20%">City:</td>
-                            <td>{{orderDetails.address.city}}</td>
+                            <td width="20%" class="noBorder">Address2:</td>
+                            <td class="noBorder">{{orderDetails.address.street2}}</td>
                         </tr>
                         <tr>
-                            <td width="20%">State:</td>
-                            <td>{{orderDetails.address.state}}</td>
+                            <td width="20%" class="noBorder">City:</td>
+                            <td class="noBorder">{{orderDetails.address.city}}</td>
                         </tr>
                         <tr>
-                            <td width="20%">Zip:</td>
-                            <td>{{orderDetails.address.zip}}</td>
+                            <td width="20%" class="noBorder">State:</td>
+                            <td class="noBorder">{{orderDetails.address.state}}</td>
+                        </tr>
+                        <tr>
+                            <td width="20%" class="noBorder">Zip:</td>
+                            <td class="noBorder">{{orderDetails.address.zip}}</td>
+                        </tr>
+                        <tr>
+                            <td width="20%" class="noBorder">Country:</td>
+                            <td class="noBorder">{{orderDetails.address.country}}</td>
                         </tr>
                     </table>
-
-
                 </div>
             </div>
-
             <div class="panel panel-default" name="creditCardInfo">
-                <div class="panel-heading">Payment Details</div>
+                <div class="panel-heading">Payment Details <span>
+                    <button type="button" class="btn btn-xs pull-right btn-kistler" (click)="changePaymentMethod()">Change Payment Method</button>
+                    </span></div>
                 <div class="panel-body">
                     <form class="form-horizontal">
                         <div class="panelPaymentGap">Card Name: <span class="cardname">{{orderDetails.card.cardName}}</span></div>
@@ -123,11 +143,47 @@
                     </form>
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
 
+    <div class="row">
+        <modal #addrModal>
+            <modal-header>
+                <h2>Select a shipping address</h2>
+            </modal-header>
+            <modal-content>
+                <div class="form-group" *ngFor="let address of allAddresses; let i=index">
+                    <button type="button" class="btn btn-link" (click)="selectAddress(address)">
+          {{address.name}},
+          {{address.street1}}, {{address.city}}, {{address.state}}, {{address.zip}}, {{address.country}}
+          <span *ngIf="address.isDefault" class="DefaultColor">Default</span>
+          </button>
+                </div>
+            </modal-content>
+            <modal-footer>
+                <button class="btn btn-md btn-kistler" (click)="addrModal.close()">Cancel</button>
+            </modal-footer>
+        </modal>
+    </div>
+    <div class="row">
+        <modal #cardModal>
+            <modal-header>
+                <h2>Select a credit card</h2>
+            </modal-header>
+            <modal-content>
+                <div class="form-group" *ngFor="let card of payMethods; let i=index">
+                    <button type="button" class="btn btn-link" (click)="selectCard(card)">
+          {{card.cardName}},
+          {{card.ccNumber}}
+          <span *ngIf="card.isDefault" class="DefaultColor">Default</span>
+          </button>
+                </div>
+            </modal-content>
+            <modal-footer>
+                <button class="btn btn-md btn-kistler" (click)="cardModal.close()">Cancel</button>
+            </modal-footer>
+        </modal>
+    </div>
+    <p-growl [value]="growlMessages"></p-growl>
+    <alert *ngIf="alert.show" [type]="alert.type" dismissable="true">{{alert.message}}</alert>
 </div>
